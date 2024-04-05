@@ -18,4 +18,10 @@ uk_map <- base_map |>
   group_by(NUTS118NM, NUTS118CD) |> 
   dplyr::summarise(geometry = st_union(geometry), .groups = "drop")
 
-# st_write(uk_map, "ukfsr_uk_nuts1.shp")
+# st_write(uk_map, "ukfsr_uk_nuts1.geojson")
+
+# Read back in with
+# aws.s3::s3read_using(FUN = st_read,
+#                      bucket = ukfsr::s3_bucket(),
+#                      object = "assets/maps/ukfsr_uk_nuts1/ukfsr_uk_nuts1.geojson")
+
