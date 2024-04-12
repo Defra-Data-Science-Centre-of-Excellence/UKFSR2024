@@ -30,8 +30,6 @@ psd_production<-psd%>%
   mutate(year=as.numeric(substr(year,1,4)))%>%
   filter(year>2013)
 
-#########
-
 percentage<-psd_exports%>%
   left_join(psd_production,by=c("Commodity"="Commodity","year"="year"))%>%
   mutate(Per=round((value.x/value.y)*100,1))%>%
