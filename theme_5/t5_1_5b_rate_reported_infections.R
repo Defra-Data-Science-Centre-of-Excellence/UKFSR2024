@@ -6,6 +6,7 @@ library(readr)
 library(ukfsr)
 library(afcolours)
 library(here)
+library(stringr)
 
 source(here("utils", "load-font.R"))
 
@@ -26,17 +27,6 @@ t_5_1_5b_long <- t_5_1_5b |>
   pivot_longer(cols=c("Campylobacter sp.","Non typhoidal Salmonella sp.","STEC O157","Listeria monocytogenes"),
                names_to="species",
                values_to="value")
-
-gcols= af_categorical_colours1[c(1)]
-
-t5_1_1g_long$Wave_wrap = str_wrap(t5_1_1g_long$Wave, width = 14)
-
-# # https://stackoverflow.com/questions/6644997/showing-data-values-on-stacked-bar-chart-in-ggplot2
-# # ensure question axis matches original vector
-# # https://stackoverflow.com/questions/12774210/how-do-you-specifically-order-ggplot2-x-axis-instead-of-alphabetical-order
-# # Turn question column into a character vector
-# # Then turn it back into a factor with the levels in the correct order
-t5_1_1g_long$Wave_wrap <- factor(t5_1_1g_long$Wave_wrap, levels=unique(t5_1_1g_long$Wave_wrap))
 
 t_5_1_5b_long <- setDT(t_5_1_5b_long)
 
@@ -60,12 +50,12 @@ af_colours_1 <- c(
   plot.title = element_text(size=14, face="italic"),
   legend.position = "none")
 
-t_5_1_5b_long_plot_facet <- t_5_1_5b_long_plot + facet_wrap(~ species, ncol=2, scales = "free_y") +
+  t_5_1_5b_long_plot_facet <- t_5_1_5b_long_plot + facet_wrap(~ species, ncol=2, scales = "free_y") +
   geom_blank(aes(y = y_min)) +
   geom_blank(aes(y = y_max)) +
   theme(strip.background = element_blank(), strip.placement = "outside") 
 
 t_5_1_5b_long_plot_facet
 
-save_graphic(t_5_1_5b_long_plot_facet, "5.1.5b", "_rate_reported_infections_per_pop_per_year")
+save_graphic(t_5_1_5b_long_plot_facet, "5.1.5b", "rate reported infections per pop per year")
 
