@@ -29,14 +29,15 @@ t5_1_1h_plot <- ggplot(t5_1_1h, aes(x= factor(`Confident in the part of the food
   theme_ukfsr(base_family = "GDS Transport Website",horizontal = TRUE) +
   scale_fill_manual(values=gcols) +
   labs(y = "Percentage of respondents (%)") +
-  theme(legend.position = "bottom", legend.title = element_blank()) +
-  theme(axis.text.x = element_text(size=20)) +
-  theme(axis.text.y = element_text(size=20)) +
-  theme(text = element_text(family = "GDS Transport Website")) +
+  theme(
+    legend.position = "bottom", legend.title = element_blank(),
+    axis.text.x = element_text(size=20),
+    axis.text.y = element_text(size=20),
+    axis.title.x= element_text(size=20),
+    axis.title.y = element_blank(),
+    text = element_text(family = "GDS Transport Website")) +
   geom_text(aes(label = round(`Percentage of respondents`,0)), vjust = 0.5, hjust = 2, size = 8, fontface = "bold", colour = "white") +
-  coord_flip() +
-  theme(axis.title.x= element_text(size=20)) +
-  theme(axis.title.y = element_blank()) # +
+  coord_flip() 
 
 t5_1_1h_plot
 
