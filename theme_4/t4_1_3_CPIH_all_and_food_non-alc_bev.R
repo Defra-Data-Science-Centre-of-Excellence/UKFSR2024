@@ -15,7 +15,7 @@ library(countrycode)
 library(mm23)
 
 source(here("utils", "load-font.R"))
-source(here("R", "helpers-cpi.R"))
+source(here("utils", "helpers-cpi.R"))
 
 # download data ----------------------------------------------------------------
 mm23 <- mm23::acquire_mm23()
