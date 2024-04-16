@@ -126,11 +126,11 @@ ggsave(here("data", "FSR_4.1.4a_pct_hh_insecure_map.png"), width = 960, height =
 #FSR_4_2a <- fread("4_1_2a_ave_spend_food_non_alcohol_drinks_low_income_all_households.csv")
 FSR_4_2a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
-                                   object = "theme_4/input_data/4_1_2a_ave_spend_food_non_alcohol_drinks_low_income_all_households.csv")
+                                   object = "theme_4/input_data/4_1_2a_ave_spend_food_non_alcohol_drinks_low_income_all_households_middle_income.csv")
 
 
 F4_2a <- FSR_4_2a %>%
-  gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`) # %>%
+  gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`,`percentage spend on food and non-alcoholic drinks for middle 20% by income`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`) # %>%
 
 F4_2a_plot <- ggplot(F4_2a, aes(x=factor(Year), y=value, colour=key, group=key)) +
   geom_line() +
@@ -138,7 +138,7 @@ F4_2a_plot <- ggplot(F4_2a, aes(x=factor(Year), y=value, colour=key, group=key))
   scale_y_continuous(limits = c(0,20), breaks=seq(0,20,2)) +
   guides(fill = guide_legend(byrow = TRUE)) +
   theme_ukfsr()+
-  scale_colour_manual(values=af_colours(type =c("duo"),n=2)) +
+  scale_colour_manual(values=af_colours()) +
   theme(
     legend.position = "bottom", 
     legend.justification = c(0,0)
@@ -165,7 +165,7 @@ F4_2a_plot
 #        #       dpi = "screen")
 #        dpi = 300)
 
-ggsave(filename = "4_1_2a_ave_spend_food_non_alcohol_drinks_low_income_all_households.svg",
+ggsave(filename = "4_1_2a_ave_spend_food_non_alcohol_drinks.svg",
        F4_2a_plot,
        width = 960,
        height = 640,
