@@ -7,7 +7,7 @@ library(ukfsr)
 library(afcolours)
 library(here)
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 psp <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
@@ -19,9 +19,11 @@ psp_chart <- psp |>
   mutate(type = factor(type, 
                        levels = c("total_food", "indigenous_food"),
                        labels = c("All food", "Indigenous food"))) |> 
+  filter(year>2011) |>
   ggplot() +
   geom_line(aes(x = year, y = value, colour = type), lwd = 1) +
   scale_y_continuous(limits = c(0,100)) +
+  scale_x_continuous(breaks = seq(2012, 2022, 2),limits = c(2012, 2022)) +
   scale_colour_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
