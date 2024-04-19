@@ -13,3 +13,22 @@ bucket_manifest <- function(file_ext = "png") {
 
   return(files)  
 }
+
+# Heres an example of some code to use the function to download multiple files
+# into  folder and zip it up.
+
+# files <- bucket_manifest(file_ext = "png")
+# 
+# x <- files$Key
+# y <- files$file
+# 
+# purrr::map2(x, y, \(x, y) {
+#   aws.s3::save_object(object = x,
+#                       bucket = ukfsr::s3_bucket(),
+#                       file = paste0("myfolderpath/",y),
+#                       headers = list("x-amz-acl" = "bucket-owner-full-control"))
+# }
+# )
+# 
+# 
+# utils::zip(zipfile = "myfiles.zip", files = list.files("myfolderpath/", full.names = TRUE))
