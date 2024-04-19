@@ -1,5 +1,5 @@
 # install.packages("devtools")
-devtools::install_github("FoodchainStats/ukfsr")
+#devtools::install_github("FoodchainStats/ukfsr")
 
 library('ukfsr')
 library('afcolours')
@@ -129,8 +129,14 @@ FSR_4_2a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    object = "theme_4/input_data/4_1_2a_ave_spend_food_non_alcohol_drinks_low_income_all_households_middle_income.csv")
 
 
-F4_2a <- FSR_4_2a %>%
-  gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`,`percentage spend on food and non-alcoholic drinks for middle 20% by income`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`) # %>%
+F4_2a <- FSR_4_2a %>% 
+  gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`,`percentage spend on food and non-alcoholic drinks for middle 20% by income`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`)  %>%
+  filter(Year>2011) %>% 
+  mutate(key = case_when(key=="percentage spend on food and non-alcoholic drinks for all households"~"all households",
+                         key=="percentage spend on food and non-alcoholic drinks for middle 20% by income"~"middle 20% by income",
+                         key=="percentage spend on food and non-alcoholic drinks for lowest 20% by income"~"lowest 20% by income"))
+         
+ 
 
 F4_2a_plot <- ggplot(F4_2a, aes(x=factor(Year), y=value, colour=key, group=key)) +
   geom_line() +
@@ -145,7 +151,7 @@ F4_2a_plot <- ggplot(F4_2a, aes(x=factor(Year), y=value, colour=key, group=key))
   ) +
   theme(axis.title.x=element_blank()) +
   #  theme(axis.title.y=element_blank()) +
-  labs(y = "Percentage (%)") +
+  labs(y = "% spend on food and non-alcoholic drinks") +
   geom_line(size=2) +
   #scale_colour_manual(name = "area", values=c("#FDE725FF","#414487FF")) +
   #  geom_point(size=NA) +
@@ -182,8 +188,9 @@ FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 
 F4_5b <- FSR_4_1_4a %>%
-  #  gather(variable,value, `High`,`Marginal`,`Low`,`Very low`)
+  #gather(variable,value, `High`,`Marginal`,`Low`,`Very low`)
   gather(variable,value, `Very low`,`Low`,`Marginal`,`High`)
+
 
 # https://stackoverflow.com/questions/6644997/showing-data-values-on-stacked-bar-chart-in-ggplot2
 # ensure question axis matches original vector
@@ -198,6 +205,15 @@ F4_5b$variable <- factor(F4_5b$variable, levels=unique(F4_5b$variable))
 
 # https://stackoverflow.com/questions/39156114/reversed-legend-using-guide-legend
 # https://aosmith.rbind.io/2018/01/19/reversing-the-order-of-a-ggplot2-legend/
+
+
+check_sum<-F4_5b %>% 
+  #arrange(Year) %>% 
+  select(-variable) %>%
+  group_by(Year) %>%
+  summarise(sum =sum(value))
+  
+
 
 FSR_4_1_4b_plot <- ggplot(F4_5b, aes(x = Year, y = value, fill = variable, label = value)) +
   geom_bar(stat = "identity", width = 0.5) +
@@ -216,13 +232,17 @@ FSR_4_1_4b_plot <- ggplot(F4_5b, aes(x = Year, y = value, fill = variable, label
   theme(axis.text.x = element_text(size=20)) +
   theme(axis.text.y = element_text(size=20)) +
   theme(legend.text=element_text(size=22))  +
-  guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
   theme(text = element_text(family = "GDS Transport Website"))+
-  theme_ukfsr()+
-  scale_fill_manual(values = af_colours())
+  theme_ukfsr(horizontal = TRUE)+
+  scale_fill_manual(values = af_colours())+
+  guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) + #reverse equal to true did not fix
+  #guides(colour=guide_legend(override.aes=list(size=1),reverse = FALSE)) +
   #scale_colour_manual(values=af_colours(type =c("categorical"),n=4))+ 
-  theme(panel.background = element_blank())
+  theme(panel.background = element_blank()) #+
+  #scale_fill_fsr(guide = guide_legend(reverse = TRUE))
 
 # guide_legend(reverse = TRUE)
 
 FSR_4_1_4b_plot
+
+
