@@ -186,10 +186,22 @@ FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    object = "theme_4/input_data/4_1_4a_ household_food_security_status_FYE_2023 .csv")
 
 
+FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
+                                   bucket = "s3-ranch-054",
+                                   object = "theme_4/input_data/4_1_4a_ household_food_security_status_FYE_2023 .csv")
+
+
 
 F4_5b <- FSR_4_1_4a %>%
   #gather(variable,value, `High`,`Marginal`,`Low`,`Very low`)
   gather(variable,value, `Very low`,`Low`,`Marginal`,`High`)
+
+
+check_sum<-F4_5b %>% 
+  #arrange(Year) %>% 
+  select(-variable) %>%
+  group_by(Year) %>%
+  summarise(sum =sum(value)) #check sums add to 100
 
 
 # https://stackoverflow.com/questions/6644997/showing-data-values-on-stacked-bar-chart-in-ggplot2
@@ -207,42 +219,28 @@ F4_5b$variable <- factor(F4_5b$variable, levels=unique(F4_5b$variable))
 # https://aosmith.rbind.io/2018/01/19/reversing-the-order-of-a-ggplot2-legend/
 
 
-check_sum<-F4_5b %>% 
-  #arrange(Year) %>% 
-  select(-variable) %>%
-  group_by(Year) %>%
-  summarise(sum =sum(value))
-  
-
-
-FSR_4_1_4b_plot <- ggplot(F4_5b, aes(x = Year, y = value, fill = variable, label = value)) +
+FSR_4_1_4b_plot <- ggplot(F4_5b, aes(x = Year, y = value, fill = variable, label = round(value,0))) +
   geom_bar(stat = "identity", width = 0.5) +
-  #geom_text(size = 8, position = position_stack(vjust = 0.5), colour= "white", fontface = "bold") +
-  #theme_fsr()+
+    geom_text(size = 12, position = position_stack(vjust = 0.5), colour= "white", fontface = "bold") +
+  theme_ukfsr(horizontal = TRUE)+
   #scale_fill_fsr(guide = guide_legend(reverse = TRUE)) +
-  #scale_fill_manual(values=c("#FDE725FF", "#2A788EFF","#7AD151FF","#414487FF"), guide = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(values=af_colours(), guide = guide_legend(reverse = TRUE)) +
   #  scale_fill_fsr(guide = guide_legend(reverse = TRUE)) +
-  labs(y = "Percentage household food security") +
+  labs(y = "Percentage household food security")+
   theme(legend.position = "bottom", legend.title = element_blank()) +
   # geom_text(aes(label = value), size = 8, position=position_fill(vjust = 1.5), colour= "white", fontface = "bold") +
   coord_flip() +
   theme(axis.title.y=element_blank()) +
-  theme(axis.title.x=element_text(size=20)) +
+  theme(axis.title.x=element_text(size=26)) +
   #  theme(axis.text.x = element_text(size=18, angle=45, vjust = 1, hjust=1)) +
-  theme(axis.text.x = element_text(size=20)) +
-  theme(axis.text.y = element_text(size=20)) +
-  theme(legend.text=element_text(size=22))  +
-  theme(text = element_text(family = "GDS Transport Website"))+
-  theme_ukfsr(horizontal = TRUE)+
-  scale_fill_manual(values = af_colours())+
-  guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) + #reverse equal to true did not fix
-  #guides(colour=guide_legend(override.aes=list(size=1),reverse = FALSE)) +
-  #scale_colour_manual(values=af_colours(type =c("categorical"),n=4))+ 
-  theme(panel.background = element_blank()) #+
-  #scale_fill_fsr(guide = guide_legend(reverse = TRUE))
+  theme(axis.text.x = element_text(size=26)) +
+  theme(axis.text.y = element_text(size=26)) +
+  theme(legend.text=element_text(size=28))  +
+  guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
+  theme(text = element_text(family = "GDS Transport Website"))
 
-# guide_legend(reverse = TRUE)
 
 FSR_4_1_4b_plot
 
 
+save_graphic(FSR_4_1_4b_plot, '4.1.4b') + save_csv(FSR_4_1_4b_plot, '4.1.4b') #save image and csv back to the bucket

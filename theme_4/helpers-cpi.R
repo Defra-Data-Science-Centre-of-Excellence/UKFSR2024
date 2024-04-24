@@ -150,6 +150,33 @@ palette <- c("#414487FF", # DEFAULT BLUE
 
 
 
+#10 years chart for the index
+line_chart_2 <- function(df, cdids, start_date = "2014-01-01", labels){
+  
+  palette <- c("#414487FF", # DEFAULT BLUE
+               "#FDE725FF") # YELLOW
+  
+  if(missing(labels))(labels = cdids)
+  names(df)[names(df) == 'value'] <- 'CPI value'
+  
+  data <- df  |> 
+    filter(cdid %in% cdids & `CPI value` != is.na(`CPI value`) & date >= start_date) |> 
+    ggplot() +
+    geom_line(aes(x = date, y = `CPI value`, colour = cdid), size = 1) +
+    scale_colour_manual(values=palette,breaks = cdids, labels = labels) +
+    scale_y_continuous(labels = label_percent(scale = 1,accuracy = 0.1),breaks = breaks_extended(10)) +
+    scale_x_date(date_labels = "%b %Y") +
+    theme_mm23() 
+  
+  return(data)
+}
+
+
+
+
+
+
+
 
 #' Standard bar chart for CPI brief
 #'
