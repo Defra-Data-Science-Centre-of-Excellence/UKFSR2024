@@ -151,6 +151,10 @@ palette <- c("#414487FF", # DEFAULT BLUE
 
 
 
+
+
+
+
 #' Standard bar chart for CPI brief
 #'
 #' @param df a dataframe of cpi values created by mm23::get_mm23_*
