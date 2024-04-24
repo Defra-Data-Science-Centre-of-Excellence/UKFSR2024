@@ -7,8 +7,10 @@ library(ukfsr)
 library(afcolours)
 library(here)
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
+
+# FSI Indicator 6---------------------------------------------------------------
 # Data is business investment in food drink and tobacco mfg, CVM SA £m,
 # available here:
 # https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ds4t/cxnv
@@ -17,7 +19,7 @@ source(here("utils", "load-font.R"))
 # Need to deal with revised data appearing as text
 mfg_investment <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_3/t3_1_99/output/csv/3_1_99_food_mfg_investment_cdid_ds4t.csv")
+                                 object = "theme_fsi/tfsi_6_1/output/csv/fsi_6_1_food_mfg_investment_cdid_ds4t.csv")
 
 
 mfg_investment <- mfg_investment |> 
@@ -35,4 +37,4 @@ chart <- mfg_investment |>
        y = "£m") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(chart, "3.1.99", "food mfg investment fsi")
+save_graphic(chart, "fsi.6.1", "food mfg investment fsi")
