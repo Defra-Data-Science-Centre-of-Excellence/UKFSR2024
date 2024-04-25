@@ -63,5 +63,18 @@ save_csv(t4_1_3,"4.1.3","cpih all and food non-alc bev")
 
 
   
-  
-  
+# FSI Indicator 8b -------------------------------------------------------------
+
+source(here::here("utils", "load-font.R"))
+source(here::here("theme_4", "helpers-cpi.R"))
+
+
+cht <- line_chart(mm23_month, cdids)
+
+fsi8b <- cht +
+  scale_colour_manual(values=af_duo_colours, labels = c("Overall inflation", "Food inflation")) +
+  labs(y = "CPIH value", x = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website")
+
+save_graphic(fsi8b, "fsi.8.1b", "cpih all and food non-alc bev fsi")
+save_csv(t4_1_3,"fsi.8.1b","cpih all and food non-alc bev fsi") 

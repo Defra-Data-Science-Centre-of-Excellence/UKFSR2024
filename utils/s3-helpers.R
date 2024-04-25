@@ -32,3 +32,26 @@ bucket_manifest <- function(file_ext = "png") {
 # 
 # 
 # utils::zip(zipfile = "myfiles.zip", files = list.files("myfolderpath/", full.names = TRUE))
+
+
+
+# collect FSI graphics ---------------------------------------------------------
+svgs <- bucket_manifest(file_ext = "svg")
+pngs <- bucket_manifest(file_ext = "png")
+
+charts <- dplyr::bind_rows(svgs, pngs) |> 
+  filter(stringr::str_starts(path, "theme_fsi"))
+
+x <- charts$Key
+y <- charts$file
+
+map2(x, y, \(x, y) {
+  aws.s3::save_object(object = x, 
+                      bucket = ukfsr::s3_bucket(), 
+                      file = paste0("~/fsi/",y), 
+                      headers = list("x-amz-acl" = "bucket-owner-full-control"))
+}
+)
+
+
+zip(zipfile = "~/fsi.zip", files = list.files("~/fsi/", full.names = TRUE))

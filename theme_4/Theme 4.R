@@ -244,3 +244,52 @@ FSR_4_1_4b_plot
 
 
 save_graphic(FSR_4_1_4b_plot, '4.1.4b') + save_csv(FSR_4_1_4b_plot, '4.1.4b') #save image and csv back to the bucket
+
+
+# FSI Indicator 7 --------------------------------------------------------------
+
+source(here::here("utils", "load-font.R"))
+
+fsi7 <- ggplot(F4_5b, aes(x = Year, y = value, fill = variable, label = round(value,0))) +
+  geom_bar(stat = "identity", width = 0.5) +
+  geom_text(position = position_stack(vjust = 0.5), 
+            colour= "white",
+            family = "GDS Transport Website",
+            size = 6) +
+  scale_fill_manual(values=af_colours(), guide = guide_legend(reverse = TRUE)) +
+  labs(y = "Percentage household food security", x = NULL)+
+  coord_flip() +
+  # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
+  theme_ukfsr(base_family = "GDS Transport Website",
+              horizontal = TRUE) +
+  theme(legend.position = "bottom", legend.title = element_blank())
+
+
+fsi7
+
+save_graphic(fsi7, "fsi.7.1", "household food security fsi")
+save_csv(F4_5b, "fsi.7.1", "household food security fsi")
+
+
+# FSI Indicator 8 --------------------------------------------------------------
+
+source(here::here("utils", "load-font.R"))
+
+fsi8a <- ggplot(F4_2a) + 
+  geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
+  scale_y_continuous(limits = c(0,20), breaks=seq(0,20,2)) +
+  scale_colour_manual(values = af_colours()) +
+  labs(y = "% spend on food and non-alcoholic drinks",
+       x = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(legend.direction = "vertical",
+        legend.position = "bottom",
+        legend.box = "vertical",
+        legend.justification = c(0,0)) 
+
+
+
+
+
+save_csv(F4_2a, "fsi.8.1a", "pc spend on food fsi")
+save_graphic(fsi8a, "fsi.8.1a", "pc spend on food fsi")
