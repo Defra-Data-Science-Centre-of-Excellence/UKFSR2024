@@ -46,7 +46,7 @@ data <- nd_fuel |>
 chart <- data |> 
   filter(date >= "2014-01-01") |> 
   ggplot() +
-  geom_line(aes(x = date, y = value, colour = input), lwd = 1) +
+  geom_line(aes(x = date, y = value, colour = input)) +
   scale_colour_manual(values = af_colours()) +
   labs(x = NULL,
        y = "index (2020 = 100)") +

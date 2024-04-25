@@ -107,3 +107,31 @@ fig2 <- ggplot(tfp_chart2, aes(x = year, y = value, colour = account_item)) +
         legend.position = "none")
 
 save_graphic(fig2, "2.2.3", "total factor productivity")
+
+
+# FSI Indicator 3c -------------------------------------------------------------
+
+
+fsi3c <- tfp_chart2 |> 
+filter(year >= 2012) |>   
+ggplot() +
+  geom_line(aes(x = year, y = value, colour = account_item)) +
+  annotate(geom = "label",
+           x = c(current_year-3, current_year-3, current_year-3), y = c(tfp_y + 12, outputs_y -16, inputs_y-12),
+           label = c("Total factor productivity", "All outputs", "All inputs"),
+           colour = c("#12436d","#28a197","#801650"),
+           size = 6, 
+           family = "GDS Transport Website", 
+           # fontface = "bold", 
+           fill = alpha("white", 0),
+           label.size = NA) +
+  scale_x_continuous(expand = c(0,0), limits = c(2012,current_year+1), breaks = seq(2012, 2022, by = 2), labels = seq(2012, 2022, by = 2)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,190), breaks = seq(25, 175, by = 25), labels = seq(25, 175, by = 25)) +
+  scale_colour_manual(limits = c("Total factor productivity", "All outputs", "All inputs"), values = af_colours("categorical"))+
+  labs(x = NULL,y = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(legend.position = "none")
+
+
+save_csv(tfp_chart2, "fsi.3.1c", "total factor productivity fsi")
+save_graphic(fsi3c, "fsi.3.1c", "total factor productivity fsi")

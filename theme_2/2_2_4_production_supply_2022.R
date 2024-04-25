@@ -11,10 +11,10 @@ library(stringr)
 library(readODS)
 library(glue)
 library(scales)
-library(plotly)
+# library(plotly)
 library(forcats)
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 ## - - - - - - - - - - - - - -
 ## Functions:
@@ -282,3 +282,28 @@ ratio_barplot <- ggplot()+
        y = "percent")
 
 save_graphic(ratio_barplot, "2.2.4", "production supply ratio 2022")
+
+
+
+# FSI Indicator 3b -------------------------------------------------------------
+
+fsi3b <- ggplot() +
+  geom_hline(yintercept =100,linetype="dashed") +
+  geom_col(data=bar_data_out, aes(fct_reorder(item, value),value,fill=surplus_imports), show.legend=F) +
+  geom_text(data=bar_data_out,
+            aes(fct_reorder(item, value),value, label = round (value,0), color=surplus_imports),
+            hjust = 1.5,
+            show.legend=F, 
+            family = "GDS Transport Website", size = 6) +
+  scale_y_continuous(limits = c(0,110),breaks = seq(0,100,20)) +
+  scale_fill_manual(values = af_colours("duo")) +
+  scale_color_manual(values = c("white", "black")) +
+  labs(x = NULL,
+       y = "percent") +
+  coord_flip() +
+  theme_ukfsr(base_family = "GDS Transport Website",
+              horizontal = TRUE)
+
+
+save_csv(bar_data_out, "fsi.3.1b", "production supply ratio 2022 fsi")
+save_graphic(fsi3b, "fsi.3.1b", "production supply ratio 2022 fsi")

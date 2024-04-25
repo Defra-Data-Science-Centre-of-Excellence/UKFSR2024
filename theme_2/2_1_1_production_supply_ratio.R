@@ -21,7 +21,7 @@ psp_chart <- psp |>
                        labels = c("All food", "Indigenous food"))) |> 
   filter(year>2011) |>
   ggplot() +
-  geom_line(aes(x = year, y = value, colour = type), lwd = 1) +
+  geom_line(aes(x = year, y = value, colour = type)) +
   scale_y_continuous(limits = c(0,100)) +
   scale_x_continuous(breaks = seq(2012, 2022, 2),limits = c(2012, 2022)) +
   scale_colour_manual(values = af_colours("duo")) +
@@ -31,3 +31,9 @@ psp_chart <- psp |>
   
 
 save_graphic(psp_chart, "2.1.1", "production supply ratio")
+
+
+# FSI Indicator 3a -------------------------------------------------------------
+
+save_csv(psp, "fsi.3.1a", "production supply ratio fsi")
+save_graphic(psp_chart, "fsi.3.1a", "production supply ratio fsi")
