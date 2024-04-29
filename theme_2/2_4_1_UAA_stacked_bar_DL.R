@@ -54,7 +54,7 @@ ggplot(aes(x = year, y = value/1e6, fill = land_use)) +
   geom_text(aes(label = round(value/1e6, 1)), 
             position = position_stack(vjust = 0.5),
             colour = "white",
-            size = 4,
+            size = 7,
             family = "GDS Transport Website") +
   scale_fill_manual(values=rev(af_colours())) +
   labs(y = "Million Hectares", x = NULL) +
