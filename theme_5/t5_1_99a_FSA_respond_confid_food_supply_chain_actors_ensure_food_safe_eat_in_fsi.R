@@ -13,19 +13,22 @@ library(grid)
 library(gridtext)
 library(gtable)
 library(ggtext)
+library(gridExtra)
+library(ggpubr)
+library(ggplotify)
 library(data.table)
 
 source(here("utils", "load-font.R"))
 
 t5_1_1g <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
-                                object = "theme_5/t5_1_1/output/csv/5_1_1g_FSA_respond_confid_food_supply_chain_actors_ensure_food_safe_eat_in.csv")
+                                object = "theme_fsi/tfsi_9_1/output/csv/fsi_9_1_fsa_respond_confid_food_supply_chain_actors_ensure_food_safe_eat_in.csv")
 
 t5_1_1g$Wave <- factor(t5_1_1g$Wave, levels = c("Wave 1 (07/2020 - 10/2020)","Wave 2 (11/2020 - 01/2021)","Wave 3 (04/2021 - 06/2021)",
                                                 "Wave 4 (10/2021 - 01/2022)","Wave 6 (10/2022 - 01/2023)","Wave 7 (04/2023 - 07/2023)"))
 
-t5_1_1g_long <- t5_1_1g %>% 
-  group_by(Wave) %>%
+t5_1_1g_long <- t5_1_1g |> 
+  group_by(Wave) |>
   pivot_longer(cols=c("Food delivery services","Take-aways","Slaughterhouses and dairies","Food manufacturers","Restaurants","Shops and supermarkets",
                       "Farmers"),
                names_to="Actor",
@@ -41,12 +44,12 @@ t5_1_1g_long$Wave_label  = t5_1_1g_long$Wave
 t5_1_1g_long$Wave_label <- as.character(t5_1_1g_long$Wave_label)
 
 # rename facet x axis labels
-t5_1_1g_long <- t5_1_1g_long %>% 
-  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 1 (07/2020 - 10/2020)", "W1")) %>%
-  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 2 (11/2020 - 01/2021)", "W2")) %>%
-  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 3 (04/2021 - 06/2021)", "W3")) %>%
-  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 4 (10/2021 - 01/2022)", "W4")) %>%
-  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 6 (10/2022 - 01/2023)", "W6")) %>%
+t5_1_1g_long <- t5_1_1g_long |> 
+  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 1 (07/2020 - 10/2020)", "W1")) |>
+  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 2 (11/2020 - 01/2021)", "W2")) |>
+  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 3 (04/2021 - 06/2021)", "W3")) |>
+  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 4 (10/2021 - 01/2022)", "W4")) |>
+  mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 6 (10/2022 - 01/2023)", "W6")) |>
   mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 7 (04/2023 - 07/2023)", "W7"))
 
 t5_1_1g_plot <- ggplot(t5_1_1g_long, aes(x=factor(Wave_label), y=Value)) +

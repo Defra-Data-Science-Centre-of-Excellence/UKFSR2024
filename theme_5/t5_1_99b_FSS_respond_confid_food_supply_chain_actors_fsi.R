@@ -12,8 +12,7 @@ source(here("utils", "load-font.R"))
 
 t5_1_1h <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_5/t_5_1_1/output/csv/5_1_1h_fss_respond_confid_food_supply_chain_actors.csv",
-                                 col_types = colspec)
+                                 object = "theme_fsi/tfsi_9_1/output/csv/fsi_9_1_fss_respond_confid_food_supply_chain_actors.csv")
 
 t5_1_1h$`Confident in the part of the food supply chain` <- factor(t5_1_1h$`Confident in the part of the food supply chain`, levels=unique(t5_1_1h$`Confident in the part of the food supply chain`))
 
@@ -27,7 +26,7 @@ t5_1_1h_plot <- ggplot(t5_1_1h, aes(x= factor(`Confident in the part of the food
   geom_bar(stat="identity", width=0.7, fill = af_colours_1) +
   scale_y_continuous(limits = c(0,100), breaks=seq(0,100,10)) +
   theme_ukfsr(base_family = "GDS Transport Website",horizontal = TRUE) +
-  scale_fill_manual(values=gcols) +
+  scale_fill_manual(values=af_colours_1) +
   labs(y = "Percentage of respondents (%)") +
    theme(
      axis.title.y = element_blank()) + 
