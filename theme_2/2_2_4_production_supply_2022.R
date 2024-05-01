@@ -294,7 +294,7 @@ fsi3b <- ggplot() +
             aes(fct_reorder(item, value),value, label = round (value,0), color=surplus_imports),
             hjust = 1.5,
             show.legend=F, 
-            family = "GDS Transport Website", size = 6) +
+            family = "GDS Transport Website", size = 10) +
   scale_y_continuous(limits = c(0,110),breaks = seq(0,100,20)) +
   scale_fill_manual(values = af_colours("duo")) +
   scale_color_manual(values = c("white", "black")) +
@@ -306,4 +306,15 @@ fsi3b <- ggplot() +
 
 
 save_csv(bar_data_out, "fsi.3.1b", "production supply ratio 2022 fsi")
-save_graphic(fsi3b, "fsi.3.1b", "production supply ratio 2022 fsi")
+save_graphic(fsi3b, "fsi.3.1b", "production supply ratio 2022 fsi web")
+
+
+for(i in c(16,22)) {
+  
+  cht <- fsi3b + theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2)
+  
+  save_graphic(cht, "fsi.3.1b", paste("production supply ratio 2022 fsi base", i))
+  
+}

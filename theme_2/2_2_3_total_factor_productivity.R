@@ -120,7 +120,7 @@ ggplot() +
            x = c(current_year-3, current_year-3, current_year-3), y = c(tfp_y + 12, outputs_y -16, inputs_y-12),
            label = c("Total factor productivity", "All outputs", "All inputs"),
            colour = c("#12436d","#28a197","#801650"),
-           size = 6, 
+           size = 10, 
            family = "GDS Transport Website", 
            # fontface = "bold", 
            fill = alpha("white", 0),
@@ -135,3 +135,17 @@ ggplot() +
 
 save_csv(tfp_chart2, "fsi.3.1c", "total factor productivity fsi")
 save_graphic(fsi3c, "fsi.3.1c", "total factor productivity fsi")
+
+
+for(i in c(16,22)) {
+  
+  cht <- fsi3c + 
+    theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2) +
+    theme(legend.position = "none")
+  
+  save_graphic(cht, "fsi.3.1c", paste("total factor productivity fsi base", i))
+  
+}
+

@@ -37,4 +37,17 @@ chart <- mfg_investment |>
        y = "£m") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(chart, "fsi.6.1", "food mfg investment fsi")
+# save_graphic(chart, "fsi.6.1", "food mfg investment fsi")
+
+
+for(i in c(16,22)) {
+  
+  cht <- chart + theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2) +
+    theme(plot.margin = margin(5,50,5,5,unit = "pt"))
+  
+  save_graphic(cht, "fsi.6.1", paste("food mfg investment fsi base", i))
+  
+}
+

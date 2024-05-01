@@ -69,12 +69,32 @@ source(here::here("utils", "load-font.R"))
 source(here::here("theme_4", "helpers-cpi.R"))
 
 
-cht <- line_chart(mm23_month, cdids)
-
-fsi8b <- cht +
-  scale_colour_manual(values=af_duo_colours, labels = c("Overall inflation", "Food inflation")) +
-  labs(y = "CPIH value", x = NULL) +
+fsi8b <- mm23_month |> 
+  filter(cdid %in% cdids, date >= "2014-01-01") |> 
+  mutate(cdid = factor(cdid, levels = c("L55O", "L55P"), labels = c("All Items", "Food"))) |> 
+  ggplot() +
+  geom_line(aes(x= date, y = value, colour = cdid)) +
+  scale_y_continuous(labels = label_percent(scale = 1,accuracy = 0.1),breaks = breaks_extended(10)) +
+  scale_x_date(date_labels = "%b\n%Y") +
+  scale_colour_manual(values = af_colours(type = "duo")) +
+  labs(x = NULL, y = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
+  
 
-save_graphic(fsi8b, "fsi.8.1b", "cpih all and food non-alc bev fsi")
-save_csv(t4_1_3,"fsi.8.1b","cpih all and food non-alc bev fsi") 
+
+# save_graphic(fsi8b, "fsi.8.1b", "cpih all and food non-alc bev fsi")
+# save_csv(t4_1_3,"fsi.8.1b","cpih all and food non-alc bev fsi") 
+
+for(i in c(16,22)) {
+  
+  cht <- fsi8b + theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2) +
+    theme(plot.margin = margin(50,50,5,5,unit = "pt"))
+  
+  save_graphic(cht, "fsi.8.1b", paste("cpih all and food non-alc bev fsi base", i))
+  
+}
+
+
+
