@@ -7,13 +7,13 @@ library(ukfsr)
 library(afcolours)
 library(here)
 library(stringr)
+library(data.table)
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 t_5_1_5b <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_5/t_5_1_5/output/csv/5_1_5b_rate_reported_infections_per_pop_per_year.csv",
-                                 col_types = colspec)
+                                 object = "theme_5/t5_1_5/output/csv/5_1_5b_rate_reported_infections_per_pop_per_year.csv")
 
 ############################################################################################################################################
 # https://stackoverflow.com/questions/42588238/setting-individual-y-axis-limits-with-facet-wrap-not-with-scales-free-y
@@ -58,4 +58,42 @@ af_colours_1 <- c(
 t_5_1_5b_long_plot_facet
 
 save_graphic(t_5_1_5b_long_plot_facet, "5.1.5b", "rate reported infections per pop per year")
+
+######################################################################################################################
+# FSI version
+
+t_5_1_5b_long_plot <- ggplot(t_5_1_5b_long, aes(x=factor(Year), y=value, group=species)) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  geom_line(linewidth=1, colour = af_colours_1) +
+  labs(x = "Year", y = str_wrap("Number of UK laboratory confirmed cases per 100,000 population", width = 40)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) # +
+  # theme(
+  #   axis.title.x = element_text(size=20),
+  #   axis.title.y = element_text(size=20),
+  #   axis.text.x = element_text(size=18, angle=45, vjust = 1, hjust=1),
+  #   axis.text.y = element_text(size=16),
+  #   plot.title = element_text(size=14, face="italic"),
+  #   legend.position = "none")
+
+t_5_1_5b_long_plot_facet <- t_5_1_5b_long_plot + facet_wrap(~ species, ncol=2, scales = "free_y") +
+  geom_blank(aes(y = y_min)) +
+  geom_blank(aes(y = y_max)) +
+  theme(strip.background = element_blank(), strip.placement = "outside") 
+
+t_5_1_5b_long_plot_facet
+
+save_graphic(t_5_1_5b_long_plot_facet, "5.1.5b", "rate reported infections per pop per year")
+
+save_graphic(t_5_1_5b_long_plot_facet, "5.1.5b", "rate reported infections per pop per year")
+
+# save_graphic(F3_1a_plot, '3.1.2a') + save_csv(F3_1a, '3.1.2a')
+
+tfsi_8_1/
+  
+3_1_99b_combined_price_indices_fsi.R
+save_graphic(chart, "3.1.99a", "fertiliser price index")
+
+3_1_99_food_mfg_investment_fsi.R
+save_graphic(chart, "fsi.9.1", "rate reported infections per pop per year fsi")
+
 

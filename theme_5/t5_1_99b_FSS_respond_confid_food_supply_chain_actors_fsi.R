@@ -20,9 +20,9 @@ af_colours_1 <- c(
   "#12436D" # Dark blue
 )
 
-level_order <- c("Ensure that food is of a high quality","Ensure that food is safe to eat")
+t5_1_1h$confid_wrap <- str_wrap(t5_1_1h$`Confident in the part of the food supply chain`, width = 14)
 
-t5_1_1h_plot <- ggplot(t5_1_1h, aes(x= factor(`Confident in the part of the food supply chain`, level = level_order), y=`Percentage of respondents`)) +
+t5_1_1h_plot <- ggplot(t5_1_1h, aes(x= factor(confid_wrap), y=`Percentage of respondents`)) +
   geom_bar(stat="identity", width=0.7, fill = af_colours_1) +
   scale_y_continuous(limits = c(0,100), breaks=seq(0,100,10)) +
   theme_ukfsr(base_family = "GDS Transport Website",horizontal = TRUE) +

@@ -15,7 +15,6 @@ t_5_1_5b <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
                                  object = "theme_fsi/tfsi_9_1/output/csv/fsi_9_1_rate_reported_infections_per_pop_per_year.csv")
 
-############################################################################################################################################
 # https://stackoverflow.com/questions/42588238/setting-individual-y-axis-limits-with-facet-wrap-not-with-scales-free-y
 # https://stackoverflow.com/questions/11335836/increase-number-of-axis-ticks
 # https://stackoverflow.com/questions/20037843/how-to-use-italics-for-facet-labels-in-ggplot2
