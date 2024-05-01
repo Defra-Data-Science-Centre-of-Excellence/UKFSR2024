@@ -52,7 +52,7 @@ world_meat_production_chart <- meat |>
        y = "Million tonnes")
 
 save_graphic(world_meat_production_chart, "1.1.5", "global meat production")
-save_csv(world_meat_production_chart, "1.1.5", "global meat production")
+save_csv(meat, "1.1.5", "global meat production")
 
 world_egg_production_chart <- eggs |>
   ggplot() +
