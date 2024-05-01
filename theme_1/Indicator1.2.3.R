@@ -35,6 +35,11 @@ percentage<-psd_exports%>%
   mutate(Per=round((value.x/value.y)*100,1))%>%
   select(year,Commodity,Per)
 
+percentage_t<-psd_exports_t%>%
+  left_join(psd_production_t,by=c("Commodity"="Commodity","year"="year"))%>%
+  mutate(Per=round((value.x/value.y)*100,1))%>%
+  select(year,Commodity,Per)
+
 ########
 
 percentage_production_globally_traded_chart<-ggplot()+
