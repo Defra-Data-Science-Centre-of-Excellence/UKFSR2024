@@ -267,8 +267,20 @@ fsi7 <- ggplot(F4_5b, aes(x = Year, y = value, fill = variable, label = round(va
 
 fsi7
 
-save_graphic(fsi7, "fsi.7.1", "household food security fsi")
-save_csv(F4_5b, "fsi.7.1", "household food security fsi")
+# save_graphic(fsi7, "fsi.7.1", "household food security fsi")
+# save_csv(F4_5b, "fsi.7.1", "household food security fsi")
+
+for(i in c(16,22)) {
+  
+  cht <- fsi7 + theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2) +
+    theme(plot.margin = margin(5,60,5,5,unit = "pt"))
+  
+  save_graphic(cht, "fsi.7.1", paste("household food security fsi base", i))
+  
+}
+
 
 
 # FSI Indicator 8 --------------------------------------------------------------
@@ -288,8 +300,18 @@ fsi8a <- ggplot(F4_2a) +
         legend.justification = c(0,0)) 
 
 
+# save_csv(F4_2a, "fsi.8.1a", "pc spend on food fsi")
+# save_graphic(fsi8a, "fsi.8.1a", "pc spend on food fsi")
 
 
+for(i in c(16,22)) {
+  
+  cht <- fsi8a + theme_ukfsr(base_family = "GDS Transport Website",
+                            base_size = i,
+                            chart_line_size = 2) +
+    theme(plot.margin = margin(5,60,5,5,unit = "pt"))
+  
+  save_graphic(cht, "fsi.8.1a", paste("pc spend on food fsi base", i))
+  
+}
 
-save_csv(F4_2a, "fsi.8.1a", "pc spend on food fsi")
-save_graphic(fsi8a, "fsi.8.1a", "pc spend on food fsi")

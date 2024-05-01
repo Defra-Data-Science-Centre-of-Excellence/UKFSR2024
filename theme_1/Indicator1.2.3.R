@@ -47,3 +47,23 @@ percentage_production_globally_traded_chart<-ggplot()+
        y = "percent")
 
 save_graphic(percentage_production_globally_traded_chart, "1.2.4", "percentage production globally traded")
+
+
+
+# FSI Indicator 2 --------------------------------------------------------------
+
+for(i in c(16,22)) {
+  
+  cht <- percentage_production_globally_traded_chart +
+                  scale_x_continuous(breaks=seq(2015,2025,2),
+                                     labels=c("14/15","16/17","18/19","20/21","22/23","24/25")) +
+                  guides(colour = guide_legend(nrow=3,  reverse = TRUE)) +
+                 theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2) +
+    theme(plot.margin = margin(5,50,5,5,unit = "pt"))
+  
+  save_graphic(cht, "fsi.2.1", paste("percentage production globally traded fsi base", i))
+  
+}
+

@@ -7,6 +7,8 @@ library(afcolours)
 library(ukfsr)
 library(readODS)
 
+source(here::here("utils", "load-font.R"))
+
 UAA_data <- aws.s3::s3read_using(FUN = read_ods,
                                  bucket = "s3-ranch-054",
                                  object = "theme_2/t2_4_1/input/structure-june-uktimeseries-14dec23.ods",
@@ -38,7 +40,7 @@ UAA_data <- UAA_data |>
                                       "Uncropped arable land(d)",
                                       "Common rough grazing"),
                            labels = c("Permanent grassland",
-                                      "Temporary grass <5 years old", 
+                                      "Temporary grass", 
                                       "Crops",
                                       "Uncropped arable land",
                                       "Common rough grazing")))
@@ -63,3 +65,17 @@ ggplot(aes(x = year, y = value/1e6, fill = land_use)) +
 
 save_graphic(chart, "fsi.4.1", "uaa fsi")
 save_csv(UAA_data, "fsi.4.1", "uaa fsi")
+
+for(i in c(16,22)) {
+  
+  cht <- chart + 
+    guides(fill = guide_legend(nrow=3, byrow = TRUE)) +
+    theme_ukfsr(base_family = "GDS Transport Website",
+                                 base_size = i,
+                                 chart_line_size = 2) + 
+    theme(plot.margin = margin(5,50,5,5,unit = "pt"))
+  
+  save_graphic(cht, "fsi.4.1", paste("uaa fsi base", i))
+  
+}
+
