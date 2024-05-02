@@ -30,8 +30,7 @@ mfg_investment <- mfg_investment |>
 chart <- mfg_investment |> 
   ggplot() +
   geom_line(aes(x = date, y = value), 
-            colour = af_colours(type = "categorical", n = 1),
-            lwd = 1) +
+            colour = af_colours(type = "categorical", n = 1)) +
   scale_y_continuous(limits = c(0, 1400)) +
   labs(x = NULL,
        y = "£m") +

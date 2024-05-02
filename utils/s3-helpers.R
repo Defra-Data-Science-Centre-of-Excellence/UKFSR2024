@@ -45,7 +45,7 @@ charts <- dplyr::bind_rows(svgs, pngs) |>
 x <- charts$Key
 y <- charts$file
 
-map2(x, y, \(x, y) {
+purrr::map2(x, y, \(x, y) {
   aws.s3::save_object(object = x, 
                       bucket = ukfsr::s3_bucket(), 
                       file = paste0("~/fsi/",y), 
