@@ -33,6 +33,7 @@ t5_1_1h_plot <- ggplot(t5_1_1h, aes(x= factor(confid_wrap), y=`Percentage of res
     axis.title.y = element_blank()) + 
   geom_text(aes(label = round(`Percentage of respondents`,0)), vjust = 0.5, hjust = 2, size = 8, fontface = "bold", colour = "white") +
   coord_flip() 
+
 t5_1_1h_plot
 
 save_graphic(t5_1_1h_plot, "5.1.1h", "FSS respond confid food supply chain actors")
