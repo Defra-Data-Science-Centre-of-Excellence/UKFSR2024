@@ -30,13 +30,13 @@ psp_chart <- psp |>
        y = "percent")
   
 
-save_graphic(psp_chart, "2.1.1", "production supply ratio")
+# save_graphic(psp_chart, "2.1.1", "production supply ratio")
 
 
 # FSI Indicator 3a -------------------------------------------------------------
 
-save_csv(psp, "fsi.3.1a", "production supply ratio fsi")
-save_graphic(psp_chart, "fsi.3.1a", "production supply ratio fsi web")
+# save_csv(psp, "fsi.3.1a", "production supply ratio fsi")
+# save_graphic(psp_chart, "fsi.3.1a", "production supply ratio fsi web")
 
 
 # TEST PRINT CODE
@@ -47,7 +47,8 @@ for(i in c(16,22)) {
   cht <- psp_chart + theme_ukfsr(base_family = "GDS Transport Website",
                                  base_size = i,
                                  chart_line_size = 2) + 
-    theme(plot.margin = margin(5,50,5,5,unit = "pt"))
+    theme(plot.margin = margin(5,50,5,5,unit = "pt"))+
+    theme(legend.key.width = unit(i*2, "pt"))
   
   save_graphic(cht, "fsi.3.1a", paste("production supply ratio fsi base", i))
   
