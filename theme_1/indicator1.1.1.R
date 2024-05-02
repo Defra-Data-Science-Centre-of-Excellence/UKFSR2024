@@ -130,7 +130,7 @@ cereal_production <- aws.s3::s3read_using(FUN = read_csv,
 
 fsi1a <- cereal_production |>
   mutate(Item=if_else(Item=="Maize (corn)","Maize",Item)) |>
-  mutate(Item=if_else(Item=="Cereals, primary","Cereals",Item)) |>
+  mutate(Item=if_else(Item=="Cereals, primary","All Cereals",Item)) |>
   ggplot() +
   geom_line(aes(x = Year, y = Value2, colour = Item)) +
   scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,2)) +
