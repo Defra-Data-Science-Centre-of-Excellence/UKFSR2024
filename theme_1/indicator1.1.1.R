@@ -35,7 +35,7 @@ kcalpp_chart <- kcalpp |>
   scale_colour_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "kcals/capita/day")
+       y = "kcals/person/day")
 
 
 save_graphic(kcalpp_chart, "1.1.1", "global food supply")
@@ -50,15 +50,17 @@ fsi1 <- kcalpp |>
   rename(element=Element) |> 
   select(year,value,element)  |>
   filter(year>2010)|>
+  mutate(element = factor(element, levels= c("Food supply (kcal/capita/day)"),
+                          labels= c("Food supply (kcal/person/day)"))) |> 
   ggplot() +
   geom_line(aes(x = year, y = value, colour = element)) +
   # geom_vline(xintercept =2014,linetype="dashed")+
   # geom_text(aes(x=2009,y=2500,label="change in\ncals/capita/day\nmethodology"),size=4)+
-  scale_y_continuous(limits = c(2500,3000)) +
+  scale_y_continuous(limits = c(2500,3000), labels = scales::label_comma()) +
   scale_colour_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "kcals/capita/day")
+       y = "kcals/person/day")
 
 for(i in c(16,22)) {
   
