@@ -60,7 +60,8 @@ for(i in c(16,22)) {
   cht <- chart + theme_ukfsr(base_family = "GDS Transport Website",
                                  base_size = i,
                                  chart_line_size = 2) +
-    theme(plot.margin = margin(5,50,5,5,unit = "pt"))
+    theme(plot.margin = margin(5,50,5,5,unit = "pt"))+
+    theme(legend.key.width = unit(i*2, "pt"))
   
   save_graphic(cht, "fsi.5.1", paste("combined price indices fsi base", i))
   

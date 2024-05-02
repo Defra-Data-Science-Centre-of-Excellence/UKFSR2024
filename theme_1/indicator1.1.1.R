@@ -67,7 +67,8 @@ for(i in c(16,22)) {
   cht <- fsi1 + theme_ukfsr(base_family = "GDS Transport Website",
                              base_size = i,
                              chart_line_size = 2) +
-    theme(plot.margin = margin(5,50,5,5,unit = "pt"))
+    theme(plot.margin = margin(5,50,5,5,unit = "pt")) +
+    theme(legend.key.width = unit(i*2, "pt"))
   
   save_graphic(cht, "fsi.1.1", paste("global food supply fsi base", i))
   
@@ -97,7 +98,7 @@ production_index_chart <- production_index |>
 
 save_graphic(production_index_chart, "1.1.1", "global food production")
 
-
+# Cereal production (tonnes)----------------------------------------------------
 
 cereal_production <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
@@ -115,6 +116,45 @@ cereal_production_chart <- cereal_production |>
        y = "Million Tonnes")
 
 save_graphic(cereal_production_chart, "1.1.1", "global cereal production")
+
+
+# FSI Indicator 1.2 cereal production per capita -------------------------------
+
+source(here::here("utils", "load-font.R"))
+
+cereal_production <- aws.s3::s3read_using(FUN = read_csv,
+                                          bucket = ukfsr::s3_bucket(),
+                                          object = "theme_1/t1_1_1/output/csv/cereals_production.csv")
+
+
+
+fsi1a <- cereal_production |>
+  mutate(Item=if_else(Item=="Maize (corn)","Maize",Item)) |>
+  mutate(Item=if_else(Item=="Cereals, primary","Cereals",Item)) |>
+  ggplot() +
+  geom_line(aes(x = Year, y = Value2, colour = Item)) +
+  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,2)) +
+  scale_colour_manual(values = af_colours("categorical")) +
+  labs(x = NULL,
+       y = "kg per person per year") +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(legend.key.width = unit(58, "pt"))
+
+for(i in c(16,22)) {
+  
+  cht <- fsi1a + theme_ukfsr(base_family = "GDS Transport Website",
+                            base_size = i,
+                            chart_line_size = 2) +
+    theme(plot.margin = margin(5,50,5,5,unit = "pt")) +
+    theme(legend.key.width = unit(i*2, "pt"))
+  
+  save_graphic(cht, "fsi.1.1a", paste("cereal production per capita fsi base", i))
+  
+}
+
+
+
+# ------------------------------------------------------------------------------
 
 use_of_agricultural_commodities_by_type_and_region <- aws.s3::s3read_using(FUN = read_csv,
                                           bucket = ukfsr::s3_bucket(),

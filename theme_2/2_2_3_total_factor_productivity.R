@@ -128,7 +128,7 @@ ggplot() +
   scale_x_continuous(expand = c(0,0), limits = c(2012,current_year+1), breaks = seq(2012, 2022, by = 2), labels = seq(2012, 2022, by = 2)) +
   scale_y_continuous(expand = c(0,0), limits = c(0,190), breaks = seq(25, 175, by = 25), labels = seq(25, 175, by = 25)) +
   scale_colour_manual(limits = c("Total factor productivity", "All outputs", "All inputs"), values = af_colours("categorical"))+
-  labs(x = NULL,y = NULL) +
+  labs(x = NULL,y = "Index (1973 = 100)") +
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(legend.position = "none")
 
