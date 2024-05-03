@@ -309,11 +309,12 @@ save_csv(bar_data_out, "fsi.3.1b", "production supply ratio 2022 fsi")
 save_graphic(fsi3b, "fsi.3.1b", "production supply ratio 2022 fsi web")
 
 
-for(i in c(16,22)) {
+for(i in c(14, 16, 22)) {
   
   cht <- fsi3b + theme_ukfsr(base_family = "GDS Transport Website",
                              base_size = i,
-                             chart_line_size = 2)
+                             chart_line_size = 2,
+                             horizontal = TRUE)
   
   save_graphic(cht, "fsi.3.1b", paste("production supply ratio 2022 fsi base", i))
   

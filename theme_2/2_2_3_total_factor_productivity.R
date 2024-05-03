@@ -137,7 +137,7 @@ save_csv(tfp_chart2, "fsi.3.1c", "total factor productivity fsi")
 save_graphic(fsi3c, "fsi.3.1c", "total factor productivity fsi")
 
 
-for(i in c(16,22)) {
+for(i in c(14, 16, 22)) {
   
   cht <- fsi3c + 
     theme_ukfsr(base_family = "GDS Transport Website",

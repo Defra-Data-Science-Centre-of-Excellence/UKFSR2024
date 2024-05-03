@@ -55,7 +55,7 @@ chart <- data |>
 
 save_graphic(chart, "fsi.5.1", "combined price indices fsi")
 
-for(i in c(16,22)) {
+for(i in c(14, 16, 22)) {
   
   cht <- chart + theme_ukfsr(base_family = "GDS Transport Website",
                                  base_size = i,

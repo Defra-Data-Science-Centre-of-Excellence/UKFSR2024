@@ -42,7 +42,7 @@ psp_chart <- psp |>
 # TEST PRINT CODE
 
 
-for(i in c(16,22)) {
+for(i in c(14, 16, 22)) {
   
   cht <- psp_chart + theme_ukfsr(base_family = "GDS Transport Website",
                                  base_size = i,

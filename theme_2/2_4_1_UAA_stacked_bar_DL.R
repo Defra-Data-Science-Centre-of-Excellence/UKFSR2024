@@ -20,7 +20,7 @@ UAA_data <- aws.s3::s3read_using(FUN = read_ods,
 current_year <- "x2023"
 
 UAA_data <- UAA_data |> 
-  rename(land_use = "table_1_land_use_a_hectares",
+  dplyr::rename(land_use = "table_1_land_use_a_hectares",
          x2009 = "x2009_b",
          x2022 = "x2022_f") |> 
   select(land_use, x1984:glue("{current_year}")) |> 
@@ -66,7 +66,7 @@ ggplot(aes(x = year, y = value/1e6, fill = land_use)) +
 save_graphic(chart, "fsi.4.1", "uaa fsi")
 save_csv(UAA_data, "fsi.4.1", "uaa fsi")
 
-for(i in c(16,22)) {
+for(i in c(14, 16,22)) {
   
   cht <- chart + 
     guides(fill = guide_legend(nrow=3, byrow = TRUE)) +
