@@ -62,7 +62,7 @@ fsi1 <- kcalpp |>
   labs(x = NULL,
        y = "kcals/person/day")
 
-for(i in c(16,22)) {
+for(i in c(14, 16,22)) {
   
   cht <- fsi1 + theme_ukfsr(base_family = "GDS Transport Website",
                              base_size = i,
@@ -140,7 +140,7 @@ fsi1a <- cereal_production |>
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(legend.key.width = unit(58, "pt"))
 
-for(i in c(16,22)) {
+for(i in c(14, 16, 22)) {
   
   cht <- fsi1a + theme_ukfsr(base_family = "GDS Transport Website",
                             base_size = i,

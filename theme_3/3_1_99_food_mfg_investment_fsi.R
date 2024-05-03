@@ -39,7 +39,7 @@ chart <- mfg_investment |>
 # save_graphic(chart, "fsi.6.1", "food mfg investment fsi")
 
 
-for(i in c(16,22)) {
+for(i in c(14, 16, 22)) {
   
   cht <- chart + theme_ukfsr(base_family = "GDS Transport Website",
                              base_size = i,

@@ -43,7 +43,7 @@ percentage_t<-psd_exports_t%>%
 ########
 
 percentage_production_globally_traded_chart<-ggplot()+
-  geom_line(data=percentage,aes(x = year, y = Per, colour = Commodity), lwd = 1) +
+  geom_line(data=percentage,aes(x = year, y = Per, colour = Commodity)) +
   scale_y_continuous(limits = c(0,50)) +
   scale_x_continuous(breaks=seq(2015,2025,2),labels=c("2014/2015","2016/2017","2018/2019","2020/2021","2022/2023","2024/2025"))+
   scale_colour_manual(values = af_colours("categorical",n=6)) +
@@ -57,7 +57,9 @@ save_graphic(percentage_production_globally_traded_chart, "1.2.4", "percentage p
 
 # FSI Indicator 2 --------------------------------------------------------------
 
-for(i in c(16,22)) {
+source(here::here("utils", "load-font.R"))
+
+for(i in c(14, 16, 22)) {
   
   cht <- percentage_production_globally_traded_chart +
                   scale_x_continuous(breaks=seq(2015,2025,2),
