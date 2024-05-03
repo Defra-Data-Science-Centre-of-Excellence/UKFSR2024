@@ -7,8 +7,10 @@ library(ukfsr)
 library(afcolours)
 library(here)
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
+
+# FSI Indicator 6---------------------------------------------------------------
 # Data is business investment in food drink and tobacco mfg, CVM SA £m,
 # available here:
 # https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ds4t/cxnv
@@ -17,7 +19,7 @@ source(here("utils", "load-font.R"))
 # Need to deal with revised data appearing as text
 mfg_investment <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_3/t3_1_99/output/csv/3_1_99_food_mfg_investment_cdid_ds4t.csv")
+                                 object = "theme_fsi/tfsi_6_1/output/csv/fsi_6_1_food_mfg_investment_cdid_ds4t.csv")
 
 
 mfg_investment <- mfg_investment |> 
@@ -28,11 +30,24 @@ mfg_investment <- mfg_investment |>
 chart <- mfg_investment |> 
   ggplot() +
   geom_line(aes(x = date, y = value), 
-            colour = af_colours(type = "categorical", n = 1),
-            lwd = 1) +
-  scale_y_continuous(limits = c(0, 1400)) +
+            colour = af_colours(type = "categorical", n = 1)) +
+  scale_y_continuous(limits = c(0, 1400), labels = scales::label_comma()) +
   labs(x = NULL,
        y = "£m") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(chart, "3.1.99", "food mfg investment fsi")
+# save_graphic(chart, "fsi.6.1", "food mfg investment fsi")
+
+
+for(i in c(14, 16, 22)) {
+  
+  cht <- chart + theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2) +
+    theme(plot.margin = margin(5,50,5,5,unit = "pt"))+
+    theme(legend.key.width = unit(i*2, "pt"))
+  
+  save_graphic(cht, "fsi.6.1", paste("food mfg investment fsi base", i))
+  
+}
+

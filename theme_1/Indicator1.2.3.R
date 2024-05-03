@@ -30,8 +30,6 @@ psd_production<-psd%>%
   mutate(year=as.numeric(substr(year,1,4)))%>%
   filter(year>2013)
 
-#########
-
 percentage<-psd_exports%>%
   left_join(psd_production,by=c("Commodity"="Commodity","year"="year"))%>%
   mutate(Per=round((value.x/value.y)*100,1))%>%
@@ -45,7 +43,7 @@ percentage_t<-psd_exports_t%>%
 ########
 
 percentage_production_globally_traded_chart<-ggplot()+
-  geom_line(data=percentage,aes(x = year, y = Per, colour = Commodity), lwd = 1) +
+  geom_line(data=percentage,aes(x = year, y = Per, colour = Commodity)) +
   scale_y_continuous(limits = c(0,50)) +
   scale_x_continuous(breaks=seq(2015,2025,2),labels=c("2014/2015","2016/2017","2018/2019","2020/2021","2022/2023","2024/2025"))+
   scale_colour_manual(values = af_colours("categorical",n=6)) +
@@ -54,3 +52,26 @@ percentage_production_globally_traded_chart<-ggplot()+
        y = "percent")
 
 save_graphic(percentage_production_globally_traded_chart, "1.2.4", "percentage production globally traded")
+
+
+
+# FSI Indicator 2 --------------------------------------------------------------
+
+source(here::here("utils", "load-font.R"))
+
+for(i in c(14, 16, 22)) {
+  
+  cht <- percentage_production_globally_traded_chart +
+                  scale_x_continuous(breaks=seq(2015,2025,2),
+                                     labels=c("14/15","16/17","18/19","20/21","22/23","24/25")) +
+                  guides(colour = guide_legend(nrow=3,  reverse = TRUE)) +
+                 theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2) +
+    theme(plot.margin = margin(5,50,5,5,unit = "pt"))+
+    theme(legend.key.width = unit(i*2, "pt"))
+  
+  save_graphic(cht, "fsi.2.1", paste("percentage production globally traded fsi base", i))
+  
+}
+

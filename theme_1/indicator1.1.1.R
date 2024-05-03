@@ -35,10 +35,46 @@ kcalpp_chart <- kcalpp |>
   scale_colour_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "kcals/capita/day")
+       y = "kcals/person/day")
 
 
 save_graphic(kcalpp_chart, "1.1.1", "global food supply")
+
+# FSI Indicator 1 --------------------------------------------------------------
+
+source(here::here("utils", "load-font.R"))
+
+fsi1 <- kcalpp |> 
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(element=Element) |> 
+  select(year,value,element)  |>
+  filter(year>2010)|>
+  mutate(element = factor(element, levels= c("Food supply (kcal/capita/day)"),
+                          labels= c("Food supply (kcal/person/day)"))) |> 
+  ggplot() +
+  geom_line(aes(x = year, y = value, colour = element)) +
+  # geom_vline(xintercept =2014,linetype="dashed")+
+  # geom_text(aes(x=2009,y=2500,label="change in\ncals/capita/day\nmethodology"),size=4)+
+  scale_y_continuous(limits = c(2500,3000), labels = scales::label_comma()) +
+  scale_colour_manual(values = af_colours("duo")) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "kcals/person/day")
+
+for(i in c(14, 16,22)) {
+  
+  cht <- fsi1 + theme_ukfsr(base_family = "GDS Transport Website",
+                             base_size = i,
+                             chart_line_size = 2) +
+    theme(plot.margin = margin(5,50,5,5,unit = "pt")) +
+    theme(legend.key.width = unit(i*2, "pt"))
+  
+  save_graphic(cht, "fsi.1.1", paste("global food supply fsi base", i))
+  
+}
+
+# -----------------------------------------------------------------
 
 production_index <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
@@ -62,6 +98,7 @@ production_index_chart <- production_index |>
 
 save_graphic(production_index_chart, "1.1.1", "global food production")
 
+# Cereal production (tonnes)----------------------------------------------------
 
 cereal_production <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
@@ -79,6 +116,45 @@ cereal_production_chart <- cereal_production |>
        y = "Million Tonnes")
 
 save_graphic(cereal_production_chart, "1.1.1", "global cereal production")
+
+
+# FSI Indicator 1.2 cereal production per capita -------------------------------
+
+source(here::here("utils", "load-font.R"))
+
+cereal_production <- aws.s3::s3read_using(FUN = read_csv,
+                                          bucket = ukfsr::s3_bucket(),
+                                          object = "theme_1/t1_1_1/output/csv/cereals_production.csv")
+
+
+
+fsi1a <- cereal_production |>
+  mutate(Item=if_else(Item=="Maize (corn)","Maize",Item)) |>
+  mutate(Item=if_else(Item=="Cereals, primary","All Cereals",Item)) |>
+  ggplot() +
+  geom_line(aes(x = Year, y = Value2, colour = Item)) +
+  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,2)) +
+  scale_colour_manual(values = af_colours("categorical")) +
+  labs(x = NULL,
+       y = "kg per person per year") +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(legend.key.width = unit(58, "pt"))
+
+for(i in c(14, 16, 22)) {
+  
+  cht <- fsi1a + theme_ukfsr(base_family = "GDS Transport Website",
+                            base_size = i,
+                            chart_line_size = 2) +
+    theme(plot.margin = margin(5,50,5,5,unit = "pt")) +
+    theme(legend.key.width = unit(i*2, "pt"))
+  
+  save_graphic(cht, "fsi.1.1a", paste("cereal production per capita fsi base", i))
+  
+}
+
+
+
+# ------------------------------------------------------------------------------
 
 use_of_agricultural_commodities_by_type_and_region <- aws.s3::s3read_using(FUN = read_csv,
                                           bucket = ukfsr::s3_bucket(),
@@ -143,3 +219,4 @@ global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
        y = "Biofuel demand share of\nglobal crop production")
 
 save_graphic(global_biofuel_production_chart, "1.1.1", "global biofuel production")
+
