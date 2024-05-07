@@ -147,7 +147,7 @@ meat_type_global<-rbind(meat_type_global_1,meat_type_global_poultry)
 
 world_meat_production_chart <- meat_type_global |>
   ggplot() +
-  geom_line(aes(x = Year, y = Value/1E6, colour = Area,linetype=Area), lwd = 1) +
+  geom_line(aes(x = Year, y = Value/1E6, colour = Item,linetype=Item), lwd = 1) +
   scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
   scale_colour_manual(values = af_colours("categorical")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
