@@ -20,32 +20,32 @@ psd<-psd_temp%>%
 psd_exports<-psd%>%
   filter(Attribute=="Exports")%>%
   pivot_longer(cols=4:67,names_to="year",values_to="value")%>%
-  mutate(year=as.numeric(substr(year,1,4)))%>%
-  filter(year>2013)
+  mutate(year2=as.numeric(substr(year,1,4)))%>%
+  filter(year2>2013)
 
 psd_production<-psd%>%
   filter(Attribute=="Production")%>%
   pivot_longer(cols=4:67,names_to="year",values_to="value")%>%
-  mutate(year=as.numeric(substr(year,1,4)))%>%
-  mutate(year=as.numeric(substr(year,1,4)))%>%
-  filter(year>2013)
+  mutate(year2=as.numeric(substr(year,1,4)))%>%
+  mutate(year2=as.numeric(substr(year,1,4)))%>%
+  filter(year2>2013)
 
 percentage<-psd_exports%>%
-  left_join(psd_production,by=c("Commodity"="Commodity","year"="year"))%>%
+  left_join(psd_production,by=c("Commodity"="Commodity","year2"="year2"))%>%
   mutate(Per=round((value.x/value.y)*100,1))%>%
-  select(year,Commodity,Per)
+  select(year2,Commodity,Per)
 
 percentage_t<-psd_exports_t%>%
-  left_join(psd_production_t,by=c("Commodity"="Commodity","year"="year"))%>%
+  left_join(psd_production_t,by=c("Commodity"="Commodity","year2"="year2"))%>%
   mutate(Per=round((value.x/value.y)*100,1))%>%
   select(year,Commodity,Per)
 
 ########
 
 percentage_production_globally_traded_chart<-ggplot()+
-  geom_line(data=percentage,aes(x = year, y = Per, colour = Commodity)) +
+  geom_line(data=percentage,aes(x = year2, y = Per, colour = Commodity)) +
   scale_y_continuous(limits = c(0,50)) +
-  scale_x_continuous(breaks=seq(2015,2025,2),labels=c("2014/2015","2016/2017","2018/2019","2020/2021","2022/2023","2024/2025"))+
+  scale_x_continuous(limits = c(2014,2023),breaks=seq(2015,2023,2),labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
   scale_colour_manual(values = af_colours("categorical",n=6)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
@@ -63,11 +63,10 @@ for(i in c(14, 16, 22)) {
   
   cht <- percentage_production_globally_traded_chart +
                   scale_x_continuous(breaks=seq(2015,2025,2),
-                                     labels=c("14/15","16/17","18/19","20/21","22/23","24/25")) +
+                                     labels=c("15/16","17/18","19/20","21/22","23/24","25/26")) +
                   guides(colour = guide_legend(nrow=3,  reverse = TRUE)) +
                  theme_ukfsr(base_family = "GDS Transport Website",
-                             base_size = i,
-                             chart_line_size = 2) +
+                             base_size = i) +
     theme(plot.margin = margin(5,50,5,5,unit = "pt"))+
     theme(legend.key.width = unit(i*2, "pt"))
   

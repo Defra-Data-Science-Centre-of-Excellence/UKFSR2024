@@ -52,7 +52,7 @@ world_meat_production_chart <- meat |>
        y = "Million tonnes")
 
 save_graphic(world_meat_production_chart, "1.1.5", "global meat production")
-save_csv(world_meat_production_chart, "1.1.5", "global meat production")
+save_csv(meat, "1.1.5", "global meat production")
 
 world_egg_production_chart <- eggs |>
   ggplot() +
@@ -77,3 +77,32 @@ world_milk_production_chart <- milk |>
 
 save_graphic(world_milk_production_chart, "1.1.5", "global milk production")
 save_csv(milk, "1.1.5", "global milk production")
+
+meat_type <- aws.s3::s3read_using(FUN = read_csv,
+                                  bucket = ukfsr::s3_bucket(),
+                                  object = "theme_1/t1_1_5/input/csv/meat_production.csv")
+
+meat_type_region<-meat_region%>%
+  filter(Area%in%c("Africa","Northern America","South America","Asia","Europe","Australia and New Zealand"))
+
+beef_veal_region<-meat_type_region%>%
+  filter(Item=="Meat of cattle with the bone, fresh or chilled")%>%
+  mutate(Item="Beef and Veal")
+
+pigmeat_region<-meat_type_region%>%
+  filter(Item=="Meat of pig with the bone, fresh or chilled")%>%
+  mutate(Item="Pigmeat")
+
+sheepmeat_region<-meat_type_region%>%
+  filter(Item=="Meat of sheep, fresh or chilled")%>%
+  mutate(Item="Sheepmeat")
+
+meat_type_global_poultry<-meat_eggs%>%
+  filter(Area=="World")%>%
+  filter(Item=="Meat, Poultry")
+
+meat_type_global_1<-meat_type%>%
+  filter(Area=="World")%>%
+  mutate(Item=if_else(Item=="Meat of sheep, fresh or chilled","Sheepmeat",Item))%>%
+  mutate(Item=if_else(Item=="Meat of pig with the bone, fresh or chilled","Pigmeat",Item))%>%
+  mutate(Item=if_else(Item=="Meat of cattle with the bone, fresh or chilled","Beef and Veal",Item))
