@@ -63,7 +63,7 @@ world_egg_production_chart <- eggs |>
   labs(x = NULL,
        y = "Million tonnes")
 
-save_graphic(cereal_yield_chart, "1.1.5", "global egg production")
+save_graphic(world_egg_production_chart, "1.1.5", "global egg production")
 save_csv(eggs, "1.1.5", "global egg production")
 
 world_milk_production_chart <- milk |>
@@ -82,20 +82,56 @@ meat_type <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
                                   object = "theme_1/t1_1_5/input/csv/meat_production.csv")
 
-meat_type_region<-meat_region%>%
+meat_type_region<-meat_type%>%
   filter(Area%in%c("Africa","Northern America","South America","Asia","Europe","Australia and New Zealand"))
 
 beef_veal_region<-meat_type_region%>%
   filter(Item=="Meat of cattle with the bone, fresh or chilled")%>%
   mutate(Item="Beef and Veal")
 
+world_beef_veal_production_chart <- beef_veal_region |>
+  ggplot() +
+  geom_line(aes(x = Year, y = Value/1E6, colour = Area,linetype=Area), lwd = 1) +
+  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
+  scale_colour_manual(values = af_colours("categorical")) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "Million tonnes")
+
+save_graphic(world_beef_veal_production_chart, "1.1.5", "global beef and veal production")
+save_csv(beef_veal_region, "1.1.5", "global beef and veal production")
+
 pigmeat_region<-meat_type_region%>%
   filter(Item=="Meat of pig with the bone, fresh or chilled")%>%
   mutate(Item="Pigmeat")
 
+world_pigmeat_production_chart <- pigmeat_region |>
+  ggplot() +
+  geom_line(aes(x = Year, y = Value/1E6, colour = Area,linetype=Area), lwd = 1) +
+  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
+  scale_colour_manual(values = af_colours("categorical")) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "Million tonnes")
+
+save_graphic(world_pigmeat_production_chart, "1.1.5", "global pigmeat production")
+save_csv(pigmeat_region, "1.1.5", "global pigmeat production")
+
 sheepmeat_region<-meat_type_region%>%
   filter(Item=="Meat of sheep, fresh or chilled")%>%
   mutate(Item="Sheepmeat")
+
+world_sheepmeat_production_chart <- sheepmeat_region |>
+  ggplot() +
+  geom_line(aes(x = Year, y = Value/1E6, colour = Area,linetype=Area), lwd = 1) +
+  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
+  scale_colour_manual(values = af_colours("categorical")) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "Million tonnes")
+
+save_graphic(world_sheepmeat_production_chart, "1.1.5", "global sheepmeat production")
+save_csv(sheepmeat_region, "1.1.5", "global sheepmeat production")
 
 meat_type_global_poultry<-meat_eggs%>%
   filter(Area=="World")%>%
@@ -106,3 +142,17 @@ meat_type_global_1<-meat_type%>%
   mutate(Item=if_else(Item=="Meat of sheep, fresh or chilled","Sheepmeat",Item))%>%
   mutate(Item=if_else(Item=="Meat of pig with the bone, fresh or chilled","Pigmeat",Item))%>%
   mutate(Item=if_else(Item=="Meat of cattle with the bone, fresh or chilled","Beef and Veal",Item))
+
+meat_type_global<-rbind(meat_type_global_1,meat_type_global_poultry)
+
+world_meat_production_chart <- meat_type_global |>
+  ggplot() +
+  geom_line(aes(x = Year, y = Value/1E6, colour = Area,linetype=Area), lwd = 1) +
+  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
+  scale_colour_manual(values = af_colours("categorical")) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "Million tonnes")
+
+save_graphic(world_meat_production_chart, "1.1.5", "global meat production")
+save_csv(meat_type_global, "1.1.5", "global meat production")
