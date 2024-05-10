@@ -87,8 +87,7 @@ p_out<-(p1+p2)/(p3+p4)/(p5+p6)
 
 cereal_production_yield <- aws.s3::s3read_using(FUN = read_csv,
                                               bucket = ukfsr::s3_bucket(),
-                                              object = "theme_1/t1_1_4/input/csv/cereal_production_yield.csv")
-
+                                              object = "theme_1/t1_1_4/input/csv/cereal_yield_production.csv")
 
 ### Processing
 
@@ -113,24 +112,28 @@ cereal_production_yield <- aws.s3::s3read_using(FUN = read_csv,
 
 cereal_production<-cereal_production_yield%>%
   filter(Element=="Production")%>%
-  group_by(`Area`,`Element`,`Year`)%>%
+  filter(Area%in%c("Africa","Asia","Europe","Northern America","South America","Australia and New Zealand"))%>%
   rename(area=Area)%>%
-  rename(year=Year)%>%
-  summarise(value=sum(Value))
+  rename(year=Year)
 
-cereal_yield<-cereal_production_yield%>%
-  filter(Element=="Yield")%>%
-  group_by(`Area`,`Element`,`Year`)%>%
-  rename(area=Area)%>%
-  rename(year=Year)%>%
-  summarise(value=mean(Value))
+cereal_yield_1<-cereal_production_yield%>%
+  filter(Element=="Yield")
+
+cereal_yield_2010<-cereal_yield_1%>%
+  filter(Year==2010)
+
+cereal_yield<-cereal_yield_1%>%
+  left_join(cereal_yield_2010,by=c("Area"="Area"))%>%
+  filter(Area%in%c("Africa","Asia","Europe","Northern America","South America","Australia and New Zealand"))%>%
+  mutate(Value=(Value.x/Value.y)*100)
+
 
 cereal_production_chart <- cereal_production |>
   filter(area!="Oceania (exec Australia and New Zealand)") |>
   ggplot() +
-  geom_line(aes(x = year, y = value/1e6, colour = area,linetype=area), lwd = 1) +
-  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
-  scale_colour_manual(values = af_colours("categorical")) +
+  geom_line(aes(x = year, y = Value/1E6, colour = area), lwd = 1) +
+  scale_x_continuous(limits = c(1965,2022),breaks =seq(1965,2022,5)) +
+  scale_colour_manual(values = af_colours("categorical"),limits=c("Asia","Europe","Northern America","South America","Africa","Australia and New Zealand")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "Million Tonnes")
@@ -139,15 +142,15 @@ save_graphic(cereal_production_chart, "1.1.4", "global cereal production")
 save_csv(cereal_production, "1.1.4", "global cereal production")
 
 cereal_yield_chart <- cereal_yield |>
-  filter(area!="Australia and New Zealand") |>
+  #filter(area!="Australia and New Zealand") |>
   ggplot() +
-  geom_line(aes(x = year, y = value/1E4, colour = area,linetype=area), lwd = 1) +
-  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
-  scale_y_continuous(limits = c(0,9),breaks =seq(0,8,2)) +
-  scale_colour_manual(values = af_colours("categorical")) +
+  geom_line(aes(x = Year.x, y = Value, colour = Area), lwd = 1) +
+  scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
+  #scale_y_continuous(limits = c(0,9),breaks =seq(0,8,2)) +
+  scale_colour_manual(values = af_colours("categorical"),limits=c("Australia and New Zealand","Europe","Asia","Africa","South America","Northern America")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "tonnes/ha")
+       y = "Index 2010=100")
 
 save_graphic(cereal_yield_chart, "1.1.4", "global cereal yields")
 save_csv(cereal_yield, "1.1.4", "global cereal yields")

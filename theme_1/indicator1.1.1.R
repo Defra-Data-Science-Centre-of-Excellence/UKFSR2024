@@ -96,7 +96,27 @@ production_index_chart <- production_index |>
   labs(x = NULL,
        y = "production index number\n(2014-2016=100)")
 
-save_graphic(production_index_chart, "1.1.1", "global food production")
+save_graphic(production_index_chart, "1.1.1", "global food production index")
+
+production_data <- aws.s3::s3read_using(FUN = read_csv,
+                                         bucket = ukfsr::s3_bucket(),
+                                         object = "theme_1/t1_1_1/input/csv/production_data.csv")
+
+production_chart <- production_data |> 
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(element=Element) |>
+  ggplot() +
+  geom_line(aes(x = year, y = value/1E6, colour = Item,linetype=Item), lwd = 1) +
+  #scale_y_continuous(limits = c(60,110)) +
+  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
+  scale_linetype_manual(values=c("solid","solid","dashed","solid","solid","solid","dotted","dotted","dashed","dotted","dashed","dotted"))+
+  scale_colour_manual(values = c(af_colours("categorical"),af_colours("categorical"))) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "tonnes")
+
+save_graphic(production_chart, "1.1.1", "global food production")
 
 # Cereal production (tonnes)----------------------------------------------------
 
@@ -131,10 +151,11 @@ cereal_production <- aws.s3::s3read_using(FUN = read_csv,
 fsi1a <- cereal_production |>
   mutate(Item=if_else(Item=="Maize (corn)","Maize",Item)) |>
   mutate(Item=if_else(Item=="Cereals, primary","All Cereals",Item)) |>
+  mutate(Item=as.factor(Item)) |>
   ggplot() +
   geom_line(aes(x = Year, y = Value2, colour = Item)) +
   scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,2)) +
-  scale_colour_manual(values = af_colours("categorical")) +
+  scale_colour_manual(values = af_colours("categorical"),limits=c("All Cereals","Maize","Rice","Wheat","Soya beans","Barley")) +
   labs(x = NULL,
        y = "kg per person per year") +
   theme_ukfsr(base_family = "GDS Transport Website") +
@@ -220,3 +241,44 @@ global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
 
 save_graphic(global_biofuel_production_chart, "1.1.1", "global biofuel production")
 
+global_protein_supply <- aws.s3::s3read_using(FUN = read_csv,
+                                                  bucket = ukfsr::s3_bucket(),
+                                                  object = "theme_1/t1_1_1/input/csv/protein_supply_per_capita.csv")
+
+global_protein_supply_chart <- ggplot(data=global_protein_supply) +
+  geom_line(aes(x=Year ,y=Value))+
+  scale_color_manual(values = af_colours("duo")) +
+  #scale_y_continuous(limits=c(0,30))+
+  scale_x_continuous(breaks = seq(2012,2021,1))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "kcals per capita per day")
+
+save_graphic(global_protein_supply_chart, "1.1.1", "global protein supply")
+
+food_supply <- aws.s3::s3read_using(FUN = read_csv,
+                            bucket = ukfsr::s3_bucket(),
+                            object = "theme_1/t1_1_1/input/csv/food_supply_per_capita.csv")
+
+
+gdp <- aws.s3::s3read_using(FUN = read_csv,
+                                              bucket = ukfsr::s3_bucket(),
+                                              object = "theme_1/t1_1_1/input/csv/GDP_2021.csv")
+
+population <- aws.s3::s3read_using(FUN = read_csv,
+                            bucket = ukfsr::s3_bucket(),
+                            object = "theme_1/t1_1_1/input/csv/global_population_2021.csv")
+
+
+gdp_per_calorie<-food_supply%>%
+  left_join(gdp,by=c("Area"="Area"))%>%
+  left_join(population,by=c("Area"="Area"))
+
+gdp_per_calorie_chart<-ggplot(gdp_per_calorie)+
+  geom_point(aes(x=log10(Value.y),y=Value.x,size=Value/1E3))+
+  scale_x_continuous(limits=c(3,5),breaks = c(3,3.3,3.7,4,4.3,4.7,5),labels=c("$1000","$2000","$5000","$10,000","$20,000","$50,000","$100,000"))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = "GDP per capita (USD)",
+       y = "kcals per capita per day")
+
+save_graphic(gdp_per_calorie_chart, "1.1.1", "gdp per calorie chart")
