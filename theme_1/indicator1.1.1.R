@@ -56,6 +56,7 @@ fsi1 <- kcalpp |>
   geom_line(aes(x = year, y = value, colour = element)) +
   # geom_vline(xintercept =2014,linetype="dashed")+
   # geom_text(aes(x=2009,y=2500,label="change in\ncals/capita/day\nmethodology"),size=4)+
+  scale_x_continuous(breaks=seq(2011,2021,2)) +
   scale_y_continuous(limits = c(2500,3000), labels = scales::label_comma()) +
   scale_colour_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
