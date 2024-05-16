@@ -9,7 +9,12 @@ bucket_manifest <- function(file_ext = "png") {
       dplyr::select(Key) |>
       dplyr::filter(stringr::str_ends(Key, file_ext)) |> 
       dplyr::mutate(path = dirname(Key),
-             file = basename(Key))
+             file = basename(Key),
+             title = str_remove(file, "(fsi|[1-5])_[1-9]_[1-9][0-9]?[a-z]{0,1}_") |> 
+               (\(z)(str_replace_all(z, pattern = "_", replacement = " ")))() |> 
+               (\(z)(str_replace_all(z, pattern = "(\\.svg|\\.png)", replacement = " ")))() |> 
+               (\(z)(str_to_sentence(z)))()
+             )
 
   return(files)  
 }
