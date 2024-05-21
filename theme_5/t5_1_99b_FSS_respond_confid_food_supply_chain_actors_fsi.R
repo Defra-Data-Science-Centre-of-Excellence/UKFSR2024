@@ -25,13 +25,14 @@ t5_1_1h$confid_wrap <- str_wrap(t5_1_1h$`Confident in the part of the food suppl
 t5_1_1h_plot <- ggplot(t5_1_1h, aes(x= factor(confid_wrap), y=`Percentage of respondents`)) +
   geom_bar(stat="identity", width=0.7, fill = af_colours_1) +
   scale_y_continuous(limits = c(0,100), breaks=seq(0,100,10)) +
-  theme_ukfsr(base_family = "GDS Transport Website",horizontal = TRUE) +
+  theme_ukfsr(base_family = "GDS Transport Website", base_size = 14, horizontal = TRUE) +
   scale_fill_manual(values=af_colours_1) +
   labs(y = "Percentage of respondents (%)") +
-   theme(
-     axis.title.y = element_blank()) + 
-  geom_text(aes(label = round(`Percentage of respondents`,0)), vjust = 0.5, hjust = 2, size = 8, fontface = "bold", colour = "white") +
-  coord_flip() 
+  theme(
+    axis.title.y = element_blank()) + 
+  geom_text(aes(label = round(`Percentage of respondents`,0)), vjust = 0.5, hjust = 2, size = 12, fontface = "bold", colour = "white") +
+  coord_flip() +
+  theme(plot.margin=unit(c(1,2,0,2), 'cm'))
 
 t5_1_1h_plot
 
