@@ -31,20 +31,7 @@ F3_1a_plot <- ggplot(F3_1a, aes(x=Year, y=value, colour=key, group=key)) +
        y = "Thousand tonnes oil equivalent") +
   scale_x_date(breaks=seq(as.Date("1998-01-01"),Sys.Date()-lubridate::years(1),by = "3 year"),labels=date_format("%Y"))+
   theme_ukfsr(base_family = "GDS Transport Website") 
-  #theme(
-  #  legend.position = "bottom", 
-  #  legend.justification = c(0,0)) +
-  #theme(axis.title.x=element_blank()) +
-  # theme(axis.title.y=element_blank())
 
-  #geom_line(size=1.5) +
-  #scale_colour_manual(values=c("#FDE725FF","#414487FF")) +
-  #  geom_point(size=NA) +
-  #theme(axis.title.y=element_text(size=20)) +
-  #theme(axis.text.x = element_text(size=18, angle=45, vjust = 1, hjust=1)) +
-  #theme(axis.text.y = element_text(size=16)) +
-  #theme(legend.text=element_text(size=22)) +
-  #guides(colour=guide_legend(override.aes=list(size=1))) 
 
 F3_1a_plot
 
