@@ -36,4 +36,6 @@ t5_1_1h_plot <- ggplot(t5_1_1h, aes(x= factor(confid_wrap), y=`Percentage of res
 
 t5_1_1h_plot
 
-save_graphic(t5_1_1h_plot, "5.1.1h", "FSS respond confid food supply chain actors")
+save_graphic(t5_1_1h_plot, "5.1.1h", "fss respond confid food supply chain actors")
+
+save_csv(t5_1_1h, "5.1.1h", "fss respond confid food supply chain actors")
