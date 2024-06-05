@@ -39,7 +39,6 @@ level_order <- c("Farmers","Slaughterhouses and dairies","Food manufacturers","S
 t5_1_1g_long$Wave_label  = t5_1_1g_long$Wave 
 t5_1_1g_long$Wave_label <- as.character(t5_1_1g_long$Wave_label)
 
-# rename facet x axis labels
 t5_1_1g_long <- t5_1_1g_long |> 
   mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 1 (07/2020- 10/2020)", "Wave 1")) |>
   mutate(Wave_label = replace(Wave_label, Wave_label == "Wave 2 (11/2020- 01/2021)", "Wave 2")) |>
@@ -51,7 +50,6 @@ t5_1_1g_long <- t5_1_1g_long |>
 af_colours_1 <- c(
   "#12436D" # Dark blue
 )
-
 
 t5_1_1g_plot <- ggplot(t5_1_1g_long, aes(x=factor(Wave_label), y=Value)) +
   geom_bar(stat="identity", fill = af_colours_1, position = position_dodge(width=2)) +
@@ -76,7 +74,8 @@ t5_1_1g_plot <- ggplot(t5_1_1g_long, aes(x=factor(Wave_label), y=Value)) +
     strip.text = element_text(size = 28, face = "bold"),
     strip.background =element_rect(fill="white"))
 
-label <- ("**Key:** <br> <br>
+# create text box
+label <- ("**Key:** <br> 
            Wave 1 : 07/2020 - 10/2020 <br> 
            Wave 2 : 11/2020 - 01/2021 <br>
            Wave 3 : 04/2021 - 06/2021 <br>
