@@ -99,9 +99,12 @@ textbox <- textbox_grob(
 
 grid.draw(textbox)
 
-# SVG FORMAT IMAGE EXPORT. Get the true screen resolution by zooming in on the graphic in the 'Plots' tab in RStudio ('Zoom'), 
-# maximising the window and inspecting the elements ('right click', e.g. 1920 X 982). Then 'Export', 'Save as image' in the 
-# 'Plots' tab (image format: SVG), and setting the width as e.g. 1920 and just leave the aspect ratio checked.
+# SVG FORMAT IMAGE EXPORT. For the situation where multipanel graphics are combined in the same graphic window (as opposed to 
+# e.g. Patchwork outputs which place graphics above and below each other), prepared using the e.g. grid, gridExtra, 
+# gridtext, gtable, ggtext packages, get the true screen resolution by zooming in on the graphic in the 'Plots' tab in 
+# RStudio ('Zoom'), maximising the window and inspecting the elements ('right click', e.g. 1920 X 982). Then 'Export', 
+# 'Save as image' in the 'Plots' tab (image format: SVG), and setting the width as e.g. 1920 and just leave the aspect ratio 
+# checked.
 
 save_csv(t5_1_1g, "5.1.1g", "fsa respond confidence food supply chain actors ensure food safe eat in")
 
