@@ -99,8 +99,9 @@ textbox <- textbox_grob(
 
 grid.draw(textbox)
 
-# AT THE MOMENT, THE ONLY WAY TO SAVE THIS COMBINED GRAPHIC IS TO ZOOM IN ON THE IMAGE, RIGHT CLICK AND SAVE (AS A PNG)
-# FOR BUCKET, RENAME FILE AS '5_1_1g_FSA_respond_confid_food_supply_chain_actors_ensure_food_safe_eat_in.png'
+# SVG FORMAT IMAGE EXPORT. Get the true screen resolution by zooming in on the graphic in the 'Plots' tab in RStudio ('Zoom'), 
+# maximising the window and inspecting the elements ('right click', e.g. 1920 X 982). Then 'Export', 'Save as image' in the 
+# 'Plots' tab (image format: SVG), and setting the width as e.g. 1920 and just leave the aspect ratio checked.
 
 save_csv(t5_1_1g, "5.1.1g", "fsa respond confidence food supply chain actors ensure food safe eat in")
 
