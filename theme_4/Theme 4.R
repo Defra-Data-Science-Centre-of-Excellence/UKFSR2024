@@ -84,15 +84,121 @@ save_graphic(FSR_4_1_1a_plot, '4.1.1a') + save_csv(FSR_4_1_1a, '4.1.1a') #save i
 #source(here("R", "palette_fsr.R"))
 
 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+  
+FSR_4_1_1b <- FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
+                                                 bucket = "s3-ranch-054",
+                                                 object = "theme_4/input_data/4_1_1b_actual_ave_weekly_household_expend_2009_FYE_2020.csv")
+
+F4_1_1b <- FSR_4_1_1b %>%
+  gather(variable,value, `2009`,`2019/20`) 
+
+F4_1_1b_plot <- ggplot(F4_1_1b, aes(x=`Main household expenditure categories`, y=value, fill=variable)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  geom_text(data = subset(F4_1_1b, variable == "2009"), 
+            #   aes(label=sprintf('%.1f',(value*100)),
+            #  aes(label=sprintf('%.1f',value),
+            aes(label=sprintf('%.0f',value),vjust= 1.5, hjust = -0.5), size=6) +
+  #  aes(label=value,vjust= 1.2, hjust = 1.2), size=6) +
+  #  vjust=ifelse(value >= 0, -0.2, 1.2), hjust = -0.3), size=6) +
+  #   vjust=ifelse(value >= 0, -0.2, 1.2), hjust = -0.3), size=6) +
+  geom_text(data = subset(F4_1_1b, variable == "2019/20"), 
+            #  aes(label=sprintf('%.1f',(value*100)),
+            #  aes(label=sprintf('%.1f',value),
+            aes(label=sprintf('%.0f',value),vjust= -0.6, hjust = -0.5), size=6) +
+  # aes(label=value,vjust= 1.2, hjust = 1.2), size=6) +
+  #    vjust=ifelse(value >= 0, -0.2, 1.2), hjust = 1.2), size=6) +
+  scale_y_continuous(limits = c(0,100), breaks=seq(0,100,10)) +
+  scale_fill_manual(name = "area", values=c("#FDE725FF","#414487FF")) +
+  labs(y = "Average weekly household expenditure (£)") +
+  coord_flip() +
+  theme(axis.title.y=element_blank()) +
+  #geom_line(size=2) +
+  #  geom_point(size=NA) +
+  theme(axis.title.x=element_text(size=20)) +
+  #  theme(axis.text.x = element_text(size=18, angle=45, vjust = 1, hjust=1)) +
+  theme(axis.text.x = element_text(size=16)) +
+  theme(axis.text.y = element_text(size=16)) +
+  theme(legend.text=element_text(size=22)) +
+  #  guides(colour=guide_legend(override.aes=list(size=1)))
+  theme( # remove the vertical grid lines
+    panel.grid.major.y = element_blank() ,
+    # explicitly set the horizontal lines (or they will disappear too)
+    panel.grid.major.x = element_line( size=.1, color="black" ) 
+  ) +
+  theme_ukfsr()
+
+F4_1_1b_plot
+
+
+# ggsave(filename = "4_1_1b_actual_ave_weekly_household_expend_2009_FYE_2020.png", F4_1_1b_plot, scale = 1, device = "png", width = 32.6, height = 21.6, units = "cm", 
+#        #       dpi = "screen")
+#        dpi = 300)
+
+ggsave(filename = "4_1_1b_actual_ave_weekly_household_expend_2009_FYE_2020.svg",
+       F4_1_1b_plot,
+       width = 960,
+       height = 640,
+       units = "px",
+       dpi = 72)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+FSR_4_1_3b <- FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
+                                                 bucket = "s3-ranch-054",
+                                                 object = "theme_4/input_data/4_1_3b_perc_change_prices_Oct_2011_2021_food_prod_classes.csv")
+  
+FSR_4_1_3b_plot <- ggplot(FSR_4_1_3b, aes(x=reorder(Category, `Percentage increase`), y=`Percentage increase`,
+                                            fill=factor(ifelse(Category == "Food and non-alcoholic beverages","Highlighted","Normal")))) +
+  geom_bar(stat="identity", show.legend = FALSE, width=0.5) +
+  geom_text(aes(label = sprintf('%.1f',`Percentage increase`), hjust=ifelse(`Percentage increase` < 0, 1.3, -0.4), vjust = 0.5), size=6, parse = FALSE) +
+  scale_y_continuous(limits = c(-20,10), breaks=seq(-20,10,5)) +
+  # scale_colour_fsr() +
+  #  scale_fill_fsr()+
+  scale_fill_manual(name = "Category", values=c("#FDE725FF","#414487FF")) +
+  coord_flip() +
+  #   theme(axis.title.x=element_blank()) +
+  theme(axis.title.y=element_blank()) +
+  theme(axis.text.x = element_text(size=18)) +
+  theme(axis.text.y = element_text(size=16)) +
+  labs(y = "Percentage change (%)") +
+  theme( # remove the vertical grid lines
+    panel.grid.major.y = element_blank() ,
+    # explicitly set the horizontal lines (or they will disappear too)
+    panel.grid.major.x = element_line( size=.1, color="black" ) 
+  ) +
+  theme(legend.position = "none") +
+  theme_ukfsr()
+
+FSR_4_1_3b_plot
+
+
+# ggsave(filename = "4_1_3b_perc_change_prices_Oct_2011_2021_food_prod_classes.png", FSR_4_1_3b_plot, scale = 1, device = "png", width = 32.6, height = 21.6, units = "cm", 
+#        #       dpi = "screen")
+#        dpi = 300)
+
+ggsave(filename = "4_1_3b_perc_change_prices_Oct_2011_2021_food_prod_classes.svg",
+       FSR_4_1_3b_plot,
+       width = 960,
+       height = 640,
+       units = "px",
+       dpi = 72)
+
+  
+----------------------------------------------------------------------------------------------------------------------------------------------------  
 #frs <- read.csv(here("data", "frs_2019_2020_table9_1.csv")) %>% clean_names()
 FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_4/input_data/4_1_4a_household_food_security_region_FYE_2023.csv")%>% clean_names()
-
+  
 #max(FSR_4_1_4a$food_insecure) >- highest insecurity is 13
 #min(FSR_4_1_4a$food_insecure) >- lowest food insecurity is 8
 
-nuts1 <- st_read("~/R/UKFSR2024/UK map files/NUTS_Level_1_January_2018_FCB_in_the_United_Kingdom.shp")
+nuts1 <- aws.s3::s3read_using(FUN = sf::st_read,
+                                     bucket = "s3-ranch-054",
+                                     object = "assets/maps/ukfsr_uk_nuts1/ukfsr_uk_nuts1.geojson")
 
 
 #map with three bands
@@ -184,6 +290,7 @@ save_graphic(F4_2a_plot, '4.2.2a') + save_csv(F4_2a, '4.2.2a') #save image and c
 FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_4/input_data/4_1_4a_ household_food_security_status_FYE_2023 .csv")
+
 
 
 FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,

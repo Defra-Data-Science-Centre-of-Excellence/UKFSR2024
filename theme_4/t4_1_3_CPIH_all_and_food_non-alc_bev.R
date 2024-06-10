@@ -61,7 +61,31 @@ t4_1_3 <- t4_1_3[ -c(4) ]
 # write out data to .CSV (and store in the bucket)
 save_csv(t4_1_3,"4.1.3","cpih all and food non-alc bev") 
 
+------------------------------------------------------------------------------------------------------------------------------------------
 
+#NEW SUPPORT 1: Changes in the food price index (real terms prices), 2010 to present, index (Chart)"
+#Monthly data for Figure_14_6 on AUK
+#specify L522: CPIH ALL ITEMS and L523: FOOD AND NON-ALCOHOLIC BEVERAGES to calculate real terms
+CPI_month_real<-mm23_month %>% 
+  filter(cdid=="D7BT" | cdid=="D7BU") %>% 
+  arrange(cdid) %>% 
+  pivot_wider(names_from=cdid,values_from=value) %>% 
+  mutate(real_food_price=D7BU/D7BT*100) %>% #real value formula is nominal value/price index*100
+  filter(as.Date("1999-12-01")<date & date<as.Date("2024-04-01")) %>%  #filter correct time series for plot <as.Date("2024-01-01")
+  mutate(real_food_price=round(real_food_price,digits=1))
+
+real_food_prices_plot <- CPI_month_real%>%
+  ggplot(aes(x = date, y = `real_food_price`),
+               value_name = "Index\n(2015=100)",legend_hide = TRUE  ) +
+  geom_line() + 
+  scale_y_continuous(limits=c(85,110),breaks= c(85,90,95,100,105,110),expand = expansion(c(0,0))) +
+  scale_x_date(breaks=seq(as.Date("2000-01-01"),as.Date("2024-01-01"),by = "2 year"),labels=date_format("%Y"))+
+  theme(panel.grid.major.x = element_blank(),
+        axis.line.x = element_line(colour =  "black"),
+        axis.ticks.x = element_line(colour = "black"),
+        axis.ticks.length = unit(0.25, "cm"))
+
+real_food_prices_plot
   
 # FSI Indicator 8b -------------------------------------------------------------
 
