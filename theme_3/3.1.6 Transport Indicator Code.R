@@ -13,22 +13,22 @@ library('lubridate')
 
 contents <- get_bucket_df("s3-ranch-054")
 
-FSR_3_1_3a <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_3_1_6a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_3/input_data/3_1_3a_ave_speed_Strategic_Road_Network.csv")
 
-FSR_3_1_3a <- FSR_3_1_3a %>%
+FSR_3_1_6a <- FSR_3_1_6a %>%
   gather(variable,value, `Monthly`,`Year ending`)
 
 
-FSR_3_1_3a$month <- lubridate::dmy(paste("01", FSR_3_1_3a$month))
+FSR_3_1_6a$month <- lubridate::dmy(paste("01", FSR_3_1_6a$month))
 
-print(FSR_3_1_3a)
+print(FSR_3_1_6a)
 
 
 
 # Create the plot
-FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = month, y = value, colour = variable, group = variable, label = variable)) +
+FSR_3_1_6a_plot <- ggplot(FSR_3_1_6a, aes(x = month, y = value, colour = variable, group = variable, label = variable)) +
   theme_ukfsr() +
   
   # Set scale_x_date with breaks every 6 months
@@ -39,7 +39,7 @@ FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = month, y = value, colour = variabl
         legend.justification = c(0, 0)) +
   theme(axis.title.x = element_blank()) +
   
-  labs(y = "Average delay (seconds per vehicle per mile)") +
+  labs(y = "Average speed (seconds per vehicle per mile)") +
   
   geom_line(size = 2) +
   
@@ -49,10 +49,10 @@ FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = month, y = value, colour = variabl
   theme(legend.text = element_text(size = 22)) +
   guides(colour = guide_legend(override.aes = list(size = 1)))
 
-FSR_3_1_3a_plot
+FSR_3_1_6a_plot
 
 # Output the plot
-save_graphic(FSR_3_1_3a_plot, '3.1.3a') + save_csv(FSR_3_1_3a, '3.1.3a')
+save_graphic(FSR_3_1_6a_plot, '3.1.3a') + save_csv(FSR_3_1_6a, '3.1.3a')
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -91,7 +91,7 @@ delay_labels <- c("Less than 5 seconds", "5 - 10 seconds", "10 - 15 seconds", "1
 af_colors <- af_colours(type = "categorical", n = length(delay_breaks) - 1) # Get 5 colors
 
 # Create the map plot
-F3.1.3b_plot <- ggplot() +
+FSR_3_1_6b_plot <- ggplot() +
               # Add UK border as the base layer
               geom_sf(data = uk_border, aes(fill = CTRY22NM), color = "black", size = 0.5) +
               scale_fill_manual(values = fill_colors) +
@@ -100,9 +100,9 @@ F3.1.3b_plot <- ggplot() +
               # Add transport delay data with color encoding on top
               geom_sf(data = shp,
                       aes(color = factor(cut(AvgDelay, breaks = delay_breaks, labels = delay_labels, include.lowest = TRUE))),
-                      size = 1.5) +
+                      linewidth = 1) +
               
-              labs(title = "2022 Transport Delay (seconds/vehicle/mile)") +
+              #labs(title = "2022 Transport Delay (seconds/vehicle/mile)") +
               
               scale_color_manual(values = c(af_colors),
                                  labels = delay_labels,
@@ -112,31 +112,31 @@ F3.1.3b_plot <- ggplot() +
               
               theme_void()
 
-F3.1.3b_plot  
+FSR_3_1_6b_plot  
 
 # Output the plot
-save_graphic(F3.1.3b_plot, '3.1.3b') #+ save_csv(F3.1.3b_plot, '3.1.3b')
+save_graphic(FSR_3_1_6b_plot, '3.1.3b') #+ save_csv(FSR_3_1_6b_plot, '3.1.3b')
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
   
 
   
-FSR_3_1_3c <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_3_1_6c <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
                                      object = "theme_3/input_data/3_1_3c_ave_delay_Strategic_Road_Network.csv")
 
-FSR_3_1_3c <- FSR_3_1_3c %>%
+FSR_3_1_6c <- FSR_3_1_6c %>%
   gather(variable,value, `Monthly`,`Year ending`)
 
 
-FSR_3_1_3c$Month <- lubridate::dmy(paste("01", FSR_3_1_3c$Month))
+FSR_3_1_6c$Month <- lubridate::dmy(paste("01", FSR_3_1_6c$Month))
 
-print(FSR_3_1_3c)
+print(FSR_3_1_6c)
 
 
 
 # Create the plot
-FSR_3_1_3c_plot <- ggplot(FSR_3_1_3c, aes(x = Month, y = value, colour = variable, group = variable, label = variable)) +
+FSR_3_1_6c_plot <- ggplot(FSR_3_1_6c, aes(x = Month, y = value, colour = variable, group = variable, label = variable)) +
   theme_ukfsr() +
   
   # Set scale_x_date with breaks every 6 months
@@ -157,7 +157,7 @@ FSR_3_1_3c_plot <- ggplot(FSR_3_1_3c, aes(x = Month, y = value, colour = variabl
   theme(legend.text = element_text(size = 22)) +
   guides(colour = guide_legend(override.aes = list(size = 1)))
 
-FSR_3_1_3c_plot
+FSR_3_1_6c_plot
 
 # Output the plot
-save_graphic(FSR_3_1_3c_plot, '3.1.3c') + save_csv(FSR_3_1_3c, '3.1.3c')
+save_graphic(FSR_3_1_6c_plot, '3.1.3c') + save_csv(FSR_3_1_6c, '3.1.3c')

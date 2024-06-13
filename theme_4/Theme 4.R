@@ -198,7 +198,7 @@ FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 nuts1 <- aws.s3::s3read_using(FUN = sf::st_read,
                                      bucket = "s3-ranch-054",
-                                     object = "assets/maps/ukfsr_uk_nuts1/ukfsr_uk_nuts1.geojson")
+                                     object = "assets/maps/ukfsr_uk_nuts1/ukfsr_uk_nuts1.geojson")%>% clean_names()
 
 
 #map with three bands
@@ -209,18 +209,20 @@ mapdata <- nuts1 %>%
                                     #food_insecure >= 10 ~ "10-11"),
          mutate(insecure_bands = case_when(food_insecure < 10 ~ "8-9",
                                            food_insecure >=10 & food_insecure < 12 ~ "10-11",
-                                           food_insecure >= 12 ~ "12-13"),
-         insecure_bands = factor(insecure_bands, levels = c("8-9","10-11","12-13"), ordered = TRUE)) #legend ordering not working?
+                                           food_insecure >= 12 ~ "12-13")) %>%
+        mutate(insecure_bands = factor(insecure_bands, levels = c("8-9","10-11","12-13"), ordered = TRUE))
+         #legend ordering not working?
 
 ggplot(mapdata) +
   
   geom_sf(aes(fill = insecure_bands),  lwd = 0.1) +
-  geom_sf_text(aes(label = stringr::str_wrap(region, 5)), size = 2, colour = "black") +
-  #scale_fill_fsr(palette = "map4",
-  #               name = "% of households \nthat are food insecure") +
+  geom_sf_text(aes(label = stringr::str_wrap(region, 5)), size = 3, colour = "black") +
+  #scale_colour_manual(values=af_colours(type =c("categorical")) +
+  scale_fill_manual(values = af_colours(type =c("categorical")),
+                 name = "% of households \nthat are food insecure") +
   theme_ukfsr()+
-  theme_void()#+
-  #scale_colour_manual(values=af_colours(type =c("categorical")))
+  theme_void()
+  
 
 #mapdata
 
