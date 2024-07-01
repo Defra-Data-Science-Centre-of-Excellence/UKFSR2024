@@ -9,6 +9,7 @@ library('dplyr')
 library('tidyr')
 library('aws.s3')
 library('lubridate')
+library('zoo')
 
 source(here::here("utils", "load-font.R"))
 
@@ -34,7 +35,8 @@ F3_1a_plot <- ggplot(F3_1a, aes(x=Year, y=value, colour=key, group=key)) +
   geom_line() +
   #scale_y_continuous(limits = c(0,4500), breaks=seq(0,4500,500)) +
   guides(fill = guide_legend(byrow = TRUE)) +
-  labs(x = "Year",
+  scale_colour_manual(values = af_colours("categorical")) + 
+  labs(x = NULL,
        y = "Thousand tonnes oil equivalent") +
   scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "2 year"),labels=date_format("%Y"))+
   theme_ukfsr(base_family = "GDS Transport Website") 
@@ -65,8 +67,9 @@ F3_2 <- FSR_3_2 %>%
 
 F3_2_plot <- ggplot(F3_2, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
+  scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
-  labs(x = "Year",
+  labs(x = NULL,
        y = "Thousand tonnes oil equivalent") +
   scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "2 year"),labels=date_format("%Y"))+
   theme_ukfsr(base_family = "GDS Transport Website") 
@@ -106,8 +109,9 @@ F3_3 <- FSR_3_3 %>%
 
 F3_3_plot <- ggplot(F3_3, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
+  scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
-  labs(x = "Year",
+  labs(x = NULL,
        y = "Thousand tonnes oil equivalent") +
   scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "2 year"),labels=date_format("%Y"))+
   theme_ukfsr(base_family = "GDS Transport Website")

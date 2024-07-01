@@ -22,7 +22,7 @@ FSR_3_1_3a <- FSR_3_1_3a %>%
 
 FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
-  labs(x = "Year",
+  labs(x = NULL,
        y = "Thousand people") +
   theme_ukfsr(base_family = "GDS Transport Website") +
   guides(fill = guide_legend(byrow = TRUE)) +

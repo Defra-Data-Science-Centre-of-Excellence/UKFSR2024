@@ -216,12 +216,13 @@ mapdata <- nuts1 %>%
 ggplot(mapdata) +
   
   geom_sf(aes(fill = insecure_bands),  lwd = 0.1) +
-  geom_sf_text(aes(label = stringr::str_wrap(region, 5)), size = 3, colour = "black") +
+  geom_sf_text(aes(label = stringr::str_wrap(region, 5)), size = 3.2, colour = "black") +
   #scale_colour_manual(values=af_colours(type =c("categorical")) +
   scale_fill_manual(values = af_colours(type =c("categorical")),
-                 name = "% of households \nthat are food insecure") +
+                 name = "% of \nhouseholds \nthat are food\ninsecure") +
   theme_ukfsr()+
-  theme_void()
+  theme_void() + 
+  theme(legend.position = "inside", legend.position.inside = c(0.8,0.75))
   
 
 #mapdata
