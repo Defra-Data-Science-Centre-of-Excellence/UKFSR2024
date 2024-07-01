@@ -14,6 +14,7 @@ library(gridtext)
 library(gtable)
 library(ggtext)
 library(data.table)
+library(scales)
 
 source(here("utils", "load-font.R"))
 
@@ -24,11 +25,18 @@ t5_1_2c <- aws.s3::s3read_using(FUN = read_csv,
 
 level_order <- c("Highly concerned","Somewhat concerned","Not very concerned","Not at all concerned","Don't know")
 
-t5_1_2c_plot <- ggplot(t5_1_2c, aes(x= factor(`Consumer concern about the availability of food`, level = level_order), y=`Percentage of respondents`)) +
+af_colours_1 <- c(
+  "#12436D" # Dark blue
+)
+
+t5_1_2c$concern_wrap <- str_wrap(t5_1_2c$`Consumer concern about the availability of food`, width = 200)
+
+t5_1_2c_plot <- ggplot(t5_1_2c, aes(x= factor(concern_wrap, level = level_order), y=`Percentage of respondents`)) +
   geom_bar(stat="identity", position=position_dodge(width=0.9), fill = af_colours_1) +
   scale_y_continuous(limits = c(0,100), breaks=seq(0,100,10)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   scale_fill_manual(values=af_colours_1) +
+  scale_x_discrete(labels = label_wrap(10)) +
   theme(
     legend.position = "bottom", 
     legend.justification = c(0,0)) +
