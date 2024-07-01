@@ -16,16 +16,16 @@ FSR_4_1_3a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
                                   object = "theme_4/input_data/4.1.3 Average Distance Travelled by English Region.csv")
 
-colnames(FSR_4_1_3a) <- c("Year", "Region", "Miles", "Regional_Code")
+colnames(FSR_4_1_3a) <- c("Year", "Region", "Miles", "Regional_Code", "Average_Distance")
 
 FSR_4_1_3a <- FSR_4_1_3a %>%
   arrange(desc(Regional_Code)) %>%
   mutate(Region = factor(Region, levels = Region))
 
-FSR_4_1_3a_plot <- ggplot(FSR_4_1_3a, aes(x= Region, y=Miles)) +
+FSR_4_1_3a_plot <- ggplot(FSR_4_1_3a, aes(x= Region, y=Average_Distance)) +
   geom_bar(stat="identity", show.legend = FALSE, fill = af_colours(n=1)) +
-  geom_text(aes(label = Miles), vjust= 0.3, hjust = 1.2, size=6, color='white', parse = FALSE) +  
-  scale_y_continuous(limits = c(0,300), breaks=seq(0,300,50)) +
+  geom_text(aes(label = Average_Distance), vjust= 0.3, hjust = 1.2, size=6, color='white', parse = FALSE) +  
+  scale_y_continuous(limits = c(0,5), breaks=seq(0,5,1)) +
   theme_ukfsr()+
   coord_flip() +
   theme(axis.title.x=element_text(size=20)) +
@@ -33,7 +33,7 @@ FSR_4_1_3a_plot <- ggplot(FSR_4_1_3a, aes(x= Region, y=Miles)) +
   theme(axis.text.x = element_text(size=18)) +
   theme(axis.text.y = element_text(size=16)) +
     labs(x = "Region", 
-         y = "Miles per person per year") + 
+         y = "Average distace teavelled per person per year") + 
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
   theme( # remove the vertical grid lines
     panel.grid.major.y = element_blank() ,
