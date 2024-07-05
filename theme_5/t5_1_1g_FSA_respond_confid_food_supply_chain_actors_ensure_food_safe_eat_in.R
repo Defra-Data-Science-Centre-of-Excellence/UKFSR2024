@@ -53,7 +53,7 @@ af_colours_1 <- c(
 
 t5_1_1g_plot <- ggplot(t5_1_1g_long, aes(x=factor(Wave_label), y=Value)) +
   geom_bar(stat="identity", fill = af_colours_1, position = position_dodge(width=2)) +
-  theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
+  theme_ukfsr(base_family = "GDS Transport Website", base_size = 22) +
   scale_y_continuous(breaks = NULL) +
   scale_fill_manual(values=af_colours_1) +
   theme(legend.position = "none") +
@@ -71,7 +71,7 @@ t5_1_1g_plot <- ggplot(t5_1_1g_long, aes(x=factor(Wave_label), y=Value)) +
   facet_wrap(~ Actor, ncol = 3, scales = "free_x", drop=FALSE) +
   theme(
     legend.position="none",
-    strip.text = element_text(size = 28, face = "bold"),
+    strip.text = element_text(size = 32, face = "bold"),
     strip.background =element_rect(fill="white"))
 
 # create text box
