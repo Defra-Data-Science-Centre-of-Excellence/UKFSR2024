@@ -15,7 +15,7 @@ source(here::here("utils", "load-font.R"))
 
 # Original data table from uktradeinfo
 # 
-# https://www.uktradeinfo.com/trade-data/ots-custom-table/?id=9985d218-7b76-4c40-bdf2-9bea6f6c7de5
+# https://www.uktradeinfo.com/trade-data/ots-custom-table/?id=d39d4559-a1a5-4204-a201-b90496ef63ca
 
 co2 <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
@@ -38,11 +38,27 @@ co2_cht <- co2_out |>
 save_csv(co2_out, "3.1.11a", "CO2 trade")
 save_graphic(co2_cht, "3.1.11a", "CO2 trade")
 
+
+co2_countries <- co2 |> 
+  clean_names() |> 
+  separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
+  filter(flow == "Imports") |> 
+  group_by(year, country) |> 
+  summarise(value = sum(net_mass_kg)/1000000) 
+
+co2_countries |> 
+  mutate(country = case_when(value <=1 ~ "Other", .default = country)) |> 
+  group_by(year, country) |> 
+  summarise(value = sum(value)) |> 
+  ggplot() +
+  geom_col(aes(x = year, y = value, fill = fct_reorder(country, value) ), position = position_stack())
+
+
 # Hypochlorite -----------------------------------------------------------------
 
 # Original data table from uktradeinfo
 # 
-# https://www.uktradeinfo.com/trade-data/ots-custom-table/?id=8c477a4b-f736-4191-9ac7-45338de93cd7
+# https://www.uktradeinfo.com/trade-data/ots-custom-table/?id=1b7a1a0f-2802-46c9-a1c1-93d8d913d4e6
 
 
 hypo <- aws.s3::s3read_using(FUN = read_csv,
@@ -65,3 +81,18 @@ hypo_cht <- hypo_out |>
 
 save_csv(hypo_out, "3.1.11b", "hypochlorite trade")
 save_graphic(hypo_cht, "3.1.11b", "hypochlorite trade")
+
+
+hypo_countries <- hypo |> 
+  clean_names() |> 
+  separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
+  filter(flow == "Imports") |> 
+  group_by(year, country) |> 
+  summarise(value = sum(net_mass_kg)/1000000) 
+
+hypo_countries |> 
+  mutate(country = case_when(value <=1 ~ "Other", .default = country)) |> 
+  group_by(year, country) |> 
+  summarise(value = sum(value)) |> 
+  ggplot() +
+  geom_col(aes(x = year, y = value, fill = fct_reorder(country, value)), position = position_stack())
