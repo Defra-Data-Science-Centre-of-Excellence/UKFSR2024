@@ -16,7 +16,7 @@ library(mm23)
 
 
 source(here::here("utils", "load-font.R"))
-source(here::here("utils", "helpers-cpi.R"))
+source(here::here("utils", "helpers-cpi_instant_brief.R"))
 
 # download data ----------------------------------------------------------------
 mm23 <- mm23::acquire_mm23()
@@ -36,7 +36,8 @@ af_duo_colours <- afcolours::af_colours("duo")
 
 cht <- line_chart(mm23_month, cdids)
 t4_1_3_plot <- cht +
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  #theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   labs(y = "Year on year % change in CPIH") +
   scale_colour_manual(values=af_duo_colours, labels = c("Overall inflation", "Food inflation")) +
   theme(
@@ -44,7 +45,8 @@ t4_1_3_plot <- cht +
     axis.title.y = element_text(size=20),
     axis.text.x = element_text(size=20),
     axis.text.y = element_text(size=20),
-    legend.text = element_text(margin = margin(r = 2, unit = 'cm')))
+    legend.text = element_text(margin = margin(r = 2, unit = 'cm')),
+    plot.margin = margin(5,50,5,5,unit = "pt"))
 
 save_graphic(t4_1_3_plot,"4.1.3","cpih all and food non-alc bev")
 
