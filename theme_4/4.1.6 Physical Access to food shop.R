@@ -12,17 +12,17 @@ contents <- get_bucket_df("s3-ranch-054")
 
 #Average Distance Travelled by English Region, 2022
 
-FSR_4_1_3a <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_4_1_6a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
                                   object = "theme_4/input_data/4.1.3 Average Distance Travelled by English Region.csv")
 
-colnames(FSR_4_1_3a) <- c("Year", "Region", "Miles", "Regional_Code", "Average_Distance")
+colnames(FSR_4_1_6a) <- c("Year", "Region", "Miles", "Regional_Code", "Average_Distance")
 
-FSR_4_1_3a <- FSR_4_1_3a %>%
+FSR_4_1_6a <- FSR_4_1_6a %>%
   arrange(desc(Regional_Code)) %>%
   mutate(Region = factor(Region, levels = Region))
 
-FSR_4_1_3a_plot <- ggplot(FSR_4_1_3a, aes(x= Region, y=Average_Distance)) +
+FSR_4_1_6a_plot <- ggplot(FSR_4_1_6a, aes(x= Region, y=Average_Distance)) +
   geom_bar(stat="identity", show.legend = FALSE, fill = af_colours(n=1)) +
   geom_text(aes(label = Average_Distance), vjust= 0.3, hjust = 1.2, size=6, color='white', parse = FALSE) +  
   scale_y_continuous(limits = c(0,5), breaks=seq(0,5,1)) +
@@ -42,11 +42,11 @@ FSR_4_1_3a_plot <- ggplot(FSR_4_1_3a, aes(x= Region, y=Average_Distance)) +
   ) 
 
 
-FSR_4_1_3a_plot
+FSR_4_1_6a_plot
 
 
-save_graphic(FSR_4_1_3a_plot, '4.1.3a','Average Distance Travelled by English Region, 2022') + 
-  save_csv(FSR_4_1_3a, '4.1.3a','Average Distance Travelled by English Region, 2022')
+save_graphic(FSR_4_1_6a_plot, '4.1.6a','Average Distance Travelled by English Region, 2022') + 
+  save_csv(FSR_4_1_6a, '4.1.6a','Average Distance Travelled by English Region, 2022')
 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -54,18 +54,18 @@ save_graphic(FSR_4_1_3a_plot, '4.1.3a','Average Distance Travelled by English Re
 
 #  Sum of Supermarkets per 10,000 People by Region
   
-FSR_4_1_3b <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_4_1_6b <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
                                      object = "theme_4/input_data/4.1.3 Access to supermarket ONS.csv")
 
-colnames(FSR_4_1_3b) <- c("Region", "Supermarket_count","Region_Code")
+colnames(FSR_4_1_6b) <- c("Region", "Supermarket_count","Region_Code")
 
 
-FSR_4_1_3b <- FSR_4_1_3b %>%
+FSR_4_1_6b <- FSR_4_1_6b %>%
   arrange(desc(Region_Code)) %>%
   mutate(Region = factor(Region, levels = Region))
 
-FSR_4_1_3b_plot <- ggplot(FSR_4_1_3b, aes(x= Region, y=Supermarket_count)) +
+FSR_4_1_6b_plot <- ggplot(FSR_4_1_6b, aes(x= Region, y=Supermarket_count)) +
   geom_bar(stat="identity", show.legend = FALSE, fill = af_colours(n=1)) +
   geom_text(aes(label = Supermarket_count), vjust= 0.3, hjust = 1.2, size=6, color='white', parse = FALSE) +  
   scale_y_continuous(limits = c(0,200), breaks=seq(0,200,25)) +
@@ -85,9 +85,9 @@ FSR_4_1_3b_plot <- ggplot(FSR_4_1_3b, aes(x= Region, y=Supermarket_count)) +
   ) 
 
 
-FSR_4_1_3b_plot
+FSR_4_1_6b_plot
 
 
-save_graphic(FSR_4_1_3b_plot, '4.1.3b','Sum of Supermarkets per 10,000 People by Region') + 
-  save_csv(FSR_4_1_3b, '4.1.3b','Sum of Supermarkets per 10,000 People by Region')
+save_graphic(FSR_4_1_6b_plot, '4.1.6b','Sum of Supermarkets per 10,000 People by Region') + 
+  save_csv(FSR_4_1_6b, '4.1.6b','Sum of Supermarkets per 10,000 People by Region')
 
