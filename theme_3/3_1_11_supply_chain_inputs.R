@@ -54,7 +54,7 @@ save_graphic(co2_net_cht, "3.1.11a", "CO2 net trade")
 co2_countries <- co2 |> 
   clean_names() |> 
   separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
-  filter(flow == "Imports") |> 
+  filter(flow == "Imports", year >= 2023) |> 
   group_by(year, country) |> 
   summarise(value = sum(net_mass_kg)/1000000) 
 
@@ -63,7 +63,11 @@ co2_countries |>
   group_by(year, country) |> 
   summarise(value = sum(value)) |> 
   ggplot() +
-  geom_col(aes(x = year, y = value, fill = fct_reorder(country, value) ), position = position_stack())
+  geom_col(aes(x = year, y = value, fill = fct_reorder(country, value) ), position = position_stack()) +
+  scale_x_continuous(breaks = c(2023)) +
+  labs(y = "kilotonnes", x = NULL) +
+  scale_fill_manual(values = rev(af_colours())) +
+  theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
 
 # Hypochlorite -----------------------------------------------------------------
@@ -110,7 +114,7 @@ save_graphic(hypo_net_cht, "3.1.11b", "hypochlorite net trade")
 hypo_countries <- hypo |> 
   clean_names() |> 
   separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
-  filter(flow == "Imports") |> 
+  filter(flow == "Imports", year >= 2023) |> 
   group_by(year, country) |> 
   summarise(value = sum(net_mass_kg)/1000000) 
 
@@ -119,7 +123,11 @@ hypo_countries |>
   group_by(year, country) |> 
   summarise(value = sum(value)) |> 
   ggplot() +
-  geom_col(aes(x = year, y = value, fill = fct_reorder(country, value)), position = position_stack())
+  geom_col(aes(x = year, y = value, fill = fct_reorder(country, value)), position = position_stack()) +
+  scale_x_continuous(breaks = c(2023)) +
+  labs(y = "kilotonnes", x = NULL) +
+  scale_fill_manual(values = rev(af_colours())) +
+  theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
 
 
@@ -167,15 +175,19 @@ save_graphic(pet_net_cht, "3.1.11c", "pet net trade")
 pet_countries <- pet |> 
   clean_names() |> 
   separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
-  filter(flow == "Imports") |> 
+  filter(flow == "Imports", date_hierarchy_year >= 2023) |> 
   group_by(date_hierarchy_year, country_hierarchy_country) |> 
   summarise(value = sum(net_mass_kg)/1000000) 
 
 pet_countries |> 
-  mutate(country = case_when(value <= 5 ~ "Other", .default = country_hierarchy_country)) |> 
+  mutate(country = case_when(value <= 15 ~ "Other", .default = country_hierarchy_country)) |> 
   group_by(date_hierarchy_year, country) |> 
   summarise(value = sum(value)) |> 
   ggplot() +
-  geom_col(aes(x = date_hierarchy_year, y = value, fill = fct_reorder(country, value) ), position = position_stack())
+  geom_col(aes(x = date_hierarchy_year, y = value, fill = fct_reorder(country, value) ), position = position_stack()) +
+  scale_x_continuous(breaks = c(2023)) +
+  labs(y = "kilotonnes", x = NULL) +
+  scale_fill_manual(values = rev(af_colours())) +
+  theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
 
