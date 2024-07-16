@@ -38,14 +38,10 @@ af_colours_1 <- c(
 )
 
 t_5_1_5b_long_plot <- ggplot(t_5_1_5b_long, aes(x=factor(Year), y=value, group=species)) +
-  theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
   geom_line(linewidth=1, colour = af_colours_1) +
   labs(x = "Year", y = str_wrap("Number of UK laboratory confirmed cases per 100,000 population", width = 40)) +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-  theme(axis.text.x = element_text(angle = 45)) +
-  theme(
-    axis.text.x = element_text(size=20, angle = 45),
-    axis.text.y = element_text(size=20))
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) 
 
 t_5_1_5b_long_plot_facet <- t_5_1_5b_long_plot + facet_wrap(~ species, ncol=2, scales = "free_y") +
   geom_blank(aes(y = y_min)) +
