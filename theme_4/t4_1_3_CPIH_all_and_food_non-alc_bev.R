@@ -43,7 +43,8 @@ t4_1_3_plot <- cht +
     axis.title.y = element_text(size=20),
     axis.text.x = element_text(size=20),
     axis.text.y = element_text(size=20),
-    legend.text = element_text(margin = margin(r = 2, unit = 'cm')))
+    legend.text = element_text(margin = margin(r = 2, unit = 'cm')),
+    plot.margin = margin(5,50,5,5,unit = "pt"))
 
 save_graphic(t4_1_3_plot,"4.1.3","cpih all and food non-alc bev")
 
