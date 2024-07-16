@@ -14,8 +14,9 @@ library(lubridate)
 library(countrycode)
 library(mm23)
 
-source(here("utils", "load-font.R"))
-source(here("utils", "helpers-cpi.R"))
+
+source(here::here("utils", "load-font.R"))
+source(here::here("utils", "helpers-cpi_instant_brief.R"))
 
 # download data ----------------------------------------------------------------
 mm23 <- mm23::acquire_mm23()
@@ -35,8 +36,9 @@ af_duo_colours <- afcolours::af_colours("duo")
 
 cht <- line_chart(mm23_month, cdids)
 t4_1_3_plot <- cht +
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(y = "CPIH value") +
+  #theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
+  labs(y = "Year on year % change in CPIH") +
   scale_colour_manual(values=af_duo_colours, labels = c("Overall inflation", "Food inflation")) +
   theme(
     axis.title.x = element_blank(),
