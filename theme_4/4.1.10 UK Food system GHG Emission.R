@@ -21,7 +21,7 @@ FSR_4_1_10a <- FSR_4_1_10a %>%
 FSR_4_1_10a_plot <-  ggplot(FSR_4_1_10a, aes(x = Year, y = value, fill = variable)) +
   geom_area(alpha = 0.8, size = 0.5, colour = "white") +
   scale_colour_manual(values = af_colours("categorical")) + 
-  scale_x_date(date_breaks = "1 year",date_labels = "%Y") +
+  scale_x_date(breaks=seq(as.Date("2003-01-01"),Sys.Date()-lubridate::years(1),by = "1 year"),date_labels = "%Y") +
   labs(
     x = NULL,
     y = "GHG Emissions (MtCO2e)",

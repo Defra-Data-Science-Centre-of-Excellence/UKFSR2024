@@ -31,7 +31,7 @@ FSR_4_1_7_plot <- ggplot(FSR_4_1_7, aes(x=Year, y=value, colour=variable, group=
   geom_line() +
   scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
-  scale_x_date(date_breaks = "24 months", date_labels = "%Y") +  # Corrected `date_labels`
+  scale_x_date(breaks=seq(as.Date("2003-01-01"),Sys.Date()-lubridate::years(1),by = "2 year"),date_labels = "%Y") +  # Corrected `date_labels`
   labs(x = NULL,
        y = "Percent (%)") +
   theme_ukfsr(base_family = "GDS Transport Website") 

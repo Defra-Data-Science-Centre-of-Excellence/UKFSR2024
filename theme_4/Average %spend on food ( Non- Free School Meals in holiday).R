@@ -36,7 +36,7 @@ FSR_4_1_9_plot <- ggplot(FSR_4_1_9, aes(x = Region, y = PercentSpend))  +
   scale_y_continuous(breaks = seq(0, max(FSR_4_1_9$PercentSpend), by = 5)) +
   guides(fill = guide_legend(byrow = TRUE)) +
   #scale_fill_manual(values=af_colours(), guide = guide_legend(reverse = TRUE)) +
-  labs(x = "Region",
+  labs(x = NULL,
        y = "Average % spend on food ( Non- Free School Meals in the holidays)") +
   scale_x_discrete(labels = wrap_format(3)) + 
   theme_ukfsr(base_family = "GDS Transport Website") 
