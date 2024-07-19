@@ -59,3 +59,58 @@ FSR_3_1_1aplot
 
 save_graphic(FSR_3_1_1aplot, '3.1.1a', ' UK Fertiliser usage') + 
   save_csv(FSR_3_1_1a, '3.1.1a', ' UK Fertiliser usage')
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+  ### Support 2 : Pesticides Usage Graph
+  
+FSR_3_1_1b <- aws.s3::s3read_using(FUN = readr::read_csv,
+                                     bucket = "s3-ranch-054",
+                                     object = "theme_3/input_data/3_1_1_pesticide_usage.csv")
+
+
+# Transform the data to long format for ggplot2
+FSR_3_1_1b <- FSR_3_1_1b %>%
+  gather(key = "measure", value = "value", kg, area) %>%
+  mutate(year = as.integer(year))
+
+FSR_3_1_1b <- FSR_3_1_1b %>%
+  mutate(value = case_when(
+    measure == "area" ~ value / 1e5,  # Convert hectares to millions of hectares
+    measure == "kg" ~ value / 1e5,    # Convert kilograms to thousands of tonnes
+    TRUE ~ value
+  ))
+
+# Define breaks for the x-axis
+x_breaks <- seq(2002, max(data_long$year), by = 4)
+
+# Define a custom labeller to remove the measure name from the facets
+custom_labeller <- function(variable, value) {
+  if (variable == "measure") {
+    return(NULL)  # Return an empty string for measure
+  } else {
+    return(as.character(value))  # Return the value as is for other variables
+  }
+}
+
+# Plot the line chart
+FSR_3_1_1bplot <- ggplot(FSR_3_1_1b, aes(x = year, y = value, colour = measure, group = measure)) +
+  geom_line() +
+  facet_wrap(~chemgroup + measure, scales = "free_y", labeller = custom_labeller) +
+  scale_color_manual(values = af_colours(),
+                     labels = c("kg" = "Weight (Thousand tonnes)", "area" = "Area (Million ha)")) +
+  #scale_y_continuous(labels = label_number(big.mark = ",")) + 
+  scale_x_continuous(breaks = x_breaks, limits = c(2002, max(data_long$year))) + 
+  labs(x = NULL,
+       y = NULL,
+       colour = "Chemical Group") +
+  theme_ukfsr() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(5,50,5,5,unit = "pt"))
+
+
+# Print the plot
+print(FSR_3_1_1bplot)
+
+
+save_graphic(FSR_3_1_1bplot, '3.1.1b', ' UK Pesticides usage') + 
+  save_csv(FSR_3_1_1b, '3.1.1b', ' UK Pesticides usage')
