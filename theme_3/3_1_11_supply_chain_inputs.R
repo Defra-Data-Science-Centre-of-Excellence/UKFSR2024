@@ -54,11 +54,11 @@ save_graphic(co2_net_cht, "3.1.11a", "CO2 net trade")
 co2_countries <- co2 |> 
   clean_names() |> 
   separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
-  filter(flow == "Imports", year >= 2023) |> 
-  group_by(year, country) |> 
+  group_by(year, country, flow) |> 
   summarise(value = sum(net_mass_kg)/1000000) 
 
-co2_countries |> 
+co2_country_cht <- co2_countries |> 
+  filter(flow == "Imports", year >= 2023) |> 
   mutate(country = case_when(value <= 1 ~ "Other", .default = country)) |> 
   group_by(year, country) |> 
   summarise(value = sum(value)) |> 
@@ -69,6 +69,8 @@ co2_countries |>
   scale_fill_manual(values = rev(af_colours())) +
   theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
+save_csv(co2_countries, "3.1.11a", "CO2 trade by country")
+save_graphic(co2_country_cht, "3.1.11a", "CO2 imports by country")
 
 # Hypochlorite -----------------------------------------------------------------
 
@@ -114,12 +116,12 @@ save_graphic(hypo_net_cht, "3.1.11b", "hypochlorite net trade")
 hypo_countries <- hypo |> 
   clean_names() |> 
   separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
-  filter(flow == "Imports", year >= 2023) |> 
-  group_by(year, country) |> 
+  group_by(year, country, flow) |> 
   summarise(value = sum(net_mass_kg)/1000000) 
 
-hypo_countries |> 
-  mutate(country = case_when(value <=1 ~ "Other", .default = country)) |> 
+hypo_country_cht <- hypo_countries |> 
+  filter(flow == "Imports", year >= 2023) |> 
+  mutate(country = case_when(value <=0.4 ~ "Other", .default = country)) |> 
   group_by(year, country) |> 
   summarise(value = sum(value)) |> 
   ggplot() +
@@ -129,7 +131,8 @@ hypo_countries |>
   scale_fill_manual(values = rev(af_colours())) +
   theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
-
+save_csv(hypo_countries, "3.1.11b", "hypochlorite trade by country")
+save_graphic(hypo_country_cht, "3.1.11b", "hypochlorite imports by country")
 
 # PET --------------------------------------------------------------------------
 # https://www.trade-tariff.service.gov.uk/commodities/3915902000
@@ -175,12 +178,12 @@ save_graphic(pet_net_cht, "3.1.11c", "pet net trade")
 pet_countries <- pet |> 
   clean_names() |> 
   separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
-  filter(flow == "Imports", date_hierarchy_year >= 2023) |> 
-  group_by(date_hierarchy_year, country_hierarchy_country) |> 
+  group_by(date_hierarchy_year, country_hierarchy_country, flow) |> 
   summarise(value = sum(net_mass_kg)/1000000) 
 
-pet_countries |> 
-  mutate(country = case_when(value <= 15 ~ "Other", .default = country_hierarchy_country)) |> 
+pet_country_cht <- pet_countries |> 
+  filter(flow == "Imports", date_hierarchy_year >= 2023) |> 
+  mutate(country = case_when(value <= 11 ~ "Other", .default = country_hierarchy_country)) |> 
   group_by(date_hierarchy_year, country) |> 
   summarise(value = sum(value)) |> 
   ggplot() +
@@ -190,4 +193,115 @@ pet_countries |>
   scale_fill_manual(values = rev(af_colours())) +
   theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
+save_csv(pet_countries, "3.1.11c", "pet trade by country")
+save_graphic(pet_country_cht, "3.1.11c", "pet imports by country")
 
+# Cardboard --------------------------------------------------------------------
+# 
+# uktradeinfo table:
+# https://www.uktradeinfo.com/trade-data/ots-custom-table/?id=40b5158b-6c83-47fe-9b8d-dc5531ef7138
+# 
+# *Background info from DBT*
+# 
+# The UK paper and pulp industry contributed £4.0bn to the economy in 2021, with
+# a total of 1,470 businesses creating £12.7bn turnover. In 2023 exports were
+# worth around £2.8 billion with around 54,000 jobs across the UK.
+#
+# Regarding commodity codes, there’s a rather complex response below from the
+# Confederation of Paper Industries:
+#
+# It is difficult to give a simple answer to that question, for a number of
+# reasons it's actually more complicated.  We follow about 60 different grades
+# within Chapter 48.
+#
+# Is the enquiry specifically about finished packaging, or the papers that make
+# up that packaging (which are fundamental)?
+# 
+# •	Paper based packaging can be what is called cartonboard (or solid board) for
+# sandwich packs, food trays, breakfast cereal, confectionery etc. or it can be
+# corrugated for fruit & veg trays and pizza boxes, e-commerce/home delivery.
+# 
+# •	In both cases, it starts as reels of paper before conversion into final
+# packaging form.  It is common for cartonboard to be imported as reels of paper
+# and converted in UK; corrugated papers are more commonly made in UK (though
+# sometimes imported) and almost always converted in UK.
+# 
+# •	An intermediary stage (after paper but before finished box) for corrugated
+# involves flat ‘sheet’ with a three-layer structure
+# 
+# The key paper/intermediary grades are as follows: 
+# 4804 11 kraft paper; also 4804 42, 4804 49, 4804 51
+# 4805 11 semi chem fluting; also 4805 19, 4805 24, 4805 25
+# 4810 papers coated with china clay
+# 4808 10 corrugated sheet
+# 
+# All of which need to be followed for a full understanding of the paper
+# packaging market
+# 
+# But the simple answer is, for the finished/converted boxes:
+# 4819 10 corrugated boxes
+# 4819 20 folding cartons
+# 
+# Be wary of just following those two grades and assuming that it will lead to
+# an understanding of paper packaging for food.  Not least because while about
+# 65% of UK made corrugated is for food & drink customers, most of that is
+# secondary or transport packaging; the majority (>85%) of folding carton board
+# will be for food, much of it direct contact.  But these customs codes do not
+# differentiate between food & non-food applications.
+
+
+cardboard <- aws.s3::s3read_using(FUN = read_csv,
+                            bucket = ukfsr::s3_bucket(),
+                            object = "theme_3/input_data/3_1_11d_cardboard_trade_data.csv")
+
+cardboard_out <- cardboard |> 
+  clean_names() |> 
+  separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
+  group_by(date_hierarchy_year, flow) |> 
+  summarise(value = sum(net_mass_kg)/1000000)
+
+cardboard_cht <- cardboard_out |> 
+  ggplot() +
+  geom_col(aes(x = date_hierarchy_year, y = value, fill = flow), position = position_dodge()) +
+  scale_fill_manual(values = af_colours("duo")) +
+  labs(y = "kilotonnes", x = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website")  
+
+save_csv(cardboard_out, "3.1.11d", "cardboard trade")
+save_graphic(cardboard_cht, "3.1.11d", "cardboard trade")
+
+
+cardboard_net <- cardboard_out |> 
+  pivot_wider(names_from = flow) |> 
+  mutate(net = Imports - Exports)
+
+cardboard_net_cht <-   ggplot(cardboard_net) +
+  geom_col(aes(x = date_hierarchy_year, y = net), fill = af_colours()[1]) +
+  labs(y = "kilotonnes", x = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website")
+
+save_csv(cardboard_net, "3.1.11d", "cardboard net trade")
+save_graphic(cardboard_net_cht, "3.1.11d", "cardboard net trade")
+
+
+cardboard_countries <- cardboard |> 
+  clean_names() |> 
+  separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
+  group_by(date_hierarchy_year, country_hierarchy_country, flow) |> 
+  summarise(value = sum(net_mass_kg)/1000000) 
+
+cardboard_country_cht <- cardboard_countries |> 
+  filter(flow == "Imports", date_hierarchy_year >= 2023) |> 
+  mutate(country = case_when(value <= 1 ~ "Other", .default = country_hierarchy_country)) |> 
+  group_by(date_hierarchy_year, country) |> 
+  summarise(value = sum(value)) |> 
+  ggplot() +
+  geom_col(aes(x = fct_reorder(country, value), y = value ), fill = af_colours(n =1), position = position_dodge()) +
+  # scale_x_continuous(breaks = c(2023)) +
+  labs(y = "kilotonnes", x = NULL) +
+  scale_fill_manual(values = rev(af_colours())) +
+  theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right") +
+  coord_flip()
+
+save_csv(cardboard_countries, "3.1.11d", "cardboard trade by country")
+save_graphic(cardboard_country_cht, "3.1.11d", "cardboard imports by country")
