@@ -36,7 +36,7 @@ chart <- mfg_investment |>
        y = "£m") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(chart, "3.1.10", "food mfg investment")
+save_graphic(chart, "3.1.11", "food mfg investment")
 
 
 

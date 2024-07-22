@@ -33,18 +33,18 @@ library(janitor)
 contents <- get_bucket_df("s3-ranch-054")
 
 
-FSR_4_1_1a <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_4_1_1 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_4/input_data/4_1_4a_ household_food_security_status_FYE_2023 .csv")
 
 
 
-FSR_4_1_1a <- FSR_4_1_1a %>%
+FSR_4_1_1 <- FSR_4_1_1 %>%
   #gather(variable,value, `High`,`Marginal`,`Low`,`Very low`)
   gather(variable,value, `Very low`,`Low`,`Marginal`,`High`)
 
 
-check_sum<-FSR_4_1_1a %>% 
+check_sum<-FSR_4_1_1 %>% 
   #arrange(Year) %>% 
   select(-variable) %>%
   group_by(Year) %>%
@@ -52,14 +52,14 @@ check_sum<-FSR_4_1_1a %>%
 
 
 # Turn question column into a character vector
-FSR_4_1_1a$variable <- as.character(FSR_4_1_1a$variable)
+FSR_4_1_1$variable <- as.character(FSR_4_1_1$variable)
 # Then turn it back into a factor with the levels in the correct order
-FSR_4_1_1a$variable <- factor(FSR_4_1_1a$variable, levels=unique(FSR_4_1_1a$variable))
+FSR_4_1_1$variable <- factor(FSR_4_1_1$variable, levels=unique(FSR_4_1_1$variable))
 
 
 source(here::here("utils", "load-font.R"))
 
-FSR_4_1_1a_plot <- ggplot(FSR_4_1_1a, aes(x = Year, y = value, fill = variable, label = round(value,0))) +
+FSR_4_1_1_plot <- ggplot(FSR_4_1_1, aes(x = Year, y = value, fill = variable, label = round(value,0))) +
   geom_bar(stat = "identity", width = 0.5) +
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
@@ -74,15 +74,15 @@ FSR_4_1_1a_plot <- ggplot(FSR_4_1_1a, aes(x = Year, y = value, fill = variable, 
   theme(legend.position = "bottom", legend.title = element_blank())
 
 
-FSR_4_1_1a_plot
+FSR_4_1_1_plot
 
 
-save_graphic(FSR_4_1_1a_plot, '4.1.1a','Household food security status of all households in the UK') + 
-  save_csv(FSR_4_1_1a, '4.1.1a','Household food security status of all households in the UK')
+save_graphic(FSR_4_1_1_plot, '4.1.1','Household food security status of all households in the UK') + 
+  save_csv(FSR_4_1_1, '4.1.1','Household food security status of all households in the UK')
 -----------------------------------------------------------------------------------------------------------------------------------------------------
-# Map COde:
+# Support 1 - % of households food (Insecure) Map Code:
   
-FSR_4_1_1b <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_4_1_1a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
                                      object = "theme_4/input_data/4_1_4a_household_food_security_region_FYE_2023.csv")%>% clean_names()
 
@@ -96,7 +96,7 @@ nuts1 <- aws.s3::s3read_using(FUN = sf::st_read,
 
 #map with three bands
 mapdata <- nuts1 %>% 
-  left_join(FSR_4_1_1b) %>% 
+  left_join(FSR_4_1_1a) %>% 
   #mutate(insecure_bands = case_when(food_insecure < 8 ~ "5-7",
   #food_insecure >=8 & food_insecure < 10 ~ "8-9",
   #food_insecure >= 10 ~ "10-11"),
@@ -106,7 +106,7 @@ mapdata <- nuts1 %>%
   mutate(insecure_bands = factor(insecure_bands, levels = c("8-9","10-11","12-13"), ordered = TRUE))
 #legend ordering not working?
 
-ggplot(mapdata) +
+FSR_4_1_1a_plot <- ggplot(mapdata) +
   
   geom_sf(aes(fill = insecure_bands),  lwd = 0.1) +
   geom_sf_text(aes(label = stringr::str_wrap(region, 5)), size = 3.2, colour = "black") +
@@ -117,11 +117,14 @@ ggplot(mapdata) +
   theme_void() + 
   theme(legend.position = "inside", legend.position.inside = c(0.8,0.75))
 
+FSR_4_1_1a_plot
 
 #mapdata
 
-ggsave(here("data", "FSR_4_1_1b_pct_hh_insecure_map.svg"), width = 960, height = 640, units = "px", dpi = 72)
-ggsave(here("data", "FSR_4_1_1b_pct_hh_insecure_map.png"), width = 960, height = 640, units = "px", dpi = 72)
+save_graphic(FSR_4_1_1a_plot, '4.1.1a','% of households food (Insecure)')
+
+#ggsave(here("data", "FSR_4_1_1a_pct_hh_insecure_map.svg"), width = 960, height = 640, units = "px", dpi = 72)
+#ggsave(here("data", "FSR_4_1_1a_pct_hh_insecure_map.png"), width = 960, height = 640, units = "px", dpi = 72)
 
 
 

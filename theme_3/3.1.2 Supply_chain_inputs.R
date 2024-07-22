@@ -35,8 +35,8 @@ co2_cht <- co2_out |>
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_csv(co2_out, "3.1.11a", "CO2 trade")
-save_graphic(co2_cht, "3.1.11a", "CO2 trade")
+save_csv(co2_out, "3.1.2a", "CO2 trade")
+save_graphic(co2_cht, "3.1.2a", "CO2 trade")
 
 co2_net <- co2_out |> 
   pivot_wider(names_from = flow) |> 
@@ -47,8 +47,8 @@ co2_net_cht <-   ggplot(co2_net) +
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_csv(co2_net, "3.1.11a", "CO2 net trade")
-save_graphic(co2_net_cht, "3.1.11a", "CO2 net trade")
+save_csv(co2_net, "3.1.2a", "CO2 net trade")
+save_graphic(co2_net_cht, "3.1.2a", "CO2 net trade")
 
 
 co2_countries <- co2 |> 
@@ -69,8 +69,8 @@ co2_country_cht <- co2_countries |>
   scale_fill_manual(values = rev(af_colours())) +
   theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
-save_csv(co2_countries, "3.1.11a", "CO2 trade by country")
-save_graphic(co2_country_cht, "3.1.11a", "CO2 imports by country")
+save_csv(co2_countries, "3.1.2a", "CO2 trade by country")
+save_graphic(co2_country_cht, "3.1.2a", "CO2 imports by country")
 
 # Hypochlorite -----------------------------------------------------------------
 
@@ -97,8 +97,8 @@ hypo_cht <- hypo_out |>
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_csv(hypo_out, "3.1.11b", "hypochlorite trade")
-save_graphic(hypo_cht, "3.1.11b", "hypochlorite trade")
+save_csv(hypo_out, "3.1.2b", "hypochlorite trade")
+save_graphic(hypo_cht, "3.1.2b", "hypochlorite trade")
 
 
 hypo_net <- hypo_out |> 
@@ -110,8 +110,8 @@ hypo_net_cht <-   ggplot(hypo_net) +
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_csv(hypo_net, "3.1.11b", "hypochlorite net trade")
-save_graphic(hypo_net_cht, "3.1.11b", "hypochlorite net trade")
+save_csv(hypo_net, "3.1.2b", "hypochlorite net trade")
+save_graphic(hypo_net_cht, "3.1.2b", "hypochlorite net trade")
 
 hypo_countries <- hypo |> 
   clean_names() |> 
@@ -131,8 +131,8 @@ hypo_country_cht <- hypo_countries |>
   scale_fill_manual(values = rev(af_colours())) +
   theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
-save_csv(hypo_countries, "3.1.11b", "hypochlorite trade by country")
-save_graphic(hypo_country_cht, "3.1.11b", "hypochlorite imports by country")
+save_csv(hypo_countries, "3.1.2b", "hypochlorite trade by country")
+save_graphic(hypo_country_cht, "3.1.2b", "hypochlorite imports by country")
 
 # PET --------------------------------------------------------------------------
 # https://www.trade-tariff.service.gov.uk/commodities/3915902000
@@ -158,8 +158,8 @@ pet_cht <- pet_out |>
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")  
 
-save_csv(pet_out, "3.1.11c", "pet trade")
-save_graphic(pet_cht, "3.1.11c", "pet trade")
+save_csv(pet_out, "3.1.2c", "pet trade")
+save_graphic(pet_cht, "3.1.2c", "pet trade")
 
 
 pet_net <- pet_out |> 
@@ -171,8 +171,8 @@ pet_net_cht <-   ggplot(pet_net) +
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_csv(pet_net, "3.1.11c", "pet net trade")
-save_graphic(pet_net_cht, "3.1.11c", "pet net trade")
+save_csv(pet_net, "3.1.2c", "pet net trade")
+save_graphic(pet_net_cht, "3.1.2c", "pet net trade")
 
 
 pet_countries <- pet |> 
@@ -193,8 +193,8 @@ pet_country_cht <- pet_countries |>
   scale_fill_manual(values = rev(af_colours())) +
   theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right")
 
-save_csv(pet_countries, "3.1.11c", "pet trade by country")
-save_graphic(pet_country_cht, "3.1.11c", "pet imports by country")
+save_csv(pet_countries, "3.1.2c", "pet trade by country")
+save_graphic(pet_country_cht, "3.1.2c", "pet imports by country")
 
 # Cardboard --------------------------------------------------------------------
 # 
@@ -267,8 +267,8 @@ cardboard_cht <- cardboard_out |>
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")  
 
-save_csv(cardboard_out, "3.1.11d", "cardboard trade")
-save_graphic(cardboard_cht, "3.1.11d", "cardboard trade")
+save_csv(cardboard_out, "3.1.2d", "cardboard trade")
+save_graphic(cardboard_cht, "3.1.2d", "cardboard trade")
 
 
 cardboard_net <- cardboard_out |> 
@@ -280,8 +280,8 @@ cardboard_net_cht <-   ggplot(cardboard_net) +
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_csv(cardboard_net, "3.1.11d", "cardboard net trade")
-save_graphic(cardboard_net_cht, "3.1.11d", "cardboard net trade")
+save_csv(cardboard_net, "3.1.2d", "cardboard net trade")
+save_graphic(cardboard_net_cht, "3.1.2d", "cardboard net trade")
 
 
 cardboard_countries <- cardboard |> 
@@ -303,5 +303,5 @@ cardboard_country_cht <- cardboard_countries |>
   theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "right") +
   coord_flip()
 
-save_csv(cardboard_countries, "3.1.11d", "cardboard trade by country")
-save_graphic(cardboard_country_cht, "3.1.11d", "cardboard imports by country")
+save_csv(cardboard_countries, "3.1.2d", "cardboard trade by country")
+save_graphic(cardboard_country_cht, "3.1.2d", "cardboard imports by country")

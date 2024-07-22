@@ -33,7 +33,11 @@ barchart <- gms |>
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE)
 
-save_graphic(barchart, "3.1.9", "grocery market share latest")
+save_graphic(barchart, "3.1.10", "grocery market share latest")
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+  
+# Support 1 - Year comparison 2021-2023
 
 
 shops <- c("Symbols & Independent", "Ocado", "Other Outlets", "Iceland",
@@ -53,5 +57,5 @@ comp_barchart <- gms |> group_by(year, company) |>
   theme_ukfsr(horizontal = TRUE)
 
 
-save_graphic(comp_barchart, "3.1.9", "grocery market share comparison")
+save_graphic(comp_barchart, "3.1.10a", "grocery market share comparison")
  

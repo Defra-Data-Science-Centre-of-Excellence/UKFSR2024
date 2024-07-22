@@ -34,12 +34,12 @@ contents <- get_bucket_df("s3-ranch-054")
 
 source(here::here("utils", "load-font.R"))
 
-F4_1_2a <- aws.s3::s3read_using(FUN = readr::read_csv,
+F4_1_2 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                  bucket = "s3-ranch-054",
                                  object = "theme_4/input_data/4_1_2a_ave_spend_food_non_alcohol_drinks_low_income_all_households_middle_income.csv")
 
 
-FSR_4_1_2a <- F4_1_2a %>% 
+FSR_4_1_2 <- F4_1_2 %>% 
   gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`,`percentage spend on food and non-alcoholic drinks for middle 20% by income`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`)  %>%
   filter(Year>2011) %>% 
   mutate(key = case_when(key=="percentage spend on food and non-alcoholic drinks for all households"~"all households",
@@ -48,7 +48,7 @@ FSR_4_1_2a <- F4_1_2a %>%
 
 
 
-FSR_4_1_2aplot <- ggplot(FSR_4_1_2a) + 
+FSR_4_1_2plot <- ggplot(FSR_4_1_2) + 
   geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
   scale_y_continuous(limits = c(0,20), breaks=seq(0,20,2)) +
   scale_colour_manual(values = af_colours()) +
@@ -60,29 +60,29 @@ FSR_4_1_2aplot <- ggplot(FSR_4_1_2a) +
         legend.box = "vertical",
         legend.justification = c(0,0)) 
 
-F4_1_2aplot
+FSR_4_1_2plot
 
-save_graphic(FSR_4_1_2aplot, '4.1.2a','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK') + 
-  save_csv(FSR_4_1_2a, '4.1.2a','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK')
+save_graphic(FSR_4_1_2plot, '4.1.2','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK') + 
+  save_csv(FSR_4_1_2, '4.1.2','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK')
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------------
   
-# Support Graph with OECD Data: Still need to apply AFColor as it got 7 variables.
+# Support Graph 4: Share of final consumption expenditure of households G7 countries with OECD Data: Still need to apply AFColor as it got 7 variables.
 
 source(here::here("utils", "load-font.R"))
 
 contents <- get_bucket_df("s3-ranch-054")
 
-F4_1_2b <- aws.s3::s3read_using(FUN = readr::read_csv,
+F4_1_2d <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_4/input_data/Proportion of total household consumption expenditure spent on food and non-alcoholic beverages OECD Data.csv")
 
-F4_1_2b <- F4_1_2b %>%
+F4_1_2d <- F4_1_2d %>%
   gather(variable,value, `Canada`,`France`,`Germany`,`Italy`,`Japan`, `UK`, `US`) %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
 
-F4_1_2b_plot <- ggplot(F4_1_2b, aes(x=Year, y=value, colour=variable, group=variable)) +
+F4_1_2d_plot <- ggplot(F4_1_2d, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
   labs(x = NULL,
        y = "Proportion of household expenditure (%)") +
@@ -96,7 +96,7 @@ F4_1_2b_plot <- ggplot(F4_1_2b, aes(x=Year, y=value, colour=variable, group=vari
   #theme(legend.direction = "vertical", legend.position = "bottom", legend.box = "vertical") +
   scale_x_date(date_breaks = "2 years", date_labels = "%Y") 
 
-F4_1_2b_plot
+F4_1_2d_plot
 
-save_graphic(F4_1_2b_plot, '4.1.2b', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages') + 
-  save_csv(F4_1_2b, '4.1.2b', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages')
+save_graphic(F4_1_2d_plot, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages') + 
+  save_csv(F4_1_2d, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages')
