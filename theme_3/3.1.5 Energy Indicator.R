@@ -18,20 +18,20 @@ contents <- get_bucket_df("s3-ranch-054")
 
 # 3_1_2a_aggregate_energy_demand_agric_food_drink_manufact
 
-FSR_3_1_5a <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_3_1_5 <- aws.s3::s3read_using(FUN = readr::read_csv,
                           bucket = "s3-ranch-054",
                           object = "theme_3/input_data/3_1_2a_aggregate_energy_demand_agric_food_drink_manufact.csv")
 
 
 
-FSR_3_1_5a <- FSR_3_1_5a %>%
+FSR_3_1_5 <- FSR_3_1_5 %>%
   filter(Year >= 2002) %>%
   gather(key,value, `Agriculture`, `Food and drink manufacturing`)  %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
   
 
 
-FSR_3_1_5aplot <- ggplot(FSR_3_1_5a, aes(x=Year, y=value, colour=key, group=key)) +
+FSR_3_1_5plot <- ggplot(FSR_3_1_5, aes(x=Year, y=value, colour=key, group=key)) +
   geom_line() +
   #scale_y_continuous(limits = c(0,4500), breaks=seq(0,4500,500)) +
   guides(fill = guide_legend(byrow = TRUE)) +
@@ -42,30 +42,30 @@ FSR_3_1_5aplot <- ggplot(FSR_3_1_5a, aes(x=Year, y=value, colour=key, group=key)
   theme_ukfsr(base_family = "GDS Transport Website") 
 
 
-FSR_3_1_5aplot
+FSR_3_1_5plot
 
-save_graphic(F3_1a_plot, '3.1.5a', ' Aggregate energy demand for agriculture and food and drink manufacturing') + 
-  save_csv(FSR_3_1_5a, '3.1.5a', ' Aggregate energy demand for agriculture and food and drink manufacturing')
+save_graphic(FSR_3_1_5plot, '3.1.5', ' Aggregate energy demand for agriculture and food and drink manufacturing') + 
+  save_csv(FSR_3_1_5, '3.1.5', ' Aggregate energy demand for agriculture and food and drink manufacturing')
 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-# 3.1.2b - Energy demand by energy type in the food and drink manufacturing sector
+# Support 1 - Energy demand by energy type in the food and drink manufacturing sector
   
 
 
-FSR_3_1_5b <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_3_1_5a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                 bucket = "s3-ranch-054",
                                 object = "theme_3/input_data/3_1_2b_energy_demand_food_drink_manufact_energy_type.csv")
 
 
-FSR_3_1_5b <- FSR_3_1_5b %>%
+FSR_3_1_5a <- FSR_3_1_5a %>%
   filter(Year >= 2002) %>%
   gather(variable,value, `Coal`,`Petroleum products`,`Natural gas`,`Electricity`)  %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
 
-FSR_3_1_5bplot <- ggplot(FSR_3_1_5b, aes(x=Year, y=value, colour=variable, group=variable)) +
+FSR_3_1_5aplot <- ggplot(FSR_3_1_5a, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
   scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
@@ -75,32 +75,32 @@ FSR_3_1_5bplot <- ggplot(FSR_3_1_5b, aes(x=Year, y=value, colour=variable, group
   theme_ukfsr(base_family = "GDS Transport Website") 
 
 
-FSR_3_1_5bplot
+FSR_3_1_5aplot
 
-save_graphic(FSR_3_1_5bplot, '3.1.5b', '  Energy demand by energy type in the food and drink manufacturing sector') + 
-  save_csv(FSR_3_1_5b, '3.1.5b', ' Energy demand by energy type in the food and drink manufacturing sector')
+save_graphic(FSR_3_1_5aplot, '3.1.5a', '  Energy demand by energy type in the food and drink manufacturing sector') + 
+  save_csv(FSR_3_1_5a, '3.1.5a', ' Energy demand by energy type in the food and drink manufacturing sector')
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
   
-# 3.1.2c Energy demand by energy type in the agriculture sector
+  # Support 2 - Energy demand by energy type in the agriculture sector
   
 
 source(here::here("utils", "load-font.R"))
 
 contents <- get_bucket_df("s3-ranch-054")
 
-FSR_3_1_5c <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_3_1_5b <- aws.s3::s3read_using(FUN = readr::read_csv,
                                 bucket = "s3-ranch-054",
                                 object = "theme_3/input_data/3_1_2c_energy_demand_agric_energy_type.csv")
 
 
 
-FSR_3_1_5c <- FSR_3_1_5c %>%
+FSR_3_1_5b <- FSR_3_1_5b %>%
   filter(Year >= 2002) %>%
   gather(variable,value, `Coal`,`Petroleum products`,`Natural gas`,`Bioenergy & waste`,`Electricity`) %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
 
-FSR_3_1_5cplot <- ggplot(FSR_3_1_5c, aes(x=Year, y=value, colour=variable, group=variable)) +
+FSR_3_1_5bplot <- ggplot(FSR_3_1_5b, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
   scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
@@ -109,14 +109,15 @@ FSR_3_1_5cplot <- ggplot(FSR_3_1_5c, aes(x=Year, y=value, colour=variable, group
   scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "2 year"),labels=date_format("%Y"))+
   theme_ukfsr(base_family = "GDS Transport Website")
 
-FSR_3_1_5cplot
+FSR_3_1_5bplot
 
-save_graphic(FSR_3_1_5cplot, '3.1.5c', '  Energy demand by energy type in the agriculture sector') + 
-  save_csv(FSR_3_1_5c, '3.1.5c', ' Energy demand by energy type in the agriculture sector')
+save_graphic(FSR_3_1_5bplot, '3.1.5b', '  Energy demand by energy type in the agriculture sector') + 
+  save_csv(FSR_3_1_5b, '3.1.5b', ' Energy demand by energy type in the agriculture sector')
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
   
-  
+  # Support 3 - Energy demand by energy type in the food and drink manufacturing sector 
+ 
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -158,5 +159,5 @@ chart <- nd_fuel |>
 
 chart
 
-save_graphic(chart, '3.1.5d', '  Energy prices') + 
-  save_csv(nd_fuel, '3.1.5d', ' Energy prices')
+save_graphic(chart, '3.1.5c', '  Energy prices') + 
+  save_csv(nd_fuel, '3.1.5c', ' Energy prices')

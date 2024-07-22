@@ -10,17 +10,18 @@ source(here::here("utils", "load-font.R"))
 
 contents <- get_bucket_df("s3-ranch-054")
 
-FSR_4_1_10a <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_4_1_10 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_4/input_data/GHG emissions chart.csv")
 
-FSR_4_1_10a <- FSR_4_1_10a %>%
+FSR_4_1_10 <- FSR_4_1_10 %>%
   gather(variable,value, `UK Agriculture`,`Imports`,`Other inputs`,`Supply chain and consumer`,`Disposal`) %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
 
-FSR_4_1_10a_plot <-  ggplot(FSR_4_1_10a, aes(x = Year, y = value, fill = variable)) +
+
+FSR_4_1_10_plot <-  ggplot(FSR_4_1_10, aes(x = Year, y = value, fill = variable)) +
   geom_area(alpha = 0.8, size = 0.5, colour = "white") +
-  scale_colour_manual(values = af_colours("categorical")) + 
+  scale_fill_manual(values = af_colours("categorical")) + 
   scale_x_date(breaks=seq(as.Date("2003-01-01"),Sys.Date()-lubridate::years(1),by = "1 year"),date_labels = "%Y") +
   labs(
     x = NULL,
@@ -29,7 +30,7 @@ FSR_4_1_10a_plot <-  ggplot(FSR_4_1_10a, aes(x = Year, y = value, fill = variabl
   ) +
   theme_ukfsr(base_family = "GDS Transport Website") 
 
-FSR_4_1_10a_plot
+FSR_4_1_10_plot
 
-save_graphic(FSR_4_1_10a_plot, '4.1.10a', 'UK Food system GHG Emission') + 
-  save_csv(FSR_4_1_10a, '4.1.10a', ' UK Food system GHG Emission')
+save_graphic(FSR_4_1_10_plot, '4.1.10', 'UK Food system GHG Emission') + 
+  save_csv(FSR_4_1_10, '4.1.10', ' UK Food system GHG Emission')
