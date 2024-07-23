@@ -13,19 +13,30 @@ FSR_3_1_1 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
                                   object = "theme_3/input_data/2.2.1aFarmCosts.csv")
 
+variable_order <- c("Fertilisers", "Pesticides", "Seeds", 
+                    "Animal feed", "Veterinary expenses", "Energy", 
+                    "Agricultural services", "Total maintenance", "Other goods and services")
+
+
 FSR_3_1_1 <- FSR_3_1_1 %>%
-  gather(variable,value, 'Seeds','Energy','Fertilisers','Pesticides','Animal feed', 'Agricultural services') %>%
-  mutate("Year" = as.Date(paste0(Year, "-01-01")))
+  gather(variable,value, 'Seeds','Energy','Fertilisers','Pesticides','Animal feed',
+         'Agricultural services','Veterinary expenses','Total maintenance','Other goods and services') %>%
+  mutate("Year" = as.Date(paste0(Year, "-01-01")),
+         variable = factor(variable, levels = variable_order))
 
 
-FSR_3_1_1plot <- ggplot(FSR_3_1_1, aes(x=Year, y=value, colour=variable, group=variable)) +
+FSR_3_1_1plot <- ggplot(FSR_3_1_1, aes(x=Year, y=value, group=variable, color = 'variable')) +
   geom_line() +
-  scale_colour_manual(values = af_colours("categorical")) + 
-  guides(fill = guide_legend(byrow = TRUE)) +
+  facet_wrap( ~ variable) +
+  scale_colour_manual(values = af_colours(),
+                      labels = c("variable" = NULL)) + 
+  #guides(fill = guide_legend(byrow = TRUE)) +
   labs(x = NULL,
        y = "£ Million") +
-  scale_x_date(breaks=seq(as.Date("2003-01-01"),Sys.Date()-lubridate::years(1),by = "2 year"),date_labels = "%Y") +
-  theme_ukfsr(base_family = "GDS Transport Website") 
+  scale_x_date(breaks=seq(as.Date("2003-01-01"),Sys.Date()-lubridate::years(1),by = "4 year"),date_labels = "%Y") +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(plot.margin = margin(5,50,5,5,unit = "pt"),
+        legend.position = "none")
 
 FSR_3_1_1plot
 
@@ -81,7 +92,7 @@ FSR_3_1_1b <- FSR_3_1_1b %>%
   ))
 
 # Define breaks for the x-axis
-x_breaks <- seq(2002, max(data_long$year), by = 4)
+x_breaks <- seq(2002, max(FSR_3_1_1b$year), by = 4)
 
 # Define a custom labeller to remove the measure name from the facets
 custom_labeller <- function(variable, value) {
@@ -95,11 +106,11 @@ custom_labeller <- function(variable, value) {
 # Plot the line chart
 FSR_3_1_1bplot <- ggplot(FSR_3_1_1b, aes(x = year, y = value, colour = measure, group = measure)) +
   geom_line() +
-  facet_wrap(~chemgroup + measure, scales = "free_y", labeller = custom_labeller) +
+  facet_wrap(~chemgroup + measure, labeller = custom_labeller) +
   scale_color_manual(values = af_colours(),
                      labels = c("kg" = "Weight (Thousand tonnes)", "area" = "Area (Million ha)")) +
   #scale_y_continuous(labels = label_number(big.mark = ",")) + 
-  scale_x_continuous(breaks = x_breaks, limits = c(2002, max(data_long$year))) + 
+  scale_x_continuous(breaks = x_breaks, limits = c(2002, max(FSR_3_1_1b$year))) + 
   labs(x = NULL,
        y = NULL,
        colour = "Chemical Group") +
