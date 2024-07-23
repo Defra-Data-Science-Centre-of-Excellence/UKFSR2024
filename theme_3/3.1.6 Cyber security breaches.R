@@ -23,7 +23,7 @@ cht <- ggplot(cyber, aes(x = year, y = value, colour = sector)) +
   scale_colour_manual(values = af_colours("duo")) +
   scale_y_continuous(limits = c(0,50), labels = scales::label_percent(scale = 1)) +
   labs(x= NULL, y = NULL) +
-  theme_ukfsr()
+  theme_ukfsr(base_family = "GDS Transport Website")
 
 # Chart notes
 # Bases: 1000+ UK businesses each year; 300+ charities per year 
