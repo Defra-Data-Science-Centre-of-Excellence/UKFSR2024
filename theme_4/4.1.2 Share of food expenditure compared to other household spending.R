@@ -78,23 +78,30 @@ F4_1_2d <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_4/input_data/Proportion of total household consumption expenditure spent on food and non-alcoholic beverages OECD Data.csv")
 
+variable_order <- c("US", "Canada", "Japan", 
+                    "France", "Germany", "Italy", 
+                    "UK")
+
 F4_1_2d <- F4_1_2d %>%
   gather(variable,value, `Canada`,`France`,`Germany`,`Italy`,`Japan`, `UK`, `US`) %>%
-  mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
+  mutate("Year" = as.Date(paste0(Year, "-01-01")),
+         variable = factor(variable, levels = variable_order)) 
+
+af_colours <- function() {c("US" = "#12436D", "Canada" = "#12436D", "Japan" = "#12436D",
+                           "France" = "#12436D", "Germany" = "#12436D", "Italy" = "#12436D",
+                           "UK" = "#F46A25" )}
 
 F4_1_2d_plot <- ggplot(F4_1_2d, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
+  facet_wrap(~ variable) +
+  scale_colour_manual(values = af_colours())+
   labs(x = NULL,
        y = "Proportion of household expenditure (%)") +
   theme_ukfsr(base_family = "GDS Transport Website") +
-  
   guides(fill = guide_legend(byrow = TRUE)) +
-  theme(
-    legend.position = "bottom", 
-    legend.justification = c(0,0)) +
-  guides(colour=guide_legend(override.aes=list(size=1))) +
+  theme(legend.position = "none") +
   #theme(legend.direction = "vertical", legend.position = "bottom", legend.box = "vertical") +
-  scale_x_date(date_breaks = "2 years", date_labels = "%Y") 
+  scale_x_date(date_breaks = "4 years", date_labels = "%Y") 
 
 F4_1_2d_plot
 
