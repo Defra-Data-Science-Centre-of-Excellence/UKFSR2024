@@ -116,7 +116,7 @@ xmap <- ggplot(ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN"))) +
   geom_sf(data = xsimple, aes(fill = camscdsq95), lwd = 0) +
   scale_fill_manual(values = af_colours(type = "categorical", n = 4)) +
   theme_void() +
-  theme(text = element_text(family = "GDS Transport Website", size = 18),
+  theme(text = element_text(family = "GDS Transport Website", size = 26),
         legend.title = element_blank(),
         legend.position = "inside", 
         legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
