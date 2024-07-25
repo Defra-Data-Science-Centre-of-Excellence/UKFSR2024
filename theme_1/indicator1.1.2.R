@@ -40,32 +40,21 @@ food_loss_percentage_chart <- food_loss_percentage |>
 
 save_graphic(food_loss_percentage_chart, "1.1.2", "global food loss")
 
-household_waste_index <- aws.s3::s3read_using(FUN = read_tsv,
+household_waste_index <- aws.s3::s3read_using(FUN = read_csv,
                                              bucket = ukfsr::s3_bucket(),
-                                             object = "theme_1/t1_1_2/input/csv/Household Estimates.txt")
-
-household_waste_index_world<-household_waste_index%>%
-  mutate(capita=`CONFIDENCE IN ESTIMATE`/`HOUSEHOLD ESTIMATE (TONNES/YEAR)`)%>%
-  summarise(capita=sum(capita,na.rm = TRUE),household_waste=sum(`CONFIDENCE IN ESTIMATE`,na.rm = TRUE))%>%
-  mutate(household_waste_per_capita=household_waste/capita)%>%
-  mutate(REGION="World")%>%
-  mutate(index="World")
-
-household_waste_index_region<-household_waste_index%>%
-  mutate(capita=`CONFIDENCE IN ESTIMATE`/`HOUSEHOLD ESTIMATE (TONNES/YEAR)`)%>%
-  group_by(REGION)%>%
-  summarise(capita=sum(capita,na.rm = TRUE),household_waste=sum(`CONFIDENCE IN ESTIMATE`,na.rm = TRUE))%>%
-  mutate(household_waste_per_capita=household_waste/capita)%>%
-  mutate(index="Other")#%>%
-  #mutate(REGION=if_else(REGION=="Latin America and the Caribbean","Latin America and the Caribbean",REGION))%>%
-  #mutate(REGION=if_else(REGION=="Australia and New Zealand","Australia and New Zealand",REGION))
+                                             object = "theme_1/t1_1_2/input/csv/Household Estimate.csv")%>%
+  mutate(index=if_else(Region=="World","1","0"))%>%
+  mutate(Average=as.numeric(Average))%>%
+  filter(!is.na(Average))
 
 
 
-household_waste_index_chart<-rbind(household_waste_index_world,household_waste_index_region)|>
+
+
+household_waste_index_chart<-household_waste_index%>%#rbind(household_waste_index_world,household_waste_index_region)|>
   ggplot() +
-  geom_col(aes(fct_reorder(REGION,household_waste_per_capita), household_waste_per_capita,fill=index), lwd = 1)+
-  geom_text(aes(fct_reorder(REGION,household_waste_per_capita), household_waste_per_capita,color=index, label=round(household_waste_per_capita,1),hjust=1.3),size=5)+
+  geom_col(aes(fct_reorder(Region,Average), Average,fill=index), lwd = 1)+
+  geom_text(aes(fct_reorder(Region,Average), Average,color=index, label=round(Average,1),hjust=1.3),size=5)+
   coord_flip()+
   theme_ukfsr()+
   #scale_y_continuous(limits = c(2000,3000)) +
@@ -76,7 +65,7 @@ household_waste_index_chart<-rbind(household_waste_index_world,household_waste_i
                            "inches"),
         legend.position="none")+
   labs(x = NULL,
-       y = "Food Loss Percentage(%)")
+       y = "Household Food Waste(kg/capita/year)")
 
 
 save_graphic(household_waste_index_chart, "1.1.2", "household waste index")
