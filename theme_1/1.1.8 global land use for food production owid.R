@@ -47,3 +47,43 @@ cht <- glu |>
 
 save_graphic(cht, "1.1.8", "global land use for food production")
 
+#  experiments------------------------------------------------------------------
+
+glu2 <- glu |> 
+  mutate(region = factor(region, levels = rev(c("Agricultural land", "Habitable land", "Land surface", "Earths surface")),
+                         labels = rev(c("Agricultural\n land", "Habitable\n land", "Land\n surface", "Earth's\n surface"))),
+         category = factor(category, levels = c("Land", "Barren land", "Glaciers","Habitable Land",  
+                                                "Waterbodies", "Urban", "Shrub", "Forests", "Agriculture",   
+                                                "Non-food crops", "Crops for food", "Livestock"),
+                           labels = c("Land", "Barren land", "Glaciers","Habitable\nLand",  
+                                      "Waterbodies", "Urban", "Shrub", "Forests", "Agriculture",   
+                                      "Non-food crops", "Food crops", "Livestock")),
+         label_outside = case_when(category %in% c("Barren land", "Glaciers", "Shrub", "Urban", "Waterbodies", "Forests", "Non-food crops") ~ "Y", .default = "N")) 
+
+
+  ggplot() +
+  geom_col(data = glu2, aes(x = region, y = area, fill = category), colour = "white") +
+  geom_text(data = glu2 |> filter(label_outside == "N"), aes(x = region, y = area, label = paste0(pct, "% ", category)),
+            position = position_stack(vjust = 0.5),
+            family = "GDS Transport Website", size = 11, size.unit = "pt", colour = "#BFBFBF" ) +
+    scale_fill_manual(values = c(Land = "#12436D",
+                                 `Barren land` = "#BFBFBF",
+                                 Glaciers = "#BFBFBF",
+                                 `Habitable\nLand` = "#12436D",  
+                                 Waterbodies =  "#BFBFBF",
+                                 Urban =  "#BFBFBF",
+                                 Shrub =  "#BFBFBF",
+                                 Forests =  "#BFBFBF",
+                                 Agriculture = "#12436D",   
+                                 `Non-food crops` =  "#BFBFBF",
+                                 `Food crops` = "#12436D", 
+                                 Livestock = "#12436D")) +
+    
+  # coord_flip() + 
+  labs(x = NULL, y = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website") + 
+  theme(legend.position = "none",
+        axis.text.y = element_blank(),
+        axis.line.y = element_blank(), 
+        panel.grid.major.y = element_blank())
+
