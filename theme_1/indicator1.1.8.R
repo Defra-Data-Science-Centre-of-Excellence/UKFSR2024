@@ -57,5 +57,5 @@ agricultural_land_use_temporary_chart <- agricultural_land_use_temporary|>
   labs(x = NULL,
        y = "million ha")
 
-save_graphic(agricultural_land_use_temporary_chart, "1.1.8", "agricultral_land_use_permanent")
-save_csv(agricultural_land_use_temporary, "1.1.8", "agricultral_land_use_permanent")
+save_graphic(agricultural_land_use_temporary_chart, "1.1.8", "agricultural_land_use_temporary")
+save_csv(agricultural_land_use_temporary, "1.1.8", "agricultural_land_use_temporary")

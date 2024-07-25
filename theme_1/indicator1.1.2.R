@@ -39,6 +39,7 @@ food_loss_percentage_chart <- food_loss_percentage |>
 
 
 save_graphic(food_loss_percentage_chart, "1.1.2", "global food loss")
+save_csv(food_loss_percentage, "1.1.2", "global food loss")
 
 household_waste_index <- aws.s3::s3read_using(FUN = read_csv,
                                              bucket = ukfsr::s3_bucket(),
@@ -69,3 +70,4 @@ household_waste_index_chart<-household_waste_index%>%#rbind(household_waste_inde
 
 
 save_graphic(household_waste_index_chart, "1.1.2", "household waste index")
+save_csv(household_waste_index, "1.1.2", "household waste index")
