@@ -18,14 +18,14 @@ kcalppns <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
                             object = "theme_1/t1_1_1/input/csv/kcal_capita_day_nd.csv")
 
-kcalpp<-rbind(kcalpp_temp,kcalppns)
+kcalpp<-rbind(kcalpp_temp,kcalppns)%>%
+  select(Year,Value,Element)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  rename(element=Element)%>%
+  filter(year>2010)
 
 kcalpp_chart <- kcalpp |> 
-  rename(year=Year) |>
-  rename(value=Value) |> 
-  rename(element=Element) |> 
-  select(year,value,element)  |>
-  filter(year>2010)|>
   ggplot() +
   geom_line(aes(x = year, y = value, colour = element), lwd = 1) +
   #geom_vline(xintercept =2014,linetype="dashed")+
@@ -80,15 +80,15 @@ for(i in c(14, 16,22)) {
 
 production_index <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
-                            object = "theme_1/t1_1_1/input/csv/Gross_per_capita_Production_Index.csv")
-
-production_index_chart <- production_index |> 
+                            object = "theme_1/t1_1_1/input/csv/Gross_per_capita_Production_Index.csv")%>%
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(element=Element) |>
   mutate(element="Gross per capita production") |>
   select(year,value,element)  |>
-  filter(year>2001)|>
+  filter(year>2001)
+
+production_index_chart <- production_index |>
   ggplot() +
   geom_line(aes(x = year, y = value, colour = element), lwd = 1) +
   scale_y_continuous(limits = c(60,110)) +
@@ -183,10 +183,10 @@ for(i in c(14, 16, 22)) {
 
 use_of_agricultural_commodities_by_type_and_region <- aws.s3::s3read_using(FUN = read_csv,
                                           bucket = ukfsr::s3_bucket(),
-                                          object = "theme_1/t1_1_1/input/csv/use_of_agricultural_commodities_by_type_and_region.csv")
+                                          object = "theme_1/t1_1_1/input/csv/use_of_agricultural_commodities_by_type_and_region.csv")%>%
+  pivot_longer(cols=c('food','feed','biofuel','other'),names_to = "item",values_to = "value")
 
 use_of_agricultural_commodities_by_type_and_region_chart <- use_of_agricultural_commodities_by_type_and_region |>
-  pivot_longer(cols=c('food','feed','biofuel','other'),names_to = "item",values_to = "value") |>
   ggplot(aes(fill=item, y=value, x=commodity)) +
   geom_bar(position = "fill", stat="identity")+
   coord_flip()+
@@ -236,13 +236,17 @@ global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
 
 global_biofuel_production<-global_biofuel_production_in%>%
   filter(Country=="WORLD")%>%
-  select(Time,Commodity,Variable,Value)%>%
-  pivot_wider(names_from = Variable,values_from = Value)%>%
+  rename(time=Time)%>%
+  rename(commodity=Commodity)%>%
+  rename(variable=Variable)%>%
+  rename(value=Value)%>%
+  select(time,commodity,variable,value)%>%
+  pivot_wider(names_from = variable,values_from = value)%>%
   mutate(value=(`Biofuel use`/Production)*100)%>%
-  filter(Time>1999 & Time<2024)
+  filter(time>1999 & time<2024)
 
 global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
-  geom_line(aes(x=Time ,y=value,color=Commodity))+
+  geom_line(aes(x=time ,y=value,color=commodity))+
   scale_color_manual(values = af_colours("categorical")) +
   scale_y_continuous(limits=c(0,30))+
   scale_x_continuous(breaks = seq(2000,2023,2))+
