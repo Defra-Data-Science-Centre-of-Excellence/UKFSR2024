@@ -12,29 +12,30 @@ contents <- get_bucket_df("s3-ranch-054")
 
 FSR_3_1_3a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
-                                   object = "theme_3/input_data/proportion of spray irrigation volume licensed.csv")
-
+                                   object = "theme_3/input_data/Water irrigation storage.csv")
 
 
 FSR_3_1_3a <- FSR_3_1_3a %>%
-  pivot_longer(cols = starts_with("Indicative proportion"),
-               names_to = "Year",
-               values_to = "Proportion") %>%
-  mutate(Year = ifelse(str_detect(Year, "2022"), "2022", "2023"))
+  pivot_longer(cols = c( "spray irrigation - storage ('000m3)", "spray irrigation ('000m3)"), names_to = "Type", values_to = "Volume")
+
+FSR_3_1_3a <- FSR_3_1_3a %>%
+  arrange(Region_Code) %>%
+  mutate(Region = factor(Region, levels = unique(Region)))
 
 # Plot the bar chart
-FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = `Former EA Region`, y = Proportion, fill = Year)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  scale_fill_manual(values = afcolours::af_colours("duo"), labels = c("2022", "2023")) +
-  labs(y = "Proportion licensed for storage (%)",
+FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = Region, y = Volume / 1e3, fill = Type)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = afcolours::af_colours("duo"), labels = c("spray irrigation - storage", "spray irrigation")) +
+  labs(y = "Volume (millions m3)",
        x = NULL,
-       fill = "Year") +
+       fill = "Type") +
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
   theme_ukfsr() 
 
 FSR_3_1_3a_plot
 
-save_graphic(FSR_3_1_3a_plot, '3.1.3a', 'Indicative proportion of spray irrigation licensed for storage') + 
-  save_csv(FSR_3_1_3a, '3.1.3a', 'Indicative proportion of spray irrigation licensed for storage')
+save_graphic(FSR_3_1_3a_plot, '3.1.3a', 'spray irrigation and storage') + 
+  save_csv(FSR_3_1_3a, '3.1.3a', 'spray irrigation and storage')
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
