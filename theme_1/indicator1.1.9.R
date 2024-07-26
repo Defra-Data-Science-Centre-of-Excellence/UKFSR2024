@@ -92,22 +92,27 @@ scr_top_exporters_wheat<-stocks%>%
 
 scr_out<-rbind(scr_world,scr_world_minus_china,scr_top_exporters_maize,scr_top_exporters_soyabean,scr_top_exporters_sunflowerseed,scr_top_exporters_rice,scr_top_exporters_wheat)%>%
   mutate(plot_year=as.numeric(substr(year,1,4)))%>%
-  mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
+  mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))%>%
+  rename(commodity="Commodity")%>%
+  rename(scr="SCR")%>%
+  rename(area="Area")%>%
+  rename(stocks="value.x")%>%
+  rename(comsumption="value.y")
+  
+#scr_maize<-scr_out%>%
+#  filter(Commodity=="Corn")
 
-scr_maize<-scr_out%>%
-  filter(Commodity=="Corn")
+#scr_soyabean<-scr_out%>%
+#  filter(Commodity=="Oilseed, Soybean")
 
-scr_soyabean<-scr_out%>%
-  filter(Commodity=="Oilseed, Soybean")
+#scr_sunflowerseed<-scr_out%>%
+#  filter(Commodity=="Oilseed, Sunflowerseed")
 
-scr_sunflowerseed<-scr_out%>%
-  filter(Commodity=="Oilseed, Sunflowerseed")
+#scr_rice<-scr_out%>%
+#  filter(Commodity=="Rice, Milled")
 
-scr_rice<-scr_out%>%
-  filter(Commodity=="Rice, Milled")
-
-scr_wheat<-scr_out%>%
-  filter(Commodity=="Wheat")
+#scr_wheat<-scr_out%>%
+#  filter(Commodity=="Wheat")
 
 year_labels_temp<-tibble(year1=seq(4,24,4),year2=seq(5,25,4))%>%
   mutate(labels=paste0(str_pad(year1,width=2,pad="0"),"/",str_pad(year2,width=2,pad="0")))
@@ -117,8 +122,8 @@ year_labels<-year_labels_temp$labels
 
 scr_chart <- scr_out |> 
   ggplot() +
-  facet_wrap(~Commodity)+
-  geom_line(aes(x=plot_year,y=SCR,color=Area))+
+  facet_wrap(~commodity)+
+  geom_line(aes(x=plot_year,y=scr,color=area))+
   scale_color_manual(values = af_colours("categorical"))+
   scale_x_continuous(breaks=seq(2004,2024,4),labels=year_labels)+
   scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
@@ -127,72 +132,75 @@ scr_chart <- scr_out |>
   labs(x = NULL,
        y = "percent")
 
+scr_out<-scr_out%>%select(-plot_year)
+
 save_graphic(scr_chart, "1.1.9", "stocks to consumption")
-
-scr_maize_chart <- scr_maize |> 
-  ggplot() +
-  geom_line(aes(x=plot_year,y=SCR,color=Area))+
-  theme_ukfsr()+
-  scale_color_manual(values = af_colours("categorical"))+
-  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
-  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
-  theme_ukfsr(base_family = "GDS Transport Website")+
-  labs(x = NULL,
-       y = "percent")
-
-save_graphic(scr_maize_chart, "1.1.9", "stocks to consumption maize")
-
-scr_soyabean_chart <- scr_soyabean |> 
-  ggplot() +
-  geom_line(aes(x=plot_year,y=SCR,color=Area))+
-  theme_ukfsr()+
-  scale_color_manual(values = af_colours("categorical"))+
-  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
-  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "percent")
-
-save_graphic(scr_soyabean_chart, "1.1.9", "stocks to consumption soyabean")
-
-scr_sunflowerseed_chart <- scr_sunflowerseed |> 
-  ggplot() +
-  geom_line(aes(x=plot_year,y=SCR,color=Area))+
-  theme_ukfsr()+
-  scale_color_manual(values = af_colours("categorical"))+
-  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
-  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "percent")
-
-save_graphic(scr_sunflowerseed_chart, "1.1.9", "stocks to consumption sunflowerseed")
-
-scr_rice_chart <- scr_rice |> 
-  ggplot() +
-  geom_line(aes(x=plot_year,y=SCR,color=Area))+
-  theme_ukfsr()+
-  scale_color_manual(values = af_colours("categorical"))+
-  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
-  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "percent")
-
-save_graphic(scr_rice_chart, "1.1.9", "stocks to consumption rice")
-
-scr_wheat_chart <- scr_wheat |> 
-  ggplot() +
-  geom_line(aes(x=plot_year,y=SCR,color=Area))+
-  theme_ukfsr()+
-  scale_color_manual(values = af_colours("categorical"))+
-  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
-  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "percent")
-
-save_graphic(scr_wheat_chart, "1.1.9", "stocks to consumption wheat")
-
-
 save_csv(scr_out, "1.1.9", "stock to consumption ratio")
+
+#scr_maize_chart <- scr_maize |> 
+#  ggplot() +
+#  geom_line(aes(x=plot_year,y=SCR,color=Area))+
+#  theme_ukfsr()+
+#  scale_color_manual(values = af_colours("categorical"))+
+#  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
+#  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
+#  theme_ukfsr(base_family = "GDS Transport Website")+
+#  labs(x = NULL,
+#       y = "percent")
+
+#save_graphic(scr_maize_chart, "1.1.9", "stocks to consumption maize")
+
+#scr_soyabean_chart <- scr_soyabean |> 
+#  ggplot() +
+#  geom_line(aes(x=plot_year,y=SCR,color=Area))+
+#  theme_ukfsr()+
+#  scale_color_manual(values = af_colours("categorical"))+
+#  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
+#  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
+#  theme_ukfsr(base_family = "GDS Transport Website") +
+#  labs(x = NULL,
+#       y = "percent")
+
+#save_graphic(scr_soyabean_chart, "1.1.9", "stocks to consumption soyabean")
+
+#scr_sunflowerseed_chart <- scr_sunflowerseed |> 
+#  ggplot() +
+#  geom_line(aes(x=plot_year,y=SCR,color=Area))+
+#  theme_ukfsr()+
+#  scale_color_manual(values = af_colours("categorical"))+
+#  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
+#  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
+#  theme_ukfsr(base_family = "GDS Transport Website") +
+#  labs(x = NULL,
+#       y = "percent")
+
+#save_graphic(scr_sunflowerseed_chart, "1.1.9", "stocks to consumption sunflowerseed")
+
+#scr_rice_chart <- scr_rice |> 
+#  ggplot() +
+#  geom_line(aes(x=plot_year,y=SCR,color=Area))+
+#  theme_ukfsr()+
+#  scale_color_manual(values = af_colours("categorical"))+
+#  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
+#  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
+#  theme_ukfsr(base_family = "GDS Transport Website") +
+#  labs(x = NULL,
+#       y = "percent")
+
+#save_graphic(scr_rice_chart, "1.1.9", "stocks to consumption rice")
+
+#scr_wheat_chart <- scr_wheat |> 
+#  ggplot() +
+#  geom_line(aes(x=plot_year,y=SCR,color=Area))+
+#  theme_ukfsr()+
+#  scale_color_manual(values = af_colours("categorical"))+
+#  scale_x_continuous(breaks=seq(2004,2024,2),labels=year_labels)+
+#  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
+#  theme_ukfsr(base_family = "GDS Transport Website") +
+#  labs(x = NULL,
+#       y = "percent")
+
+#save_graphic(scr_wheat_chart, "1.1.9", "stocks to consumption wheat")
+
+
+

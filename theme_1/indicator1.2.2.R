@@ -22,25 +22,50 @@ aquastat_regions<-aquastat%>%
 
 
 agricultural_water_withdrawal<-aquastat_regions%>%
-  filter(Variable=="Agricultural water withdrawal")
+  filter(Variable=="Agricultural water withdrawal")%>%
+  rename(country=Country)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,country,value)
+
 
 percentage_cultivated_area_irrigation<-aquastat_regions%>%
-  filter(Variable=="% of the cultivated area equipped for irrigation")
+  filter(Variable=="% of the cultivated area equipped for irrigation")%>%
+  rename(country=Country)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,country,value)
+
 
 percentage_cultivated_area_irrigation<-aquastat_regions%>%
-  filter(Variable=="% of the cultivated area equipped for irrigation")
+  filter(Variable=="% of the cultivated area equipped for irrigation")%>%
+  rename(country=Country)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,country,value)
+
 
 agricultural_water_withdrawal_percentage<-aquastat_regions%>%
-  filter(Variable=="Agricultural water withdrawal as % of total renewable water resources")
+  filter(Variable=="Agricultural water withdrawal as % of total renewable water resources")%>%
+  rename(country=Country)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,country,value)
+
 
 water_stress<-aquastat_regions%>%
-  filter(Variable=="SDG 6.4.2. Water Stress")
+  filter(Variable=="SDG 6.4.2. Water Stress")%>%
+  rename(country=Country)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,country,value)
+  
 
 
 ########
 
 agricultural_water_withdrawal_chart<-ggplot()+
-  geom_line(data=agricultural_water_withdrawal,aes(x = Year, y = Value, colour = Country)) +
+  geom_line(data=agricultural_water_withdrawal,aes(x = year, y = value, colour = country)) +
   #scale_y_continuous(limits = c(0,50)) +
   #scale_x_continuous(limits = c(2014,2023),breaks=seq(2015,2023,2),labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
   #scale_colour_manual(values = af_colours("categorical",n=3)) +
@@ -53,7 +78,7 @@ save_csv(agricultural_water_withdrawal, "1.2.2", "agricultural_water_withdrawal"
 
 
 percentage_cultivated_area_irrigation_chart<-ggplot()+
-  geom_line(data=percentage_cultivated_area_irrigation,aes(x = Year, y = Value, colour = Country)) +
+  geom_line(data=percentage_cultivated_area_irrigation,aes(x = year, y = value, colour = country)) +
   #scale_y_continuous(limits = c(0,50)) +
   #scale_x_continuous(limits = c(2014,2023),breaks=seq(2015,2023,2),labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
   #scale_colour_manual(values = af_colours("categorical",n=3)) +
@@ -65,7 +90,7 @@ save_graphic(percentage_cultivated_area_irrigation_chart, "1.2.2", "percentage c
 save_csv(percentage_cultivated_area_irrigation, "1.2.2", "percentage cultivated area irrigation")
 
 agricultural_water_withdrawal_percentage_chart<-ggplot()+
-  geom_line(data=agricultural_water_withdrawal_percentage,aes(x = Year, y = Value, colour = Country)) +
+  geom_line(data=agricultural_water_withdrawal_percentage,aes(x = year, y = value, colour = country)) +
   #scale_y_continuous(limits = c(0,50)) +
   #scale_x_continuous(limits = c(2014,2023),breaks=seq(2015,2023,2),labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
   #scale_colour_manual(values = af_colours("categorical",n=3)) +
@@ -77,7 +102,7 @@ save_graphic(agricultural_water_withdrawal_percentage_chart, "1.2.2", "agricultu
 save_csv(agricultural_water_withdrawal_percentage, "1.2.2", "agricultural water withdrawal percentage")
 
 water_stress_chart<-ggplot()+
-  geom_line(data=water_stress,aes(x = Year, y = Value, colour = Country)) +
+  geom_line(data=water_stress,aes(x = year, y = value, colour = country)) +
   #scale_y_continuous(limits = c(0,50)) +
   #scale_x_continuous(limits = c(2014,2023),breaks=seq(2015,2023,2),labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
   #scale_colour_manual(values = af_colours("categorical",n=3)) +

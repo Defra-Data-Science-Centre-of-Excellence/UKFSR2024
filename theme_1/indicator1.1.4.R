@@ -91,30 +91,32 @@ cereal_production_yield <- aws.s3::s3read_using(FUN = read_csv,
 
 ### Processing
 
+#  cereal_production_yield<-cereal_production_yield%>%
+#    mutate(Area=if_else(Area%in%c("Northern Africa","Western Asia","Central Asia"),"North Africa, Central and Western Asia",Area))%>%
+#    mutate(Area=if_else(Area%in%c("Middle Africa","Western Africa","Eastern Africa","Southern Africa"),"Sub-Saharan Africa",Area))%>%
+#    mutate(Area=if_else(Area%in%c("Central America","Caribbean","South America"),"Latin America and Caribbean",Area))%>%
+#    mutate(Area=if_else(Area%in%c("Polynesia","Micronesia","Melanesia"),"Oceania (exec Australia and New Zealand)",Area))%>%
+#    mutate(Area=if_else(Area%in%c("Eastern Asia","Southern Asia","South-eastern Asia"),"South, East and South East Asia",Area))%>%
+#    mutate(Area=if_else(Area%in%c("Northern America"),"North America",Area))%>%
+#    group_by(`Area`,`Element`,`Year`)%>%
+#    rename(area=Area)%>%
+#    rename(year=Year)%>%
+#    summarise(value=sum(Value))
+# 
 # cereal_production_yield<-cereal_production_yield%>%
-#   mutate(Area=if_else(Area%in%c("Northern Africa","Western Asia","Central Asia"),"North Africa, Central and Western Asia",Area))%>%
-#   mutate(Area=if_else(Area%in%c("Middle Africa","Western Africa","Eastern Africa","Southern Africa"),"Sub-Saharan Africa",Area))%>%
+#   mutate(Area=if_else(Area%in%c("Northern Africa","Middle Africa","Western Africa","Eastern Africa","Southern Africa"),"Sub-Saharan Africa",Area))%>%
 #   mutate(Area=if_else(Area%in%c("Central America","Caribbean","South America"),"Latin America and Caribbean",Area))%>%
 #   mutate(Area=if_else(Area%in%c("Polynesia","Micronesia","Melanesia"),"Oceania (exec Australia and New Zealand)",Area))%>%
-#   mutate(Area=if_else(Area%in%c("Eastern Asia","Southern Asia","South-eastern Asia"),"South, East and South East Asia",Area))%>%
-#   mutate(Area=if_else(Area%in%c("Northern America"),"North America",Area))%>%
-#   group_by(`Area`,`Element`,`Year`)%>%
-#   rename(area=Area)%>%
-#   rename(year=Year)%>%
-#   summarise(value=sum(Value))
-
-#cereal_production_yield<-cereal_production_yield%>%
-#  mutate(Area=if_else(Area%in%c("Northern Africa","Middle Africa","Western Africa","Eastern Africa","Southern Africa"),"Sub-Saharan Africa",Area))%>%
-#  mutate(Area=if_else(Area%in%c("Central America","Caribbean","South America"),"Latin America and Caribbean",Area))%>%
-#  mutate(Area=if_else(Area%in%c("Polynesia","Micronesia","Melanesia"),"Oceania (exec Australia and New Zealand)",Area))%>%
-#  mutate(Area=if_else(Area%in%c("Western Asia","Central Asia","Eastern Asia","Southern Asia","South-eastern Asia"),"Asia",Area))%>%
-#  mutate(Area=if_else(Area%in%c("Northern America"),"North America",Area))
+#   mutate(Area=if_else(Area%in%c("Western Asia","Central Asia","Eastern Asia","Southern Asia","South-eastern Asia"),"Asia",Area))%>%
+#   mutate(Area=if_else(Area%in%c("Northern America"),"North America",Area))
 
 cereal_production<-cereal_production_yield%>%
   filter(Element=="Production")%>%
   filter(Area%in%c("Africa","Asia","Europe","Northern America","South America","Australia and New Zealand"))%>%
   rename(area=Area)%>%
-  rename(year=Year)
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,area,value)
 
 cereal_yield_1<-cereal_production_yield%>%
   filter(Element=="Yield")
@@ -123,15 +125,19 @@ cereal_yield_2010<-cereal_yield_1%>%
   filter(Year==2010)
 
 cereal_yield<-cereal_yield_1%>%
-  left_join(cereal_yield_2010,by=c("Area"="Area"))%>%
+  left_join(cereal_yield_2010,by=c("Year"="Year","Area"="Area"))%>%
   filter(Area%in%c("Africa","Asia","Europe","Northern America","South America","Australia and New Zealand"))%>%
-  mutate(Value=(Value.x/Value.y)*100)
+  mutate(Value=(Value.x/Value.y)*100)%>%
+  rename(area=Area)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,area,value)
 
 
 cereal_production_chart <- cereal_production |>
   filter(area!="Oceania (exec Australia and New Zealand)") |>
   ggplot() +
-  geom_line(aes(x = year, y = Value/1E6, colour = area), lwd = 1) +
+  geom_line(aes(x = year, y = value/1E6, colour = area), lwd = 1) +
   scale_x_continuous(limits = c(1965,2022),breaks =seq(1965,2022,5)) +
   scale_colour_manual(values = af_colours("categorical"),limits=c("Asia","Europe","Northern America","South America","Africa","Australia and New Zealand")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
@@ -144,7 +150,7 @@ save_csv(cereal_production, "1.1.4", "global cereal production")
 cereal_yield_chart <- cereal_yield |>
   #filter(area!="Australia and New Zealand") |>
   ggplot() +
-  geom_line(aes(x = Year.x, y = Value, colour = Area), lwd = 1) +
+  geom_line(aes(x = year, y = value, colour = area), lwd = 1) +
   scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
   #scale_y_continuous(limits = c(0,9),breaks =seq(0,8,2)) +
   scale_colour_manual(values = af_colours("categorical"),limits=c("Australia and New Zealand","Europe","Asia","Africa","South America","Northern America")) +

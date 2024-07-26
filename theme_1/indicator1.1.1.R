@@ -11,21 +11,21 @@ source(here("utils", "load-font.R"))
 
 kcalpp_temp <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
-                            object = "theme_1/t1_1_1/output/csv/kcal_capita_day.csv")%>%
+                            object = "theme_1/t1_1_1/input/csv/kcal_capita_day.csv")%>%
                             filter(Year<2010)
 
 kcalppns <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
-                            object = "theme_1/t1_1_1/output/csv/kcal_capita_day_nd.csv")
+                            object = "theme_1/t1_1_1/input/csv/kcal_capita_day_nd.csv")
 
-kcalpp<-rbind(kcalpp_temp,kcalppns)
+kcalpp<-rbind(kcalpp_temp,kcalppns)%>%
+  select(Year,Value,Element)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  rename(element=Element)%>%
+  filter(year>2010)
 
 kcalpp_chart <- kcalpp |> 
-  rename(year=Year) |>
-  rename(value=Value) |> 
-  rename(element=Element) |> 
-  select(year,value,element)  |>
-  filter(year>2010)|>
   ggplot() +
   geom_line(aes(x = year, y = value, colour = element), lwd = 1) +
   #geom_vline(xintercept =2014,linetype="dashed")+
@@ -39,6 +39,7 @@ kcalpp_chart <- kcalpp |>
 
 
 save_graphic(kcalpp_chart, "1.1.1", "global food supply")
+save_csv(kcalpp, "1.1.1", "global food supply")
 
 # FSI Indicator 1 --------------------------------------------------------------
 
@@ -79,15 +80,15 @@ for(i in c(14, 16,22)) {
 
 production_index <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
-                            object = "theme_1/t1_1_1/output/csv/Gross_per_capita_Production_Index.csv")
-
-production_index_chart <- production_index |> 
+                            object = "theme_1/t1_1_1/input/csv/Gross_per_capita_Production_Index.csv")%>%
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(element=Element) |>
   mutate(element="Gross per capita production") |>
   select(year,value,element)  |>
-  filter(year>2001)|>
+  filter(year>2001)
+
+production_index_chart <- production_index |>
   ggplot() +
   geom_line(aes(x = year, y = value, colour = element), lwd = 1) +
   scale_y_continuous(limits = c(60,110)) +
@@ -98,46 +99,48 @@ production_index_chart <- production_index |>
        y = "production index number\n(2014-2016=100)")
 
 save_graphic(production_index_chart, "1.1.1", "global food production index")
+save_csv(production_index, "1.1.1", "global food production index")
 
-production_data <- aws.s3::s3read_using(FUN = read_csv,
-                                         bucket = ukfsr::s3_bucket(),
-                                         object = "theme_1/t1_1_1/input/csv/production_data.csv")
-
-production_chart <- production_data |> 
-  rename(year=Year) |>
-  rename(value=Value) |> 
-  rename(element=Element) |>
-  ggplot() +
-  geom_line(aes(x = year, y = value/1E6, colour = Item,linetype=Item), lwd = 1) +
-  #scale_y_continuous(limits = c(60,110)) +
-  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
-  scale_linetype_manual(values=c("solid","solid","dashed","solid","solid","solid","dotted","dotted","dashed","dotted","dashed","dotted"))+
-  scale_colour_manual(values = c(af_colours("categorical"),af_colours("categorical"))) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "tonnes")
-
-save_graphic(production_chart, "1.1.1", "global food production")
+# production_data <- aws.s3::s3read_using(FUN = read_csv,
+#                                          bucket = ukfsr::s3_bucket(),
+#                                          object = "theme_1/t1_1_1/input/csv/production_data.csv")
+# 
+# production_chart <- production_data |> 
+#   rename(year=Year) |>
+#   rename(value=Value) |> 
+#   rename(element=Element) |>
+#   ggplot() +
+#   geom_line(aes(x = year, y = value/1E6, colour = Item,linetype=Item), lwd = 1) +
+#   #scale_y_continuous(limits = c(60,110)) +
+#   scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
+#   scale_linetype_manual(values=c("solid","solid","dashed","solid","solid","solid","dotted","dotted","dashed","dotted","dashed","dotted"))+
+#   scale_colour_manual(values = c(af_colours("categorical"),af_colours("categorical"))) +
+#   theme_ukfsr(base_family = "GDS Transport Website") +
+#   labs(x = NULL,
+#        y = "tonnes")
+# 
+# save_graphic(production_chart, "1.1.1", "global food production")
+# save_csv(production_data, "1.1.1", "global food production")
 
 # Cereal production (tonnes)----------------------------------------------------
 
-cereal_production <- aws.s3::s3read_using(FUN = read_csv,
-                                         bucket = ukfsr::s3_bucket(),
-                                         object = "theme_1/t1_1_1/output/csv/cereals_production.csv")
-
-cereal_production_chart <- cereal_production |>
-  mutate(Item=if_else(Item=="Maize (corn)","Maize",Item)) |>
-  mutate(Item=if_else(Item=="Cereals, primary","Cereals",Item)) |>
-  ggplot() +
-  geom_line(aes(x = Year, y = Value/1e6, colour = Item), lwd = 1) +
-  scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
-  scale_colour_manual(values = af_colours("categorical")) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "Million Tonnes")
-
-save_graphic(cereal_production_chart, "1.1.1", "global cereal production")
-
+# cereal_production <- aws.s3::s3read_using(FUN = read_csv,
+#                                          bucket = ukfsr::s3_bucket(),
+#                                          object = "theme_1/t1_1_1/output/csv/cereals_production.csv")
+# 
+# cereal_production_chart <- cereal_production |>
+#   mutate(Item=if_else(Item=="Maize (corn)","Maize",Item)) |>
+#   mutate(Item=if_else(Item=="Cereals, primary","Cereals",Item)) |>
+#   ggplot() +
+#   geom_line(aes(x = Year, y = Value/1e6, colour = Item), lwd = 1) +
+#   scale_x_continuous(limits = c(2013,2022),breaks =seq(2013,2022,1)) +
+#   scale_colour_manual(values = af_colours("categorical")) +
+#   theme_ukfsr(base_family = "GDS Transport Website") +
+#   labs(x = NULL,
+#        y = "Million Tonnes")
+# 
+# save_graphic(cereal_production_chart, "1.1.1", "global cereal production")
+# save_csv(cereal_production_data, "1.1.1", "global cereal production")
 
 # FSI Indicator 1.2 cereal production per capita -------------------------------
 
@@ -145,7 +148,7 @@ source(here::here("utils", "load-font.R"))
 
 cereal_production <- aws.s3::s3read_using(FUN = read_csv,
                                           bucket = ukfsr::s3_bucket(),
-                                          object = "theme_1/t1_1_1/output/csv/cereals_production.csv")
+                                          object = "theme_1/t1_1_1/input/csv/cereals_production.csv")
 
 
 
@@ -180,10 +183,10 @@ for(i in c(14, 16, 22)) {
 
 use_of_agricultural_commodities_by_type_and_region <- aws.s3::s3read_using(FUN = read_csv,
                                           bucket = ukfsr::s3_bucket(),
-                                          object = "theme_1/t1_1_1/input/csv/use_of_agricultural_commodities_by_type_and_region.csv")
+                                          object = "theme_1/t1_1_1/input/csv/use_of_agricultural_commodities_by_type_and_region.csv")%>%
+  pivot_longer(cols=c('food','feed','biofuel','other'),names_to = "item",values_to = "value")
 
 use_of_agricultural_commodities_by_type_and_region_chart <- use_of_agricultural_commodities_by_type_and_region |>
-  pivot_longer(cols=c('food','feed','biofuel','other'),names_to = "item",values_to = "value") |>
   ggplot(aes(fill=item, y=value, x=commodity)) +
   geom_bar(position = "fill", stat="identity")+
   coord_flip()+
@@ -194,38 +197,38 @@ use_of_agricultural_commodities_by_type_and_region_chart <- use_of_agricultural_
        y = "percent")
 
 save_graphic(use_of_agricultural_commodities_by_type_and_region_chart, "1.1.1", "use of agricultural commodities by type and region")
+save_csv(use_of_agricultural_commodities_by_type_and_region, "1.1.1", "use of agricultural commodities by type and region")
 
 
-
-feed_demand_by_component_and_by_region <- aws.s3::s3read_using(FUN = read_csv,
-                                                                           bucket = ukfsr::s3_bucket(),
-                                                                           object = "theme_1/t1_1_1/input/csv/Feed demand by component and by region.csv")
-
-feed_demand_by_component_and_by_region_chart <- feed_demand_by_component_and_by_region |>
-  ggplot(aes(fill=`feed type`, y=value, x=area)) +
-  geom_bar(position = "stack", stat="identity")+
-  coord_flip()+
-  scale_fill_manual(values = af_colours("categorical")) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "Million tonnes")
-
-save_graphic(feed_demand_by_component_and_by_region_chart, "1.1.1", "feed demand by component and by region")
-
-global_cereal_production <- aws.s3::s3read_using(FUN = read_csv,
-                                                               bucket = ukfsr::s3_bucket(),
-                                                               object = "theme_1/t1_1_1/input/csv/cerealsproduction.csv")
-
-global_cereal_production_chart <- ggplot(data=global_cereal_production) +
-  geom_line(aes(x=year ,y=value/1E3,color=commodity,linetype=commodity))+
-  scale_color_manual(values = af_colours("categorical")) +
-  scale_x_continuous(breaks = c(2015,2017,2019,2021,2023),labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "1,000,000 Million tonnes")
-
-save_graphic(global_cereal_production_chart, "1.1.1", "global cereal production")
-
+# feed_demand_by_component_and_by_region <- aws.s3::s3read_using(FUN = read_csv,
+#                                                                            bucket = ukfsr::s3_bucket(),
+#                                                                            object = "theme_1/t1_1_1/input/csv/Feed demand by component and by region.csv")
+# 
+# feed_demand_by_component_and_by_region_chart <- feed_demand_by_component_and_by_region |>
+#   ggplot(aes(fill=`feed type`, y=value, x=area)) +
+#   geom_bar(position = "stack", stat="identity")+
+#   coord_flip()+
+#   scale_fill_manual(values = af_colours("categorical")) +
+#   theme_ukfsr(base_family = "GDS Transport Website") +
+#   labs(x = NULL,
+#        y = "Million tonnes")
+# 
+# save_graphic(feed_demand_by_component_and_by_region_chart, "1.1.1", "feed demand by component and by region")
+# 
+# global_cereal_production <- aws.s3::s3read_using(FUN = read_csv,
+#                                                                bucket = ukfsr::s3_bucket(),
+#                                                                object = "theme_1/t1_1_1/input/csv/cerealsproduction.csv")
+# 
+# global_cereal_production_chart <- ggplot(data=global_cereal_production) +
+#   geom_line(aes(x=year ,y=value/1E3,color=commodity,linetype=commodity))+
+#   scale_color_manual(values = af_colours("categorical")) +
+#   scale_x_continuous(breaks = c(2015,2017,2019,2021,2023),labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
+#   theme_ukfsr(base_family = "GDS Transport Website") +
+#   labs(x = NULL,
+#        y = "1,000,000 Million tonnes")
+# 
+# save_graphic(global_cereal_production_chart, "1.1.1", "global cereal production")
+# 
 
 global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
                                                  bucket = ukfsr::s3_bucket(),
@@ -233,13 +236,17 @@ global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
 
 global_biofuel_production<-global_biofuel_production_in%>%
   filter(Country=="WORLD")%>%
-  select(Time,Commodity,Variable,Value)%>%
-  pivot_wider(names_from = Variable,values_from = Value)%>%
+  rename(time=Time)%>%
+  rename(commodity=Commodity)%>%
+  rename(variable=Variable)%>%
+  rename(value=Value)%>%
+  select(time,commodity,variable,value)%>%
+  pivot_wider(names_from = variable,values_from = value)%>%
   mutate(value=(`Biofuel use`/Production)*100)%>%
-  filter(Time>1999 & Time<2024)
+  filter(time>1999 & time<2024)
 
 global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
-  geom_line(aes(x=Time ,y=value,color=Commodity))+
+  geom_line(aes(x=time ,y=value,color=commodity))+
   scale_color_manual(values = af_colours("categorical")) +
   scale_y_continuous(limits=c(0,30))+
   scale_x_continuous(breaks = seq(2000,2023,2))+
@@ -248,21 +255,23 @@ global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
        y = "Biofuel demand share of\nglobal crop production")
 
 save_graphic(global_biofuel_production_chart, "1.1.1", "global biofuel production")
+save_csv(global_biofuel_production, "1.1.1", "global_biofuel_production")
 
-global_protein_supply <- aws.s3::s3read_using(FUN = read_csv,
-                                                  bucket = ukfsr::s3_bucket(),
-                                                  object = "theme_1/t1_1_1/input/csv/protein_supply_per_capita.csv")
 
-global_protein_supply_chart <- ggplot(data=global_protein_supply) +
-  geom_line(aes(x=Year ,y=Value))+
-  scale_color_manual(values = af_colours("duo")) +
-  #scale_y_continuous(limits=c(0,30))+
-  scale_x_continuous(breaks = seq(2010,2021,1))+
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "kcals per capita per day")
+#global_protein_supply <- aws.s3::s3read_using(FUN = read_csv,
+#                                                  bucket = ukfsr::s3_bucket(),
+#                                                  object = "theme_1/t1_1_1/input/csv/protein_supply_per_capita.csv")
 
-save_graphic(global_protein_supply_chart, "1.1.1", "global protein supply")
+#global_protein_supply_chart <- ggplot(data=global_protein_supply) +
+#  geom_line(aes(x=Year ,y=Value))+
+#  scale_color_manual(values = af_colours("duo")) +
+#  #scale_y_continuous(limits=c(0,30))+
+#  scale_x_continuous(breaks = seq(2010,2021,1))+
+#  theme_ukfsr(base_family = "GDS Transport Website") +
+#  labs(x = NULL,
+#       y = "kcals per capita per day")
+
+#save_graphic(global_protein_supply_chart, "1.1.1", "global protein supply")
 
 food_supply <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
@@ -318,21 +327,22 @@ gdp_per_calorie_chart<-ggplot(gdp_per_calorie)+
        y = "kcals per capita per day")
 
 save_graphic(gdp_per_calorie_chart, "1.1.1", "gdp per calorie chart")
+save_csv(gdp_per_calorie, "1.1.1", "gdp per calorie")
 
-feed_change_use_in <- aws.s3::s3read_using(FUN = read_csv,
-                                                               bucket = ukfsr::s3_bucket(),
-                                                               object = "theme_1/t1_1_1/input/csv/feed_use_change.csv")
-
-feed_change_use<-feed_change_use_in%>%
-  pivot_longer(2:6,names_to = "use",values_to = "value")%>%
-  rename(income_group=`Income Group`)
-
-feed_change_use_chart<-ggplot(feed_change_use)+
-  geom_col(aes(x=income_group,y=value,fill=use),position = "dodge")+
-  #scale_x_continuous(limits=c(3,5),breaks = c(3,3.3,3.7,4,4.3,4.7,5),labels=c("$1000","$2000","$5000","$10,000","$20,000","$50,000","$100,000"))+
-  scale_fill_manual(values = af_colours("categorical")) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = "income group",
-       y = "percent per annum")
-
-save_graphic(feed_change_use_chart, "1.1.1", "feed change use chart")
+# feed_change_use_in <- aws.s3::s3read_using(FUN = read_csv,
+#                                                                bucket = ukfsr::s3_bucket(),
+#                                                                object = "theme_1/t1_1_1/input/csv/feed_use_change.csv")
+# 
+# feed_change_use<-feed_change_use_in%>%
+#   pivot_longer(2:6,names_to = "use",values_to = "value")%>%
+#   rename(income_group=`Income Group`)
+# 
+# feed_change_use_chart<-ggplot(feed_change_use)+
+#   geom_col(aes(x=income_group,y=value,fill=use),position = "dodge")+
+#   #scale_x_continuous(limits=c(3,5),breaks = c(3,3.3,3.7,4,4.3,4.7,5),labels=c("$1000","$2000","$5000","$10,000","$20,000","$50,000","$100,000"))+
+#   scale_fill_manual(values = af_colours("categorical")) +
+#   theme_ukfsr(base_family = "GDS Transport Website") +
+#   labs(x = "income group",
+#        y = "percent per annum")
+# 
+# save_graphic(feed_change_use_chart, "1.1.1", "feed change use chart")
