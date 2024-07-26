@@ -66,6 +66,9 @@ glu2 <- glu |>
   geom_text(data = glu2 |> filter(label_outside == "N"), aes(x = region, y = area, label = paste0(pct, "% ", category)),
             position = position_stack(vjust = 0.5),
             family = "GDS Transport Website", size = 11, size.unit = "pt", colour = "#BFBFBF" ) +
+  geom_text(data = glu2 |> filter(label_outside == "Y"), aes(x = region, y = area, label = paste0(pct, "% ", category)),
+            position = position_stack(vjust = 0.5),
+            family = "GDS Transport Website", size = 11, size.unit = "pt", colour = "red" ) +
     scale_fill_manual(values = c(Land = "#12436D",
                                  `Barren land` = "#BFBFBF",
                                  Glaciers = "#BFBFBF",
@@ -87,3 +90,26 @@ glu2 <- glu |>
         axis.line.y = element_blank(), 
         panel.grid.major.y = element_blank())
 
+
+  
+  glu3 <- glu |> 
+    mutate(region = factor(region, levels = rev(c("Agricultural land", "Habitable land", "Land surface", "Earths surface")),
+                           labels = rev(c("Agricultural\n land", "Habitable\n land", "Land\n surface", "Earth's\n surface"))),
+           category = factor(category, levels = c("Land", "Barren land", "Glaciers","Habitable Land",  
+                                                  "Waterbodies", "Urban", "Shrub", "Forests", "Agriculture",   
+                                                  "Non-food crops", "Crops for food", "Livestock"),
+                             labels = c("Land", "Barren land", "Glaciers","Habitable\nLand",  
+                                        "Waterbodies", "Urban", "Shrub", "Forests", "Agriculture",   
+                                        "Non-food crops", "Food crops", "Livestock")),
+           label_outside = case_when(category %in% c("Barren land", "Glaciers", "Shrub", "Urban", "Waterbodies", "Forests", "Non-food crops") ~ -1.5, .default = 0.5)) 
+
+  
+ggplot(data = glu3, aes(x = region, y = area)) +
+    geom_col(aes(fill = category), colour = "white") +
+    geom_text(aes(label = category, hjust = label_outside), position = position_stack(vjust = 0.5))
+  
+  
+  
+  
+  
+  
