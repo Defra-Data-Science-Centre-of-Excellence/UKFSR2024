@@ -30,7 +30,6 @@ FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = Region, y = Volume / 1e3, fill = T
        x = NULL,
        fill = "Type") +
   scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
-  scale_y_continuous(labels = scales::comma) + 
   theme_ukfsr() 
 
 FSR_3_1_3a_plot
