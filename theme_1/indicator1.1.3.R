@@ -87,11 +87,15 @@ number_of_moderately_or_severely_food_insecure_people <- aws.s3::s3read_using(FU
 number_of_moderately_or_severely_food_insecure_people_world<-number_of_moderately_or_severely_food_insecure_people%>%
   mutate(Value=as.numeric(Value))%>%
   filter(Area=="World")%>%
-  filter(Item=="Number of moderately or severely food insecure people (million) (annual value)")
+  filter(Item=="Number of moderately or severely food insecure people (million) (annual value)")%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,value)
+  
 
 number_of_moderately_or_severely_food_insecure_people_world_chart<-number_of_moderately_or_severely_food_insecure_people_world%>%
   ggplot()+
-  geom_col(aes(x=Year,y=Value))+
+  geom_col(aes(x=year,y=value))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   scale_color_manual(values = af_colours("duo")) +
   scale_fill_manual(values = af_colours("duo")) +
@@ -105,11 +109,15 @@ save_csv(number_of_moderately_or_severely_food_insecure_people_world, "1.1.3", "
 coahd <- aws.s3::s3read_using(FUN = read_csv,
                                                                               bucket = ukfsr::s3_bucket(),
                                                                               object = "theme_1/t1_1_3/input/csv/CoAHD.csv")%>%
-  filter(!Area=="Europe")
+  filter(!Area=="Europe")%>%
+  rename(area="Area")%>%
+  rename(year="Year")%>%
+  rename(value="Value")%>%
+  select(year,area,value)
 
 coahd_chart<-coahd%>%
   ggplot()+
-  geom_line(aes(x=Year,y=Value,group=Area,color=Area))+
+  geom_line(aes(x=year,y=value,group=area,color=area))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   scale_color_manual(values = af_colours("categorical",n=6)) +
   #scale_x_continuous(breaks=seq(2016,2023,1))+

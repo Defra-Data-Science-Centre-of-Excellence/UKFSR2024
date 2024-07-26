@@ -92,8 +92,13 @@ scr_top_exporters_wheat<-stocks%>%
 
 scr_out<-rbind(scr_world,scr_world_minus_china,scr_top_exporters_maize,scr_top_exporters_soyabean,scr_top_exporters_sunflowerseed,scr_top_exporters_rice,scr_top_exporters_wheat)%>%
   mutate(plot_year=as.numeric(substr(year,1,4)))%>%
-  mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
-
+  mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))%>%
+  rename(commodity="Commodity")%>%
+  rename(scr="SCR")%>%
+  rename(area="Area")%>%
+  rename(stocks="value.x")%>%
+  rename(comsumption="value.y")
+  
 #scr_maize<-scr_out%>%
 #  filter(Commodity=="Corn")
 
@@ -117,8 +122,8 @@ year_labels<-year_labels_temp$labels
 
 scr_chart <- scr_out |> 
   ggplot() +
-  facet_wrap(~Commodity)+
-  geom_line(aes(x=plot_year,y=SCR,color=Area))+
+  facet_wrap(~commodity)+
+  geom_line(aes(x=plot_year,y=scr,color=area))+
   scale_color_manual(values = af_colours("categorical"))+
   scale_x_continuous(breaks=seq(2004,2024,4),labels=year_labels)+
   scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
@@ -126,6 +131,8 @@ scr_chart <- scr_out |>
   theme(panel.spacing=unit(2,"lines"))+
   labs(x = NULL,
        y = "percent")
+
+scr_out<-scr_out%>%select(-plot_year)
 
 save_graphic(scr_chart, "1.1.9", "stocks to consumption")
 save_csv(scr_out, "1.1.9", "stock to consumption ratio")

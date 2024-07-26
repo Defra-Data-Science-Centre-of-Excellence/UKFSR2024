@@ -10,6 +10,7 @@ library(ukfsr)
 library(readxl)
 library(afcolours)
 library(here)
+library(lubridate)
 
 
 #FAOSTAT
@@ -48,11 +49,12 @@ egp_usd<-com_historical_data_monthly%>%
   mutate(EGP=WHEAT_EGP/3749.473)%>%
   mutate(USD=WHEAT_US_HRW/209.81)%>%
   pivot_longer(cols=10:11,values_to = "index",names_to = "currency")%>%
-  select(Date,currency,index)
+  rename(date=Date)%>%
+  select(date,currency,index)
 
 egp_usd_chart <- egp_usd |> 
   ggplot() +
-  geom_line(aes(x=Date,y=index,color=currency))+
+  geom_line(aes(x=date,y=index,color=currency))+
   theme_ukfsr()+
   scale_color_manual(values = af_colours("duo"))+
   #scale_x_continuous(breaks=seq(2019,2024,1),labels=seq(2019,2024,1))+

@@ -17,28 +17,33 @@ source(here("utils", "load-font.R"))
 
 agricultral_land_use <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
-                                         object = "theme_1/t1_1_8/input/csv/agricultral_land_use.csv")
+                                         object = "theme_1/t1_1_8/input/csv/agricultral_land_use.csv")%>%
+                                         rename(item=Item)%>%
+                                         rename(value=Value)%>%
+                                         rename(year=Year)
 
 
 
 agricultural_land_use_permanent<-agricultral_land_use%>%
-                                  filter(Item%in%c("Permanent meadows and pastures","Permanent crops","Arable land","Cropland","Agriculture","Agricultural land"))%>%
+                                  filter(item%in%c("Permanent meadows and pastures","Permanent crops","Arable land","Cropland","Agriculture","Agricultural land"))%>%
                                   filter(Area=="World")%>%
-                                  filter(Year>2001)%>%
-                                  mutate(per=(Value/4787551.8)*100)
+                                  filter(year>2001)%>%
+                                  mutate(per=(value/4787551.8)*100)%>%
+                                  select(year,item,value,per)
   
 agricultural_land_use_temporary<-agricultral_land_use%>%
-                                  filter(Item%in%c("Temporary crops","Temporary fallow","Temporary meadows and pastures"))%>%
+                                  filter(item%in%c("Temporary crops","Temporary fallow","Temporary meadows and pastures"))%>%
                                   filter(Area=="World")%>%
-                                  filter(Year>2001)%>%
-                                  mutate(per=(Value/4787551.8)*100)
+                                  filter(year>2001)%>%
+                                  mutate(per=(value/4787551.8)*100)%>%
+                                  select(year,item,value,per)
 
 
 
 
 agricultural_land_use_permanent_chart <- agricultural_land_use_permanent|>
   ggplot() +
-  geom_line(aes(x = Year, y = Value,color=Item), lwd = 1) +
+  geom_line(aes(x = year, y = value,color=item), lwd = 1) +
   #scale_x_continuous(limits = c(1950,2022),breaks =seq(1950,2022,5)) +
   scale_color_manual(values = af_colours("categorical"))+
   theme_ukfsr(base_family = "GDS Transport Website") +
@@ -50,7 +55,7 @@ save_csv(agricultural_land_use_permanent, "1.1.8", "agricultural_land_use_perman
 
 agricultural_land_use_temporary_chart <- agricultural_land_use_temporary|>
   ggplot() +
-  geom_line(aes(x = Year, y = Value/1E3,color=Item), lwd = 1) +
+  geom_line(aes(x = year, y = value/1E3,color=item), lwd = 1) +
   #scale_x_continuous(limits = c(1950,2022),breaks =seq(1950,2022,5)) +
   scale_color_manual(values = af_colours("categorical"))+
   theme_ukfsr(base_family = "GDS Transport Website") +

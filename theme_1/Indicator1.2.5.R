@@ -30,7 +30,9 @@ export_shares_global<-export_shares_not_world%>%
   group_by(Commodity,years)%>%
   summarise(HI=sum(HI,na.rm=TRUE))%>%
   mutate(year=as.numeric(substr(years,1,4)))%>%
-  arrange(desc(year))
+  arrange(desc(year))%>%
+  rename(commodity=Commodity)%>%
+  rename(hi=HI)
 
 export_shares_global_a<-export_shares_not_world%>%
   left_join(export_shares_world,by=c("Commodity"="Commodity","Attribute"="Attribute","Unit Description"="Unit Description","years"="years"))%>%
@@ -50,6 +52,10 @@ herfindhal_indices_chart<-ggplot()+
   labs(x = NULL,
        y = "HI(export share squared)")
 
+export_shares_global<-export_shares_global%>%
+  select(-year)%>%
+  rename(year=years)
+
 save_graphic(herfindhal_indices_chart, "1.2.5", "herfindhal indices")
 save_csv(export_shares_global, "1.2.5", "herfindhal indices")
 
@@ -58,7 +64,8 @@ daily_chokepoint_transit_calls_and_trade_volume_estimates <- aws.s3::s3read_usin
                                       object = "theme_1/t1_2_5/input/csv/7day_moving_average_chokepoints.csv")%>%
   pivot_longer(2:4,names_to = "chokepoint",values_to="value")%>%
   mutate(date=as.Date(`Row Labels`))%>%
-  filter(date>as.Date("2022-12-31"))
+  filter(date>as.Date("2022-12-31"))%>%
+  select(-`Row Labels`)
 
 daily_chokepoint_transit_calls_and_trade_volume_estimates_chart<-ggplot()+
 geom_line(data=daily_chokepoint_transit_calls_and_trade_volume_estimates,aes(x=date,y=value/1E6,group=chokepoint,color=chokepoint))+

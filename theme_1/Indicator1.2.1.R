@@ -27,12 +27,15 @@ fertiliser_concertrations_out<-fertiliser_concertrations_countries%>%
   mutate(share_squared=share*share)%>%
   group_by(Year,Item)%>%
   summarise(share_squared=sum(share_squared,na.rm = TRUE))%>%
-  filter(Year>2000)
+  filter(Year>2000)%>%
+  rename(year=Year)%>%
+  rename(item=Item)%>%
+  select(year,share_squared,item)
 
 ########
 
 fertiliser_concertrations_chart<-ggplot()+
-  geom_line(data=fertiliser_concertrations_out,aes(x = Year, y = share_squared, colour = Item)) +
+  geom_line(data=fertiliser_concertrations_out,aes(x = year, y = share_squared, colour = item)) +
   #scale_y_continuous(limits = c(0,50)) +
   #scale_x_continuous(limits = c(2014,2023),breaks=seq(2015,2023,2),labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
   scale_colour_manual(values = af_colours("categorical",n=3)) +
@@ -45,7 +48,10 @@ save_csv(fertiliser_concertrations_out, "1.2.1", "fertiliser concertrations")
 
 fertiliser_production <- aws.s3::s3read_using(FUN = read_csv,
                                                   bucket = ukfsr::s3_bucket(),
-                                                  object = "theme_1/t1_2_1/input/csv/FertilserProduction.csv")
+                                                  object = "theme_1/t1_2_1/input/csv/FertilserProduction.csv")%>%
+  rename(area=Area)%>%
+  rename(year=Year)%>%
+  rename(value=Value)
 
 nitrogen_production<-fertiliser_production%>%
   filter(str_detect(Item,"nitrogen"))
@@ -57,7 +63,7 @@ potash_production<-fertiliser_production%>%
   filter(str_detect(Item,"potash"))
 
 nitrogen_production_chart<-ggplot()+
-  geom_line(data=nitrogen_production,aes(x = Year, y = Value/1E6, colour = Area)) +
+  geom_line(data=nitrogen_production,aes(x = year, y = value/1E6, colour = area)) +
   scale_colour_manual(values = af_colours("categorical",n=6)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
@@ -67,7 +73,7 @@ save_graphic(nitrogen_production_chart, "1.2.1", "nitrogen production chart")
 save_csv(nitrogen_production, "1.2.1", "nitrogen production")
 
 phosphate_production_chart<-ggplot()+
-  geom_line(data=phosphate_production,aes(x = Year, y = Value/1E6, colour = Area)) +
+  geom_line(data=phosphate_production,aes(x = year, y = value/1E6, colour = area)) +
   scale_colour_manual(values = af_colours("categorical",n=6)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
@@ -77,7 +83,7 @@ save_graphic(phosphate_production_chart, "1.2.1", "phosphate production chart")
 save_csv(phosphate_production, "1.2.1", "phosphate production")
 
 potash_production_chart<-ggplot()+
-  geom_line(data=potash_production,aes(x = Year, y = Value/1E6, colour = Area)) +
+  geom_line(data=potash_production,aes(x = year, y = value/1E6, colour = area)) +
   scale_colour_manual(values = af_colours("categorical",n=6)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,

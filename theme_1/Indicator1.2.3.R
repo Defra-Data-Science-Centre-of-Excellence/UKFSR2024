@@ -55,10 +55,13 @@ sources_of_output_growth_by_region_data <- aws.s3::s3read_using(FUN = read_csv,
                             object = "theme_1/t1_2_3/input/csv/Sources of Output Growth by Region_data.csv")
 
 sources_of_output_growth_by_region_data_world<-sources_of_output_growth_by_region_data%>%
-  filter(Region=="World")
+  filter(Region=="World")%>%
+  rename(decade=Decade)%>%
+  rename(`avg. growth (%/year)`=`Avg. Growth (%/year)`)%>%
+  rename(`sources of output growth`=`Sources of Output Growth`)
 
 sources_of_output_growth_by_region_chart<-ggplot()+
-  geom_col(data=sources_of_output_growth_by_region_data_world,aes(x = Decade, y = `Avg. Growth (%/year)`*100,fill=`Sources of Output Growth`)) +
+  geom_col(data=sources_of_output_growth_by_region_data_world,aes(x = decade, y = `avg. growth (%/year)`*100,fill=`sources of output growth`)) +
   scale_y_continuous(breaks=seq(0,3,0.5))+
   scale_color_manual(values = af_colours("categorical"),n=4) +
   theme_ukfsr(base_family = "GDS Transport Website") +
@@ -71,10 +74,13 @@ save_csv(sources_of_output_growth_by_region_data_world, "1.2.3", "total factor p
 employment_data <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
                                         object = "theme_1/t1_2_3/input/csv/EmploymentIndicators.csv")%>%
-  filter(Year>2000)
+  filter(Year>2000)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  rename(area=Area)
 
 employment_data_chart<-ggplot()+
-  geom_line(data=employment_data,aes(x = Year, y = Value/1E3,color=`Area`)) +
+  geom_line(data=employment_data,aes(x = year, y = value/1E3,color=`area`)) +
   scale_color_manual(values = af_colours("categorical"),n=6) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
@@ -133,10 +139,13 @@ value_added<-agricultural_value_added%>%
   left_join(world_key,by=c("Area"="Area"))%>%
   rename(value_added=`Value.x`)%>%
   rename(gdp=`Value.y`)%>%
-  rename(population=`Value`)
+  rename(population=`Value`)%>%
+  rename(area=Area)%>%
+  rename(year=Year)%>%
+  rename(region=Region)
 
 value_added_chart<-ggplot(value_added)+
-  geom_point(aes(x=log10(gdp),y=log10(value_added),size=population/1E3,color=Region))+
+  geom_point(aes(x=log10(gdp),y=log10(value_added),size=population/1E3,color=region))+
   scale_x_continuous(limits=c(2.6,5.2),breaks = c(2.69,3,3.3,3.7,4,4.3,4.7,5),labels=c("$500","$1000","$2000","$5000","$10,000","$20,000","$50,000","$100,000"))+
   scale_y_continuous(limits=c(2,5.2),breaks=c(2,3,4,5),labels=c("100","1000","10,000","100,000"))+
   scale_color_manual(values = af_colours("categorical")) +

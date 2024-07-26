@@ -15,12 +15,15 @@ source(here("utils", "load-font.R"))
 fruit_veg <- aws.s3::s3read_using(FUN = read_csv,
                                     bucket = ukfsr::s3_bucket(),
                                     object = "theme_1/t1_1_6/input/csv/fruit_and_vegetable_production.csv")%>%
-  mutate(Area=as.factor(Area))%>%
-  mutate(Item=as.factor(Item))
+  mutate(area=as.factor(Area))%>%
+  mutate(item=as.factor(Item))%>%
+  rename(value=Value)%>%
+  rename(year=Year)%>%
+  select(year,item,value)
 
 fruit_veg_chart <- fruit_veg|>
   ggplot() +
-  geom_line(aes(x = Year, y = Value/1E6, colour = Item), lwd = 1) +
+  geom_line(aes(x = year, y = value/1E6, colour = item), lwd = 1) +
   scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
   scale_colour_manual(values = af_colours("categorical"))+#,limits=c("South America","Africa","Asia","Northern America","Australia and New Zealand","Europe")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
