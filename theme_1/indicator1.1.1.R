@@ -87,11 +87,11 @@ production_index_chart <- production_index |>
   rename(element=Element) |>
   mutate(element="Gross per capita production") |>
   select(year,value,element)  |>
-  filter(year>2011)|>
+  filter(year>2001)|>
   ggplot() +
   geom_line(aes(x = year, y = value, colour = element), lwd = 1) +
   scale_y_continuous(limits = c(60,110)) +
-  scale_x_continuous(limits = c(2011.5,2022.5),breaks =seq(2012,2022,1)) +
+  scale_x_continuous(limits = c(2001.5,2022.5),breaks =seq(2002,2022,2)) +
   scale_colour_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
@@ -227,15 +227,22 @@ global_cereal_production_chart <- ggplot(data=global_cereal_production) +
 save_graphic(global_cereal_production_chart, "1.1.1", "global cereal production")
 
 
-global_biofuel_production <- aws.s3::s3read_using(FUN = read_csv,
+global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
                                                  bucket = ukfsr::s3_bucket(),
-                                                 object = "theme_1/t1_1_1/input/csv/biofuelpercentageproduction.csv")
+                                                 object = "theme_1/t1_1_1/input/csv/HIGH_AGLINK_2023_10052024183701187.csv")
+
+global_biofuel_production<-global_biofuel_production_in%>%
+  filter(Country=="WORLD")%>%
+  select(Time,Commodity,Variable,Value)%>%
+  pivot_wider(names_from = Variable,values_from = Value)%>%
+  mutate(value=(`Biofuel use`/Production)*100)%>%
+  filter(Time>1999 & Time<2024)
 
 global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
-  geom_line(aes(x=year ,y=percentage,color=commodity))+
+  geom_line(aes(x=Time ,y=value,color=Commodity))+
   scale_color_manual(values = af_colours("categorical")) +
   scale_y_continuous(limits=c(0,30))+
-  scale_x_continuous(breaks = seq(2010,2023,1))+
+  scale_x_continuous(breaks = seq(2000,2023,2))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "Biofuel demand share of\nglobal crop production")
@@ -250,7 +257,7 @@ global_protein_supply_chart <- ggplot(data=global_protein_supply) +
   geom_line(aes(x=Year ,y=Value))+
   scale_color_manual(values = af_colours("duo")) +
   #scale_y_continuous(limits=c(0,30))+
-  scale_x_continuous(breaks = seq(2012,2021,1))+
+  scale_x_continuous(breaks = seq(2010,2021,1))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "kcals per capita per day")
@@ -270,16 +277,62 @@ population <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
                             object = "theme_1/t1_1_1/input/csv/global_population_2021.csv")
 
+africa <- aws.s3::s3read_using(FUN = read_csv,
+                                   bucket = ukfsr::s3_bucket(),
+                                   object = "theme_1/t1_1_1/input/csv/africa_list.csv")
+
+asia <- aws.s3::s3read_using(FUN = read_csv,
+                               bucket = ukfsr::s3_bucket(),
+                               object = "theme_1/t1_1_1/input/csv/asia_list.csv")
+
+europe <- aws.s3::s3read_using(FUN = read_csv,
+                               bucket = ukfsr::s3_bucket(),
+                               object = "theme_1/t1_1_1/input/csv/europe_list.csv")
+
+latin_america_caribbean <- aws.s3::s3read_using(FUN = read_csv,
+                               bucket = ukfsr::s3_bucket(),
+                               object = "theme_1/t1_1_1/input/csv/latin_america_list.csv")
+
+north_america <- aws.s3::s3read_using(FUN = read_csv,
+                               bucket = ukfsr::s3_bucket(),
+                               object = "theme_1/t1_1_1/input/csv/north_america_list.csv")
+
+oceania <- aws.s3::s3read_using(FUN = read_csv,
+                                      bucket = ukfsr::s3_bucket(),
+                                      object = "theme_1/t1_1_1/input/csv/oceania_list.csv")
+
+world_key<-rbind(north_america,oceania,latin_america_caribbean,europe,asia,africa)
 
 gdp_per_calorie<-food_supply%>%
   left_join(gdp,by=c("Area"="Area"))%>%
-  left_join(population,by=c("Area"="Area"))
+  left_join(population,by=c("Area"="Area"))%>%
+  left_join(world_key,by=c("Area"="Area"))%>%
+  mutate(Region=if_else(Area=="China","Asia",Region))
 
 gdp_per_calorie_chart<-ggplot(gdp_per_calorie)+
-  geom_point(aes(x=log10(Value.y),y=Value.x,size=Value/1E3))+
+  geom_point(aes(x=log10(Value.y),y=Value.x,size=Value.x.x/1E3,color=Region))+
   scale_x_continuous(limits=c(3,5),breaks = c(3,3.3,3.7,4,4.3,4.7,5),labels=c("$1000","$2000","$5000","$10,000","$20,000","$50,000","$100,000"))+
+  scale_color_manual(values = af_colours("categorical")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = "GDP per capita (USD)",
        y = "kcals per capita per day")
 
 save_graphic(gdp_per_calorie_chart, "1.1.1", "gdp per calorie chart")
+
+feed_change_use_in <- aws.s3::s3read_using(FUN = read_csv,
+                                                               bucket = ukfsr::s3_bucket(),
+                                                               object = "theme_1/t1_1_1/input/csv/feed_use_change.csv")
+
+feed_change_use<-feed_change_use_in%>%
+  pivot_longer(2:6,names_to = "use",values_to = "value")%>%
+  rename(income_group=`Income Group`)
+
+feed_change_use_chart<-ggplot(feed_change_use)+
+  geom_col(aes(x=income_group,y=value,fill=use),position = "dodge")+
+  #scale_x_continuous(limits=c(3,5),breaks = c(3,3.3,3.7,4,4.3,4.7,5),labels=c("$1000","$2000","$5000","$10,000","$20,000","$50,000","$100,000"))+
+  scale_fill_manual(values = af_colours("categorical")) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = "income group",
+       y = "percent per annum")
+
+save_graphic(feed_change_use_chart, "1.1.1", "feed change use chart")
