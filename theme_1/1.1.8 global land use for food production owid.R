@@ -49,67 +49,47 @@ save_graphic(cht, "1.1.8", "global land use for food production")
 
 #  experiments------------------------------------------------------------------
 
-glu2 <- glu |> 
-  mutate(region = factor(region, levels = rev(c("Agricultural land", "Habitable land", "Land surface", "Earths surface")),
-                         labels = rev(c("Agricultural\n land", "Habitable\n land", "Land\n surface", "Earth's\n surface"))),
-         category = factor(category, levels = c("Land", "Barren land", "Glaciers","Habitable Land",  
-                                                "Waterbodies", "Urban", "Shrub", "Forests", "Agriculture",   
-                                                "Non-food crops", "Crops for food", "Livestock"),
-                           labels = c("Land", "Barren land", "Glaciers","Habitable\nLand",  
-                                      "Waterbodies", "Urban", "Shrub", "Forests", "Agriculture",   
-                                      "Non-food crops", "Food crops", "Livestock")),
-         label_outside = case_when(category %in% c("Barren land", "Glaciers", "Shrub", "Urban", "Waterbodies", "Forests", "Non-food crops") ~ "Y", .default = "N")) 
+glu_simple <- aws.s3::s3read_using(FUN = read_csv,
+                            bucket = ukfsr::s3_bucket(),
+                            object = "theme_1/t1_1_8/output/csv/1_1_8_global_land_use_for_food_production_simplified.csv")
 
 
-  ggplot() +
-  geom_col(data = glu2, aes(x = region, y = area, fill = category), colour = "white") +
-  geom_text(data = glu2 |> filter(label_outside == "N"), aes(x = region, y = area, label = paste0(pct, "% ", category)),
-            position = position_stack(vjust = 0.5),
-            family = "GDS Transport Website", size = 11, size.unit = "pt", colour = "#BFBFBF" ) +
-  geom_text(data = glu2 |> filter(label_outside == "Y"), aes(x = region, y = area, label = paste0(pct, "% ", category)),
-            position = position_stack(vjust = 0.5),
-            family = "GDS Transport Website", size = 11, size.unit = "pt", colour = "red" ) +
+glu_simple <- glu_simple |> 
+    mutate(region = factor(region, levels = rev(c("Agricultural land", "Habitable land", "Land surface", "Earths surface")),
+                           labels = rev(c("Agricultural\n land", "Habitable\n land", "Land\n surface", "Earth's\n surface"))),
+           category = factor(category, levels = c("Land", "Barren land", "Habitable Land",  
+                                                   "Forests", "Agriculture",   
+                                                  "Non-food crops", "Crops for food", "Livestock"),
+                             labels = c("Land", "Barren land,\nGlaciers","Habitable\nLand",  
+                                         "Forests,\nWater bodies,\nUrban", "Agriculture",   
+                                        "Non-food crops", "Food crops", "Livestock")),
+           label_outside = case_when(category %in% c("Barren land,\nGlaciers",
+                                                     "Forests,\nWater bodies,\nUrban",
+                                                     "Non-food crops") ~ "a", .default = "b"))
+
+
+
+cht_simple <- ggplot(data = glu_simple, aes(x = region, y = area)) +
+    geom_col(aes(fill = category), colour = "white") +
+    geom_text(aes(label = category, colour = label_outside), position = position_stack(vjust = 0.5),family = "GDS Transport Website", size = 6) +
     scale_fill_manual(values = c(Land = "#12436D",
-                                 `Barren land` = "#BFBFBF",
-                                 Glaciers = "#BFBFBF",
-                                 `Habitable\nLand` = "#12436D",  
-                                 Waterbodies =  "#BFBFBF",
-                                 Urban =  "#BFBFBF",
-                                 Shrub =  "#BFBFBF",
-                                 Forests =  "#BFBFBF",
-                                 Agriculture = "#12436D",   
-                                 `Non-food crops` =  "#BFBFBF",
-                                 `Food crops` = "#12436D", 
-                                 Livestock = "#12436D")) +
-    
-  # coord_flip() + 
-  labs(x = NULL, y = NULL) +
+                               `Barren land,\nGlaciers` = "#BFBFBF",
+                               `Habitable\nLand` = "#12436D",  
+                               `Forests,\nWater bodies,\nUrban` =  "#BFBFBF",
+                               Agriculture = "#12436D",   
+                               `Non-food crops` =  "#BFBFBF",
+                               `Food crops` = "#12436D", 
+                               Livestock = "#12436D")) +
+  scale_colour_manual(values = c(a = "#12436D", b = "#BFBFBF")) +
+  labs(x = NULL, 
+       y = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website") + 
   theme(legend.position = "none",
         axis.text.y = element_blank(),
         axis.line.y = element_blank(), 
         panel.grid.major.y = element_blank())
-
-
-  
-  glu3 <- glu |> 
-    mutate(region = factor(region, levels = rev(c("Agricultural land", "Habitable land", "Land surface", "Earths surface")),
-                           labels = rev(c("Agricultural\n land", "Habitable\n land", "Land\n surface", "Earth's\n surface"))),
-           category = factor(category, levels = c("Land", "Barren land", "Glaciers","Habitable Land",  
-                                                  "Waterbodies", "Urban", "Shrub", "Forests", "Agriculture",   
-                                                  "Non-food crops", "Crops for food", "Livestock"),
-                             labels = c("Land", "Barren land", "Glaciers","Habitable\nLand",  
-                                        "Waterbodies", "Urban", "Shrub", "Forests", "Agriculture",   
-                                        "Non-food crops", "Food crops", "Livestock")),
-           label_outside = case_when(category %in% c("Barren land", "Glaciers", "Shrub", "Urban", "Waterbodies", "Forests", "Non-food crops") ~ -1.5, .default = 0.5)) 
-
-  
-ggplot(data = glu3, aes(x = region, y = area)) +
-    geom_col(aes(fill = category), colour = "white") +
-    geom_text(aes(label = category, hjust = label_outside), position = position_stack(vjust = 0.5))
   
   
   
-  
-  
-  
+ save_graphic(cht_simple, "1.1.8", "global land use for food production simplified") 
+ 
