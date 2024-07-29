@@ -20,3 +20,22 @@ purrr::map2(x, y, \(x, y) {
 
 
 zip(zipfile = "~/fsi.zip", files = list.files("~/fsi/", full.names = TRUE))
+
+# test code to make an ODS file -----------------------------------------------
+library(ukfsr)
+library(readODS)
+library(readr)
+
+csvs <- bucket_manifest(file_ext = "csv") |> 
+  dplyr::filter(stringr::str_starts(folder, "theme_3") & stringr::str_ends(folder, "output/csv"))
+
+path <- csvs$path
+title <- csvs$title
+
+purrr::map2(path, title, \(path, title) {
+  x <- aws.s3::s3read_using(FUN = read_csv,
+                            bucket = ukfsr::s3_bucket(),
+                            object = path)
+  write_ods(x, path = "~/work/test.ods", sheet = title, append = TRUE)
+}
+)
