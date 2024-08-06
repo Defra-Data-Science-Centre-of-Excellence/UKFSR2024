@@ -51,7 +51,7 @@ library(readr)
 
 csvs <- bucket_manifest(file_ext = "csv") |> 
   dplyr::filter(stringr::str_starts(folder, "theme_1") & stringr::str_ends(folder, "output/csv")) |> 
-  mutate(sheet_name = str_replace_all(paste(row_number(), str_sub(title, 1, 28)), " ", "_"))
+  mutate(sheet_name = str_replace_all(paste0(row_number(), "_", indicator_id,"_", str_sub(title, 1, 19)), " ", "_"))
 
 path <- csvs$path
 title <- csvs$title
@@ -74,4 +74,20 @@ purrr::pmap(list(data, sheet_names, title), \(data, sheet_names, title) {
 contents <- tibble(sheet_names, title, desc = "link")
 create_contents_notes(wb, contents)
 
+
+cover <- c("UK Food Security Report 2024",
+           "Theme 1",
+           "An Official Statistics publication",
+           "Official statistics are produced to high professional standards 
+           set out in the Code of Practice for Statistics. They are produced
+           free from any political interference.",
+           "© Crown copyright",
+           "You may re-use this publication (not including logos) free of charge
+           in any format or medium, under the terms of the Open Government
+           Licence."
+           )
+
+create_cover_sheet(wb, text_df = as_tibble(cover))
+
 saveWorkbook(wb, "~/test.xlsx", overwrite = TRUE)
+
