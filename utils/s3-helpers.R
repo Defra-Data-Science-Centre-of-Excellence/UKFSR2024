@@ -32,10 +32,16 @@ csvs <- bucket_manifest(file_ext = "csv") |>
 path <- csvs$path
 title <- csvs$title
 
-purrr::map2(path, title, \(path, title) {
+data <- purrr::map(path, \(path) {
   x <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
                             object = path)
-  write_ods(x, path = "~/work/test.ods", sheet = title, append = TRUE)
-}
-)
+})
+
+names(data) <- title
+contents <- list(Contents = as_tibble(csvs$title))
+
+final <- append(contents, data)
+
+write_ods(final, "~/test.ods")
+
