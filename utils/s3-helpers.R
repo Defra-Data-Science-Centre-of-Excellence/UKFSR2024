@@ -32,7 +32,7 @@ csvs <- bucket_manifest(file_ext = "csv") |>
 path <- csvs$path
 title <- csvs$title
 
-purrr::map2(path, title, \(path, title) {
+data <- purrr::map(path, \(path) {
   x <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
                             object = path)
@@ -90,4 +90,5 @@ cover <- c("UK Food Security Report 2024",
 create_cover_sheet(wb, text_df = as_tibble(cover), subheadings = c(2,3,5,7,9))
 
 saveWorkbook(wb, "~/test.xlsx", overwrite = TRUE)
+
 
