@@ -71,23 +71,23 @@ purrr::pmap(list(data, sheet_names, title), \(data, sheet_names, title) {
   
 })
 
-contents <- tibble(sheet_names, title, desc = "link")
+contents <- tibble(sheet_names, title)
 create_contents_notes(wb, contents)
 
 
 cover <- c("UK Food Security Report 2024",
            "Theme 1",
-           "An Official Statistics publication",
-           "Official statistics are produced to high professional standards 
-           set out in the Code of Practice for Statistics. They are produced
-           free from any political interference.",
-           "© Crown copyright",
-           "You may re-use this publication (not including logos) free of charge
-           in any format or medium, under the terms of the Open Government
-           Licence."
+           "Description",
+           "This dataset contains the underlying data for the indicators in Theme 1",
+           "Last update",
+           "[date]",
+           "Contact details",
+           "foodsecurityreport@defra.gov.uk",
+           "Copyright",
+           "© Crown copyright 2024"
            )
 
-create_cover_sheet(wb, text_df = as_tibble(cover))
+create_cover_sheet(wb, text_df = as_tibble(cover), subheadings = c(2,3,5,7,9))
 
 saveWorkbook(wb, "~/test.xlsx", overwrite = TRUE)
 
