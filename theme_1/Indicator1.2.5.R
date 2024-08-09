@@ -17,7 +17,7 @@ export_shares <- aws.s3::s3read_using(FUN = read_csv,
                                         object = "theme_1/t1_2_5/input/csv/export_shares.csv")%>%
   pivot_longer(cols=4:23,names_to="years",values_to = "value")%>%
   mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
-
+  
 export_shares_world <-export_shares%>%
   filter(Country=="World")
 
@@ -44,13 +44,14 @@ export_shares_global_a<-export_shares_not_world%>%
 ########
 
 herfindhal_indices_chart<-ggplot()+
-  geom_line(data=export_shares_global,aes(x = year, y = signif(HI,digits=3),group=Commodity, colour = Commodity)) +
+  geom_line(data=export_shares_global,aes(x = year, y = signif(hi,digits=3),group=commodity, colour = commodity)) +
+  geom_point(data=export_shares_global,aes(x = year, y = signif(hi,digits=3),group=commodity, colour = commodity, shape = commodity),size=3) +
   scale_y_continuous(limits = c(0,0.5),breaks=c(0.1,0.2,0.3,0.4,0.5),labels=c(0.1,0.2,0.3,0.4,0.5)) +
-  scale_x_continuous(limits = c(2004,2024),breaks=seq(2004,2024,2))+#,labels=c("2015/2016","2017/2018","2019/2020","2021/2022","2023/2024"))+
-  #scale_colour_manual(values = af_colours("categorical",n=6)) +
+  scale_x_continuous(limits = c(2004,2024),breaks=c(seq(2004,2020,4),2023),labels=c("2004/2005","2008/2009","2012/2014","2016/2018","2020/2021","2023/2024"))+
+  scale_colour_manual(values = af_colours("categorical",n=6)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "HI(export share squared)")
+       y = "HI(export share squared)",colour="",linetype="",shape="",size="")
 
 export_shares_global<-export_shares_global%>%
   select(-year)%>%

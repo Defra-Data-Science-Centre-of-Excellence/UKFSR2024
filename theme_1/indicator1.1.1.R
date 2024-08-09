@@ -320,6 +320,8 @@ gdp_per_calorie<-food_supply%>%
 
 gdp_per_calorie_chart<-ggplot(gdp_per_calorie)+
   geom_point(aes(x=log10(Value.y),y=Value.x,size=Value.x.x/1E3,color=Region))+
+  geom_hline(aes(yintercept = 2000, linetype="dashed"))+
+  geom_hline(aes(yintercept = 2500, linetype="dashed"))+
   scale_x_continuous(limits=c(3,5),breaks = c(3,3.3,3.7,4,4.3,4.7,5),labels=c("$1000","$2000","$5000","$10,000","$20,000","$50,000","$100,000"))+
   scale_color_manual(values = af_colours("categorical")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
@@ -346,3 +348,62 @@ save_csv(gdp_per_calorie, "1.1.1", "gdp per calorie")
 #        y = "percent per annum")
 # 
 # save_graphic(feed_change_use_chart, "1.1.1", "feed change use chart")
+
+production <- aws.s3::s3read_using(FUN = read_csv,
+                                         bucket = ukfsr::s3_bucket(),
+                                         object = "theme_1/t1_1_1/input/csv/production.csv")%>%
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(item=Item) |>
+  select(year,value,item)|>
+  filter(year>1970)
+
+cereals_production <- aws.s3::s3read_using(FUN = read_csv,
+                                   bucket = ukfsr::s3_bucket(),
+                                   object = "theme_1/t1_1_1/input/csv/cereals_production.csv")%>%
+  filter(Area=="World") |>
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(item=Item) |>
+  select(year,value,item)|>
+  filter(year>1970)
+
+population <- aws.s3::s3read_using(FUN = read_csv,
+                                   bucket = ukfsr::s3_bucket(),
+                                   object = "theme_1/t1_1_1/input/csv/global_population_2022.csv")%>%
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(item=Item) |>
+  select(year,value)|>
+  filter(year>1970)
+
+production_per_capita<-production%>%
+  left_join(population,by=c("year"="year"))%>%
+  mutate(value=(((value.x)/value.y)*1000)/365)%>%
+  mutate(item=if_else(item%in%c("Citrus Fruit, Total","Fruit Primary","Vegetables Primary"),"Fruit and Vegetables, Primary + Citrus Fruit",item))%>%
+  mutate(item=as.factor(item))%>%
+  mutate(item=ordered(item,levels=c("Cereals, primary","Eggs Primary","Meat, Total","Milk, Total","Roots and Tubers, Total","Fruit and Vegetables, Primary + Citrus Fruit")))%>%
+  group_by(year,item)%>%
+  summarise(value=sum(value,na.rm=TRUE))#%>%
+  #filter(item!="Eggs Primary")
+
+cereals_per_capita<-cereals_production%>%
+  left_join(population,by=c("year"="year"))%>%
+  mutate(value=((value.x/value.y)))%>%
+  group_by(year,item)%>%
+  summarise(value=sum(value,na.rm=TRUE))    
+
+production_chart <- production_per_capita|>
+  ggplot() +
+  geom_line(aes(x = year, y = value, colour = item), lwd = 1) +
+  geom_point(aes(x = year, y = value, colour = item, shape = item),size=3) +
+  scale_x_continuous(limits = c(1969.5,2022.5),breaks =seq(1970,2022,10)) +
+  scale_colour_manual(values = af_colours("categorical",n=6))+#,limits=c("Cereals, primary","Eggs Primary","Meat, Total","Milk, Total","Roots and Tubers, Total","Fruit and Vegetables, Primary + Citrus Fruit"))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "production g per capita per day",
+       shape="",
+       colour="")
+
+save_graphic(production_chart, "1.1.1", "global food production")
+save_csv(production, "1.1.1", "global food production")

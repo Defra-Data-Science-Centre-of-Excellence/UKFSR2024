@@ -254,3 +254,20 @@ world_meat_production_chart <- meat_type_global |>
 
 save_graphic(world_meat_production_chart, "1.1.5", "global meat production")
 save_csv(meat_type_global, "1.1.5", "global meat production")
+
+greenhouse_gas_emission_meat <- aws.s3::s3read_using(FUN = read_csv,
+                                                        bucket = ukfsr::s3_bucket(),
+                                                        object = "theme_1/t1_1_5/input/csv/greenhousegasemissionmeat.csv")%>%
+  pivot_longer(cols=2:5,names_to="stat",values_to = "value")
+
+greenhouse_gas_emission_meat_chart <- greenhouse_gas_emission_meat|>
+  ggplot() +
+  geom_boxplot(aes(Type,value), lwd = 1) +
+  #scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
+  scale_colour_manual(values = af_colours("duo"))+#,limits=c("South America","Africa","Asia","Northern America","Australia and New Zealand","Europe")) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "kg CO2-eq/kg produce")
+
+save_graphic(greenhouse_gas_emission_meat_chart, "1.1.5", "greenhouse_gas_emission_meat")
+save_csv(greenhouse_gas_emission_meat, "1.1.5", "greenhouse_gas_emission_meat")

@@ -9,6 +9,9 @@ library(ukfsr)
 library(afcolours)
 library(here)
 library(readxl)
+library(rworldmap)
+library(tmap)
+library(sf)
 
 psd_temp <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
@@ -53,6 +56,31 @@ percentage_production_globally_traded_chart<-ggplot()+
 
 save_graphic(percentage_production_globally_traded_chart, "1.2.4", "percentage production globally traded")
 save_csv(percentage, "1.2.4", "percentage production globally traded")
+
+neg<-function(x) -x
+
+ifpri <- aws.s3::s3read_using(FUN = read_csv,
+                                 bucket = ukfsr::s3_bucket(),
+                                 object = "theme_1/t1_2_4/input/csv/Food_Import_Dependence_Index.csv")%>%
+  mutate(IndexCat=if_else(Index<neg(5),"exporter",if_else(Index<5,"self sufficent",if_else(Index<20,"very low",if_else(Index<30,"low",if_else(Index<40,"medium",if_else(Index>50,"high","very high")))))))
+  
+
+world_map <- aws.s3::s3read_using(FUN = read_sf,
+                              bucket = ukfsr::s3_bucket(),
+                              object = "theme_1/t1_2_4/input/csv/world.geo.json")
+
+world_map_ifpri<-world_map%>%
+  left_join(ifpri,by=c("sov_a3"="ISO3CODE"))%>%
+  filter(Commodity=="All")
+
+world_map_ifpri_chart<-ggplot()+ 
+  geom_sf(data=world_map)+
+  geom_sf(data = world_map_ifpri,aes(fill=IndexCat))+
+  scale_color_manual(values = af_colours("categorical")) +
+  theme_ukfsr(base_family = "GDS Transport Website")
+
+save_graphic(world_map_ifpri_chart, "1.2.4", "food_import_vulnerability_index_food_import_dependence_ratio")
+save_csv(ifpri, "1.2.4", "food_import_vulnerability_index_food_import_dependence_ratio.csv")
 
 # FSI Indicator 2 --------------------------------------------------------------
 

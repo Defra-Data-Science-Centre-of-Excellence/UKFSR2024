@@ -74,3 +74,22 @@ household_waste_index_chart<-household_waste_index%>%#rbind(household_waste_inde
 
 save_graphic(household_waste_index_chart, "1.1.2", "household waste index")
 save_csv(household_waste_index, "1.1.2", "household waste index")
+
+food_waste_percentages <- aws.s3::s3read_using(FUN = read_csv,
+                                              bucket = ukfsr::s3_bucket(),
+                                              object = "theme_1/t1_1_2/input/csv/food_waste_percentages.csv")%>%
+  pivot_longer(cols=2:3,names_to = "measure",values_to="value")
+
+food_waste_percentages_chart<-food_waste_percentages%>%
+  ggplot() +
+  geom_col(aes(x=measure,y=value,fill=food_type), lwd = 1)+
+  theme_ukfsr()+
+  #scale_y_continuous(limits = c(2000,3000)) +
+  scale_fill_manual(values = af_colours("categorical"),n=5) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "percent")
+
+
+save_graphic(food_waste_percentages_chart, "1.1.2", "food_waste_percentages")
+save_csv(food_waste_percentages, "1.1.2", "food_waste_percentages")
