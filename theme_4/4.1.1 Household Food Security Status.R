@@ -56,6 +56,9 @@ FSR_4_1_1$variable <- as.character(FSR_4_1_1$variable)
 # Then turn it back into a factor with the levels in the correct order
 FSR_4_1_1$variable <- factor(FSR_4_1_1$variable, levels=unique(FSR_4_1_1$variable))
 
+# Reverse the selected color in the graph
+reversed_palette <- rev(af_colours()[1:length(unique(FSR_4_1_1$variable))])
+
 
 source(here::here("utils", "load-font.R"))
 
@@ -65,7 +68,7 @@ FSR_4_1_1_plot <- ggplot(FSR_4_1_1, aes(x = Year, y = value, fill = variable, la
             colour= "white",
             family = "GDS Transport Website",
             size = 6) +
-  scale_fill_manual(values=af_colours(), guide = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
   # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
@@ -153,6 +156,9 @@ FSR_4_1_1b$variable <- as.character(FSR_4_1_1b$variable)
 # Then turn it back into a factor with the levels in the correct order
 FSR_4_1_1b$variable <- factor(FSR_4_1_1b$variable, levels=unique(FSR_4_1_1b$variable))
 
+# Reverse the selected color in the graph
+reversed_palette <- rev(af_colours()[1:length(unique(FSR_4_1_1b$variable))])
+
 
 source(here::here("utils", "load-font.R"))
 
@@ -162,7 +168,7 @@ FSR_4_1_1b_plot <- ggplot(FSR_4_1_1b, aes(x = Disability, y = value, fill = vari
             colour= "white",
             family = "GDS Transport Website",
             size = 10) +
-  scale_fill_manual(values=af_colours(), guide = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
   # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
@@ -202,6 +208,12 @@ FSR_4_1_1c$variable <- as.character(FSR_4_1_1c$variable)
 # Then turn it back into a factor with the levels in the correct order
 FSR_4_1_1c$variable <- factor(FSR_4_1_1c$variable, levels=unique(FSR_4_1_1c$variable))
 
+# Reverse the selected color in the graph
+reversed_palette <- rev(af_colours()[1:length(unique(FSR_4_1_1c$variable))])
+
+
+
+
 
 source(here::here("utils", "load-font.R"))
 
@@ -211,7 +223,7 @@ FSR_4_1_1c_plot <- ggplot(FSR_4_1_1c, aes(x = Age, y = value, fill = variable, l
             colour= "white",
             family = "GDS Transport Website",
             size = 10) +
-  scale_fill_manual(values=af_colours(), guide = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
   # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
@@ -252,6 +264,9 @@ FSR_4_1_1d$variable <- as.character(FSR_4_1_1d$variable)
 # Then turn it back into a factor with the levels in the correct order
 FSR_4_1_1d$variable <- factor(FSR_4_1_1d$variable, levels=unique(FSR_4_1_1d$variable))
 
+# Reverse the selected color in the graph
+reversed_palette <- rev(af_colours()[1:length(unique(FSR_4_1_1d$variable))])
+
 
 source(here::here("utils", "load-font.R"))
 
@@ -261,7 +276,7 @@ FSR_4_1_1d_plot <- ggplot(FSR_4_1_1d, aes(x = `Ethnic group`, y = value, fill = 
             colour= "white",
             family = "GDS Transport Website",
             size = 10) +
-  scale_fill_manual(values=af_colours(), guide = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
   # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
