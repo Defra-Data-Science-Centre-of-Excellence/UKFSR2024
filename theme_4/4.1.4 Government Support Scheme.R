@@ -25,19 +25,17 @@ FSR_4_1_4 <- FSR_4_1_4 %>%
 
 FSR_4_1_4 <- FSR_4_1_4 %>%
   pivot_longer(cols = c(`Feb-22`, `Feb-24`), 
-               names_to = "Usage_Period", 
-               values_to = "Usage_Value")
+               names_to = "Month", 
+               values_to = "Value")
 
-FSR_4_1_4$Usage_Period <- factor(FSR_4_1_4$Usage_Period, levels = unique(FSR_4_1_4$Usage_Period))
+FSR_4_1_4$Month <- factor(FSR_4_1_4$Month, levels = unique(FSR_4_1_4$Month))
 
-# Convert the Usage_Value to thousands and round to two decimal places
-FSR_4_1_4$Usage_Value <- round(FSR_4_1_4$Usage_Value / 1000, 1)
-
+FSR_4_1_4$Value <- round(FSR_4_1_4$Value/1000,1)
 
 # Plot the bar chart
-FSR_4_1_4_plot <- ggplot(FSR_4_1_4, aes(x = `Region`, y = Usage_Value, fill = Usage_Period)) +
+FSR_4_1_4_plot <- ggplot(FSR_4_1_4, aes(x = `Region`, y = Value, fill = Month)) +
   geom_bar(stat = "identity", position = position_dodge()) +
-  geom_text(aes(label = Usage_Value), 
+  geom_text(aes(label = Value), 
             position = position_dodge(width = 0.9), 
             vjust = 0.5, hjust = -0.1, 
             size = 6, color = 'black') + 
