@@ -131,7 +131,7 @@ save_graphic(FSR_4_1_1a_plot, '4.1.1a','% of households food (Insecure)')
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
-
+  # Support 2 - Households food security by disability.
 
 FSR_4_1_1b <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
@@ -184,6 +184,7 @@ save_graphic(FSR_4_1_1b_plot, '4.1.1b','Household food security status by disabi
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
   
+  # Support 3 - Households food security by age.
   
 FSR_4_1_1c <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
@@ -240,6 +241,7 @@ save_graphic(FSR_4_1_1c_plot, '4.1.1c','Household food security status by age') 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
   
+  # Support 4 - Households food security by ethnicity.
   
 FSR_4_1_1d <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
