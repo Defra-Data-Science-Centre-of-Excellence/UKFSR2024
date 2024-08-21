@@ -40,6 +40,7 @@ t4_1_3_plot <- cht +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   labs(y = "Year on year % change in CPIH") +
   scale_colour_manual(values=af_duo_colours, labels = c("Overall inflation", "Food inflation")) +
+  scale_x_date(breaks = seq(min(mm23_month$date), max(mm23_month$date), by = "2 years"),date_labels = "%b %Y") +  # Adjust breaks to 3 years
   theme(
     axis.title.x = element_blank(),
     axis.title.y = element_text(size=20),
