@@ -67,7 +67,7 @@ FSR_4_1_1_plot <- ggplot(FSR_4_1_1, aes(x = Year, y = value, fill = variable, la
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
             family = "GDS Transport Website",
-            size = 6) +
+            size = 7) +
   scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
@@ -167,7 +167,7 @@ FSR_4_1_1b_plot <- ggplot(FSR_4_1_1b, aes(x = Disability, y = value, fill = vari
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
             family = "GDS Transport Website",
-            size = 10) +
+            size = 7) +
   scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
@@ -223,7 +223,7 @@ FSR_4_1_1c_plot <- ggplot(FSR_4_1_1c, aes(x = Age, y = value, fill = variable, l
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
             family = "GDS Transport Website",
-            size = 10) +
+            size = 7) +
   scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
@@ -277,7 +277,7 @@ FSR_4_1_1d_plot <- ggplot(FSR_4_1_1d, aes(x = `Ethnic group`, y = value, fill = 
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
             family = "GDS Transport Website",
-            size = 10) +
+            size = 7) +
   scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +

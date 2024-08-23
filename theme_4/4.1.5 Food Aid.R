@@ -67,7 +67,7 @@ FSR_4_1_5a_plot <- ggplot(FSR_4_1_5a, aes(x = `Frequency of social supermarket u
             hjust = -0.2, 
             colour= "black",
             family = "GDS Transport Website",
-            size = 10) +
+            size = 7) +
   labs(y = "% of respondents", x = "Frequency of social supermarket use") +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website",
