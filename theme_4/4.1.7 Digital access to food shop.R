@@ -41,3 +41,40 @@ FSR_4_1_7_plot
 
 save_graphic(FSR_4_1_7_plot, '4.1.7', ' Internet Sales as a propotion of all retailing ') + 
   save_csv(FSR_4_1_7, '4.1.7', 'Internet Sales as a propotion of all retailing')
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Kantar data on proportion of usage of the retail channels in %
+
+
+FSR_4_1_7a <- aws.s3::s3read_using(FUN = readr::read_csv,
+                                   bucket = "s3-ranch-054",
+                                   object = "theme_4/input_data/Urban_Rural_Demographic_spend.csv")
+
+
+FSR_4_1_7a <- FSR_4_1_7a %>%
+  pivot_longer(cols = c(`Supermarket`, `Convenience`, `Internet`, `Discounter`, `High street`), 
+               names_to = "retail_channel", 
+               values_to = "proportion")
+
+FSR_4_1_7a$Demography <- factor(FSR_4_1_7a$Demography, 
+                                levels = rev(c("City", "Urban", "Suburban", "Semi-rural", "Rural")))
+
+
+# Plot the bar chart
+FSR_4_1_7a_plot <- ggplot(FSR_4_1_7a, aes(x = Demography, y = proportion, fill = retail_channel)) +
+  geom_bar(stat = "identity", position = "stack") + 
+  geom_text(aes(label = round(proportion, 1)),  # Add text labels
+            position = position_stack(vjust = 0.5),  # Position labels in the middle of each bar segment
+            size = 7, color = "white") +  
+  coord_flip() +
+  scale_fill_manual(values = rev(af_colours()[1:5])) +
+  labs(y = "% of sales by type of food shop",
+       x = NULL,
+       fill = "Retail Channel") +
+  theme_ukfsr()
+
+FSR_4_1_7a_plot
+
+save_graphic(FSR_4_1_7a_plot, '4.1.7a','Usage proportion of retail channels in %') + 
+  save_csv(FSR_4_1_7a, '4.1.7a','Usage proportion of retail channels in %')
