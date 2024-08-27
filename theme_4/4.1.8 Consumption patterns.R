@@ -16,12 +16,7 @@ FSR_4_1_8 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   object = "theme_4/input_data/UK consumption of different food groups.csv")
 
 
-FSR_4_1_8 <- FSR_4_1_8 %>%
-  mutate(`Food group` = recode(`Food group`,
-                               `Other cereals and cereal products` = 'Cereals',
-                               `Vegetables (excluding potatoes)` = 'Vegetables',
-                               `Potatoes (fresh and processed)` = 'Potatoes'))
-         
+
          
 # Reorder the Food_group factor by the Percentage_change
 FSR_4_1_8 <- FSR_4_1_8 %>%
