@@ -24,7 +24,7 @@ FSR_4_1_6 <- FSR_4_1_6 %>%
 
 FSR_4_1_6_plot <- ggplot(FSR_4_1_6, aes(x= Region, y=Average_Distance)) +
   geom_bar(stat="identity", show.legend = FALSE, fill = af_colours(n=1)) +
-  geom_text(aes(label = Average_Distance), vjust= 0.3, hjust = 1.2, size=6, color='white', parse = FALSE) +  
+  geom_text(aes(label = round(Average_Distance,1)), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE) +  
   scale_y_continuous(limits = c(0,5), breaks=seq(0,5,1)) +
   theme_ukfsr()+
   coord_flip() +
@@ -67,7 +67,7 @@ FSR_4_1_6a <- FSR_4_1_6a %>%
 
 FSR_4_1_6a_plot <- ggplot(FSR_4_1_6a, aes(x= Region, y=Supermarket_count)) +
   geom_bar(stat="identity", show.legend = FALSE, fill = af_colours(n=1)) +
-  geom_text(aes(label = Supermarket_count), vjust= 0.3, hjust = 1.2, size=6, color='white', parse = FALSE) +  
+  geom_text(aes(label = Supermarket_count), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE) +  
   scale_y_continuous(limits = c(0,200), breaks=seq(0,200,25)) +
   theme_ukfsr()+
   coord_flip() +

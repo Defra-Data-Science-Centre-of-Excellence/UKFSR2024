@@ -31,7 +31,7 @@ FSR_4_1_9_plot <- ggplot(FSR_4_1_9, aes(x = `Income Quintile`, y = Value, fill =
   geom_text(aes(label = Value), 
             position = position_dodge(width = 0.9), 
             vjust = -0.5, hjust = 0.5, 
-            size = 6, color = 'black') + 
+            size = 7, color = 'black') + 
   scale_fill_manual(values = afcolours::af_colours("duo")) +
   labs(y = "% of disposable income ",
        x = "Income quintile",
