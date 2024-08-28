@@ -60,7 +60,7 @@ FSR_4_1_5a$`Frequency of social supermarket use` <- factor(FSR_4_1_5a$`Frequency
 source(here::here("utils", "load-font.R"))
 
 FSR_4_1_5a_plot <- ggplot(FSR_4_1_5a, aes(x = `Frequency of social supermarket use`, y = `% of respondents`)) +
-  geom_bar(stat = "identity", width = 0.5, fill = af_colours("categorical")[1]) +
+  geom_bar(stat = "identity", fill = af_colours("categorical")[1]) +
   geom_text(aes(label = `% of respondents`), 
             position = position_dodge(width = 0.5), 
             vjust = 0.5,

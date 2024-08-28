@@ -95,6 +95,7 @@ F4_1_2d_plot <- ggplot(F4_1_2d, aes(x=Year, y=value, colour=variable, group=vari
   geom_line() +
   facet_wrap(~ variable) +
   scale_colour_manual(values = af_colours())+
+  scale_y_continuous(breaks = seq(from = 0, to = 17, by = 4), limits = c(0,17)) +
   labs(x = NULL,
        y = "Proportion of household expenditure (%)") +
   theme_ukfsr(base_family = "GDS Transport Website") +
