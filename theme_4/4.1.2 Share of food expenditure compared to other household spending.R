@@ -22,6 +22,7 @@ library(png)
 library(viridis)
 library(showtext)
 library(svglite)
+library(cowplot)
 
 
 
@@ -64,6 +65,46 @@ FSR_4_1_2plot
 
 save_graphic(FSR_4_1_2plot, '4.1.2','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK') + 
   save_csv(FSR_4_1_2, '4.1.2','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK')
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Actual average weekly household expenditure (ONS Family Spending in the UK)
+  
+F4_1_2c <- aws.s3::s3read_using(FUN = readr::read_csv,
+                                bucket = "s3-ranch-054",
+                                object = "theme_4/input_data/Actual average weekly household expenditure.csv")
+
+F4_1_2c <- F4_1_2c %>%
+  gather(variable, value, `Food & non-alcoholic drinks`, `Restaurants & hotels`, `Other`) %>%
+  filter(Year %in% c("2017/18", "2018/19", "2019/20", "2020/21", "2021/22", "2022/23"))
+
+F4_1_2c <- F4_1_2c %>%
+  mutate(variable = factor(variable, levels = rev(c("Food & non-alcoholic drinks", "Restaurants & hotels", "Other"))))
+
+
+
+F4_1_2c_plot <- ggplot(F4_1_2c, aes(x = Year, y = value, fill = variable)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = value), 
+            position = position_stack(vjust = 0.5), 
+            vjust = 0.5, 
+            hjust = 0.3, 
+            colour = "white", 
+            family = "GDS Transport Website", 
+            size = 7) +
+  scale_fill_manual(values = af_colours()) +  
+ # Only label these years
+  labs(x = NULL,
+       y = "Average weekly household expenditure (£)") +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  guides(fill = guide_legend(byrow = TRUE, reverse = TRUE)) 
+
+F4_1_2c_plot
+
+save_graphic(F4_1_2c_plot, '4.1.2c', 'Actual average weekly household expenditure') + 
+  save_csv(F4_1_2c, '4.1.2c', 'Actual average weekly household expenditure')
+
+
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -108,3 +149,5 @@ F4_1_2d_plot
 
 save_graphic(F4_1_2d_plot, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages') + 
   save_csv(F4_1_2d, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages')
+
+
