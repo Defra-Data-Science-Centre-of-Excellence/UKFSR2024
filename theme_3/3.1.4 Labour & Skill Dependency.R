@@ -24,6 +24,7 @@ FSR_3_1_4_plot <- ggplot(FSR_3_1_4, aes(x=Year, y=value, colour=variable, group=
   geom_line() +
   labs(x = NULL,
        y = "Thousand people") +
+  scale_colour_manual(values = af_colours()) + 
   theme_ukfsr(base_family = "GDS Transport Website") +
   guides(fill = guide_legend(byrow = TRUE)) +
   theme(
