@@ -1,3 +1,6 @@
+#devtools::install_github("FoodchainStats/ukfsr")
+
+
 library(dplyr)
 library(tidyr)
 library(janitor)

@@ -1,3 +1,6 @@
+#devtools::install_github("FoodchainStats/ukfsr")
+
+
 # Load required libraries
 library('sf')
 library('ukfsr')
@@ -14,14 +17,6 @@ library('lubridate')
 contents <- get_bucket_df("s3-ranch-054")
 
 
-# .SHP file can't be read directly from the S3 bucket you . You would need to download/have the .SHP file in your local machine and then you have to convert the .SHP file to .GEOJSON/.PARQUET
-# Code to convert to .geojson
-
-#uk_border_temp <- sf::st_read("~/UKFSR2024/Transport Delay Shape File/CTRY_DEC_2022_GB_BUC.shp")
-#sf::st_write(uk_border_temp, dsn = "CTRY_DEC_2022_GB_BUC.geojson", layer = 1)  # Assuming one layer
-
-#shp_temp <- sf::st_read("~/UKFSR2024/Transport Delay Shape File/2022_Delay_v2.shp")
-#sf::st_write(uk_border_temp, dsn = "2022_Delay_v2.geojson", layer = 1)
 
 uk_border <- aws.s3::s3read_using(FUN = sf::st_read,
                                    bucket = "s3-ranch-054",

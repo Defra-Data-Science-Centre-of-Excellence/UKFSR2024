@@ -33,7 +33,6 @@ FSR_3_1_5 <- FSR_3_1_5 %>%
 
 FSR_3_1_5plot <- ggplot(FSR_3_1_5, aes(x=Year, y=value, colour=key, group=key)) +
   geom_line() +
-  #scale_y_continuous(limits = c(0,4500), breaks=seq(0,4500,500)) +
   guides(fill = guide_legend(byrow = TRUE)) +
   scale_colour_manual(values = af_colours("categorical")) + 
   labs(x = NULL,

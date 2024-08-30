@@ -1,3 +1,6 @@
+#devtools::install_github("FoodchainStats/ukfsr")
+
+
 library('ukfsr')
 library('afcolours')
 library('ggplot2')
