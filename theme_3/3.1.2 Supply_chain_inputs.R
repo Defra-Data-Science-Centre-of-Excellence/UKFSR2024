@@ -405,3 +405,32 @@ all_net_cht <- all_net |>
 save_graphic(all_net_cht, "3.1.2e", "net trade by product")
 
 
+------------------------------------------------------------------------------------------------------------------------------------
+  
+# Wheat UK Import/Export data.
+  
+
+FSR_3_1_2f <- aws.s3::s3read_using(FUN = readr::read_csv,
+                                     bucket = "s3-ranch-054",
+                                     object = "theme_3/input_data/UK Wheat trade data.csv")
+
+FSR_3_1_2f <- FSR_3_1_2f %>%
+  gather(variable,value,`Export`,`Import`)
+
+FSR_3_1_2f_plot <- ggplot(FSR_3_1_2f, aes(x=Year, y=value, colour=variable, group=variable)) +
+  geom_line() +
+  labs(x = NULL,
+       y = "Thousand tonne") +
+  scale_colour_manual(values = af_colours()) + 
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  guides(fill = guide_legend(byrow = TRUE)) +
+  theme(
+    legend.position = "bottom", 
+    legend.justification = c(0,0)) +
+  guides(colour=guide_legend(override.aes=list(size=1)))+
+  expand_limits(y = 0) 
+
+FSR_3_1_2f_plot
+
+save_csv(FSR_3_1_2f, "3.1.2f", "UK Wheat import and export")
+save_graphic(FSR_3_1_2f_plot, "3.1.2f", "UK Wheat import and export")
