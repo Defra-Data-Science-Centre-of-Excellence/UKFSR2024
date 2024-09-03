@@ -20,12 +20,15 @@ variable_order <- c("Fertilisers", "Pesticides", "Seeds",
                     "Animal feed", "Veterinary expenses", "Energy", 
                     "Agricultural services", "Total maintenance", "Other goods and services")
 
+variable_labels <- c("Fertilisers", "Pesticides", "Seeds", 
+                    "Animal feed", "Veterinary expenses", "Energy", 
+                    "Agricultural services", "Total maintenance", "Other goods & services")
 
 FSR_3_1_1 <- FSR_3_1_1 %>%
   gather(variable,value, 'Seeds','Energy','Fertilisers','Pesticides','Animal feed',
          'Agricultural services','Veterinary expenses','Total maintenance','Other goods and services') %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01")),
-         variable = factor(variable, levels = variable_order))
+         variable = factor(variable, levels = variable_order, labels = variable_labels))
 
 
 FSR_3_1_1plot <- ggplot(FSR_3_1_1, aes(x=Year, y=value, group=variable, color = 'variable')) +
@@ -36,15 +39,15 @@ FSR_3_1_1plot <- ggplot(FSR_3_1_1, aes(x=Year, y=value, group=variable, color = 
   #guides(fill = guide_legend(byrow = TRUE)) +
   labs(x = NULL,
        y = "£ Million") +
-  scale_x_date(breaks=seq(as.Date("2003-01-01"),Sys.Date()-lubridate::years(1),by = "4 year"),date_labels = "%Y") +
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  scale_x_date(breaks=seq(as.Date("2005-01-01"),Sys.Date()-lubridate::years(1),by = "5 year"),date_labels = "%Y") +
+  theme_ukfsr(base_family = "GDS Transport Website",base_size = 12) +
   theme(plot.margin = margin(5,50,5,5,unit = "pt"),
         legend.position = "none")
 
 FSR_3_1_1plot
 
-save_graphic(FSR_3_1_1plot, '3.1.1', ' UK principal farm costs') + 
-  save_csv(FSR_3_1_1, '3.1.1', ' UK principal farm costs')
+save_graphic(FSR_3_1_1plot, '3.1.1', ' UK principal farm costs') 
+save_csv(FSR_3_1_1, '3.1.1', ' UK principal farm costs')
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
   ### Support 1 : Fertilizer Usage Graph
