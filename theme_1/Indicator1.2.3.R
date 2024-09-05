@@ -81,6 +81,7 @@ employment_data <- aws.s3::s3read_using(FUN = read_csv,
 
 employment_data_chart<-ggplot()+
   geom_line(data=employment_data,aes(x = year, y = value/1E3,color=`area`)) +
+  geom_point(data=employment_data,aes(x=year, y=value/1E3,color=`area`,shape=`area`),size=4)+
   scale_color_manual(values = af_colours("categorical"),n=6) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,

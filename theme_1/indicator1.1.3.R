@@ -127,3 +127,145 @@ coahd_chart<-coahd%>%
 save_graphic(coahd_chart, "1.1.3", "coahd")
 save_csv(coahd, "1.1.3", "coahd")
 
+world_data<-map_data("world")
+
+food_supply_2022 <- aws.s3::s3read_using(FUN = read_csv,
+                                                                              bucket = ukfsr::s3_bucket(),
+                                                                              object = "theme_1/t1_1_3/input/csv/foodsupply2022.csv")
+
+food_supply_2022_key<-food_supply_2022%>%
+  mutate(gpcpd=(Value*1000)/365)%>%
+  mutate(Item=if_else(Item%in%c("Pigmeat","Mutton & Goat Meat","Bovine Meat","Meat, Other"),"Red Meat",Item))%>%
+  group_by(Area,Item)%>%
+  summarise(gpcpd=sum(gpcpd,na.rm = TRUE))%>%
+  mutate(key="a")%>%
+  mutate(key=if_else(Item=="Cereals - Excluding Beer",if_else(gpcpd<232,"i",if_else(gpcpd<308.6,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Starchy Roots",if_else(gpcpd<50,"i",if_else(gpcpd<66.5,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Sugar & Sweeteners",if_else(gpcpd<31,"i",if_else(gpcpd<41.2,"ii","iii")),key))%>%           
+  mutate(key=if_else(Item=="Pulses",if_else(gpcpd<75,"i",if_else(gpcpd<98.8,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Treenuts",if_else(gpcpd<50,"i",if_else(gpcpd<66.5,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Vegetables",if_else(gpcpd<300,"i",if_else(gpcpd<399,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Fruits - Excluding Wine",if_else(gpcpd<200,"i",if_else(gpcpd<266,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Poultry Meat",if_else(gpcpd<29,"i",if_else(gpcpd<38.6,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Red Meat",if_else(gpcpd<14,"i",if_else(gpcpd<18.6,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Eggs",if_else(gpcpd<13,"i",if_else(gpcpd<17.3,"ii","iii")),key))%>%
+  mutate(key=if_else(Item=="Milk - Excluding Butter",if_else(gpcpd<250,"i",if_else(gpcpd<332.5,"ii","iii")),key))%>%        
+  mutate(key=if_else(Item=="Fish, Seafood",if_else(gpcpd<28,"i",if_else(gpcpd<37.3,"ii","iii")),key))%>%
+  mutate(Item=if_else(Item=="Cereals - Excluding Beer","Cereals",Item))%>%
+  mutate(Item=if_else(Item=="Starchy Roots","Roots and Tubers",Item))%>%
+  mutate(Item=if_else(Item=="Sugar & Sweeteners","Sugar",Item))%>%           
+  mutate(Item=if_else(Item=="Pulses","Legumes",Item))%>%
+  mutate(Item=if_else(Item=="Treenuts","Nuts",Item))%>%
+  mutate(Item=if_else(Item=="Fruits - Excluding Wine","Fruits",Item))%>%
+  mutate(Item=if_else(Item=="Milk - Excluding Butter","Milk",Item))%>%        
+  mutate(Item=if_else(Item=="Fish, Seafood","Seafood",Item))
+
+
+food_supply_2022_key<-food_supply_2022_key%>%
+  mutate(Area=if_else(Area=="United States of America","USA",Area))%>%
+  mutate(Area=if_else(Area=="Syrian Arab Republic","Syria",Area))%>%
+  mutate(Area=if_else(Area=="Netherlands (Kingdom of the)","Netherlands",Area))%>%
+  mutate(Area=if_else(Area=="Viet Nam","Vietnam",Area))%>%
+  mutate(Area=if_else(Area=="Brunei Darussalam","Brunei",Area))%>%
+  mutate(Area=if_else(Area=="Venezuela (Bolivarian Republic of)","Venezuela",Area))%>%
+  mutate(Area=if_else(Area=="Türkiye","Turkey",Area))%>%
+  mutate(Area=if_else(Area=="Antigua and Barbuda","Antigua",Area))%>%
+  mutate(Area=if_else(Area=="Republic of Korea","South Korea",Area))%>%
+  mutate(Area=if_else(Area=="Democratic People's Republic of Korea","North Korea",Area))%>%
+  mutate(Area=if_else(Area=="Saint Kitts and Nevis","Saint Kitts",Area))%>%
+  mutate(Area=if_else(Area=="Republic of Moldova","Moldova",Area))%>%
+  mutate(Area=if_else(Area=="Russian Federation","Russia",Area))%>%
+  mutate(Area=if_else(Area=="Saint Vincent and the Grenadines","Grenadines",Area))%>%
+  mutate(Area=if_else(Area=="Côte d'Ivoire","Ivory Coast",Area))%>%
+  mutate(Area=if_else(Area=="Trinidad and Tobago","Trinidad",Area))%>%
+  mutate(Area=if_else(Area=="Czechia","Czech Republic",Area))%>%
+  mutate(Area=if_else(Area=="Iran (Islamic Republic of)","Iran",Area))%>%
+  mutate(Area=if_else(Area=="Bolivia (Plurinational State of)","Bolivia",Area))%>%
+  mutate(Area=if_else(Area=="Cabo Verde","Cape Verde",Area))%>%
+  mutate(Area=if_else(Area=="Lao People's Democratic Republic","Laos",Area))%>%
+  mutate(Area=if_else(Area=="United Republic of Tanzania","Tanzania",Area))%>%
+  mutate(Area=if_else(Area=="United Kingdom of Great Britain and Northern Ireland","UK",Area))%>%
+  mutate(Area=if_else(Area=="Congo","Republic of Congo",Area))%>%
+  mutate(Area=if_else(Area=="Eswatini","Swaziland",Area))
+
+world_map_food_supply_2022<-world_data%>%
+  left_join(food_supply_2022_key,by=c("region"="Area"))%>%
+  filter(!is.na(Item))
+
+world_map_food_supply_2022_chart<-ggplot()+
+  facet_wrap(~Item)+
+  geom_polygon(data = world_map_food_supply_2022,aes(x=long,y=lat,group=group,fill=key))+
+  scale_fill_manual(values = c("red","blue","green")) +
+  theme_ukfsr(base_family = "GDS Transport Website")
+
+save_graphic(world_map_food_supply_2022_chart, "1.1.3", "food supply")
+save_csv(food_supply_2022_key, "1.1.3", "food supply.csv")
+
+food_supply_2019_2022 <- aws.s3::s3read_using(FUN = read_csv,
+                                         bucket = ukfsr::s3_bucket(),
+                                         object = "theme_1/t1_1_3/input/csv/food_supply_2019-2022.csv")
+
+food_supply_2019<-food_supply_2019_2022%>%
+  filter(Year==2019)%>%
+  select(Area,Item,Value)
+
+food_supply_2022a<-food_supply_2019_2022%>%
+  filter(Year==2022)%>%
+  select(Area,Item,Value)
+
+food_supply_diff<-food_supply_2022a%>%
+  left_join(food_supply_2019,by=c("Area"="Area","Item"="Item"))%>%
+  mutate(Item=if_else(Item%in%c("Pigmeat","Mutton & Goat Meat","Bovine Meat","Meat, Other"),"Red Meat",Item))%>%
+  group_by(Area,Item)%>%
+  summarise(Value.x=sum(Value.x,na.rm = TRUE),Value.y=sum(Value.y,na.rm=TRUE))%>%
+  mutate(difference=Value.x-Value.y)%>%
+  mutate(percentage=(difference/Value.y)*100)%>%
+  mutate(Item=if_else(Item=="Cereals - Excluding Beer","Cereals",Item))%>%
+  mutate(Item=if_else(Item=="Starchy Roots","Roots and Tubers",Item))%>%
+  mutate(Item=if_else(Item=="Sugar & Sweeteners","Sugar",Item))%>%           
+  mutate(Item=if_else(Item=="Pulses","Legumes",Item))%>%
+  mutate(Item=if_else(Item=="Treenuts","Nuts",Item))%>%
+  mutate(Item=if_else(Item=="Fruits - Excluding Wine","Fruits",Item))%>%
+  mutate(Item=if_else(Item=="Milk - Excluding Butter","Milk",Item))%>%        
+  mutate(Item=if_else(Item=="Fish, Seafood","Seafood",Item))%>%
+  mutate(key=if_else(difference>0,"positive",if_else(difference<0,"negative","no change")))
+
+food_supply_diff<-food_supply_diff%>%
+  mutate(Area=if_else(Area=="United States of America","USA",Area))%>%
+  mutate(Area=if_else(Area=="Syrian Arab Republic","Syria",Area))%>%
+  mutate(Area=if_else(Area=="Netherlands (Kingdom of the)","Netherlands",Area))%>%
+  mutate(Area=if_else(Area=="Viet Nam","Vietnam",Area))%>%
+  mutate(Area=if_else(Area=="Brunei Darussalam","Brunei",Area))%>%
+  mutate(Area=if_else(Area=="Venezuela (Bolivarian Republic of)","Venezuela",Area))%>%
+  mutate(Area=if_else(Area=="Türkiye","Turkey",Area))%>%
+  mutate(Area=if_else(Area=="Antigua and Barbuda","Antigua",Area))%>%
+  mutate(Area=if_else(Area=="Republic of Korea","South Korea",Area))%>%
+  mutate(Area=if_else(Area=="Democratic People's Republic of Korea","North Korea",Area))%>%
+  mutate(Area=if_else(Area=="Saint Kitts and Nevis","Saint Kitts",Area))%>%
+  mutate(Area=if_else(Area=="Republic of Moldova","Moldova",Area))%>%
+  mutate(Area=if_else(Area=="Russian Federation","Russia",Area))%>%
+  mutate(Area=if_else(Area=="Saint Vincent and the Grenadines","Grenadines",Area))%>%
+  mutate(Area=if_else(Area=="Côte d'Ivoire","Ivory Coast",Area))%>%
+  mutate(Area=if_else(Area=="Trinidad and Tobago","Trinidad",Area))%>%
+  mutate(Area=if_else(Area=="Czechia","Czech Republic",Area))%>%
+  mutate(Area=if_else(Area=="Iran (Islamic Republic of)","Iran",Area))%>%
+  mutate(Area=if_else(Area=="Bolivia (Plurinational State of)","Bolivia",Area))%>%
+  mutate(Area=if_else(Area=="Cabo Verde","Cape Verde",Area))%>%
+  mutate(Area=if_else(Area=="Lao People's Democratic Republic","Laos",Area))%>%
+  mutate(Area=if_else(Area=="United Republic of Tanzania","Tanzania",Area))%>%
+  mutate(Area=if_else(Area=="United Kingdom of Great Britain and Northern Ireland","UK",Area))%>%
+  mutate(Area=if_else(Area=="Congo","Republic of Congo",Area))%>%
+  mutate(Area=if_else(Area=="Eswatini","Swaziland",Area))
+
+world_map_food_supply_diff<-world_data%>%
+  left_join(food_supply_diff,by=c("region"="Area"))%>%
+  filter(!is.na(Item))
+
+world_map_food_supply_diff_chart<-ggplot()+
+  facet_wrap(~Item)+
+  geom_polygon(data = world_map_food_supply_diff,aes(x=long,y=lat,group=group,fill=key))+
+  scale_fill_manual(values = c("red","blue","green")) +
+  theme_ukfsr(base_family = "GDS Transport Website")
+
+save_graphic(world_map_food_supply_diff_chart, "1.1.3", "food supply difference")
+save_csv(food_supply_diff, "1.1.3", "food supply difference.csv")

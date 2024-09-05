@@ -97,7 +97,8 @@ scr_out<-rbind(scr_world,scr_world_minus_china,scr_top_exporters_maize,scr_top_e
   rename(scr="SCR")%>%
   rename(area="Area")%>%
   rename(stocks="value.x")%>%
-  rename(comsumption="value.y")
+  rename(comsumption="value.y")%>%
+  filter(commodity!="Oilseed, Sunflowerseed")
   
 #scr_maize<-scr_out%>%
 #  filter(Commodity=="Corn")
@@ -122,13 +123,16 @@ year_labels<-year_labels_temp$labels
 
 scr_chart <- scr_out |> 
   ggplot() +
-  facet_wrap(~commodity)+
+  facet_wrap(~commodity,scales="free")+
   geom_line(aes(x=plot_year,y=scr,color=area))+
   scale_color_manual(values = af_colours("categorical"))+
   scale_x_continuous(breaks=seq(2004,2024,4),labels=year_labels)+
   scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
   theme_ukfsr(base_family = "GDS Transport Website") +
-  theme(panel.spacing=unit(2,"lines"))+
+  theme(panel.spacing=unit(2,"lines"),
+        axis.ticks = element_line() ,
+        axis.ticks.length = unit(.1, "cm"),
+        axis.line.x = element_line())+
   labs(x = NULL,
        y = "percent")
 
