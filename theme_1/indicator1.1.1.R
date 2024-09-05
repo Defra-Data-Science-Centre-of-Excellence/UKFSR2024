@@ -407,3 +407,20 @@ production_chart <- production_per_capita|>
 
 save_graphic(production_chart, "1.1.1", "global food production")
 save_csv(production, "1.1.1", "global food production")
+
+food_supply_2 <- aws.s3::s3read_using(FUN = read_csv,
+                                    bucket = ukfsr::s3_bucket(),
+                                    object = "theme_1/t1_1_1/input/csv/food_supply_output.csv")
+
+food_supply_2_chart<-ggplot(food_supply_2)+
+  geom_line(aes(x=Year,y=Value,color=Area))+
+  geom_vline(aes(xintercept = 2010),linetype="dashed")+
+  annotate("text",x=1997,y=4500,size=6,label="change in methodology")+
+  #scale_color_manual(values = c(af_colours("categorical"),)) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = "Year",
+       y = "kcals per capita per day")
+
+save_graphic(food_supply_2_chart, "1.1.1", "global food supply")
+save_csv(food_supply_2, "1.1.1", "global food supply")
+

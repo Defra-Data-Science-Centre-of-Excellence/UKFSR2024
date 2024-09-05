@@ -131,7 +131,8 @@ scr_chart <- scr_out |>
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing=unit(2,"lines"),
         axis.ticks = element_line() ,
-        axis.ticks.length = unit(.1, "cm"))+
+        axis.ticks.length = unit(.1, "cm"),
+        axis.line.x = element_line())+
   labs(x = NULL,
        y = "percent")
 

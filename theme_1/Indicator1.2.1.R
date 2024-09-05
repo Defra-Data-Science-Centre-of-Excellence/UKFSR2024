@@ -30,6 +30,8 @@ fertiliser_concertrations_out<-fertiliser_concertrations_countries%>%
   filter(Year>2000)%>%
   rename(year=Year)%>%
   rename(item=Item)%>%
+  mutate(item=str_replace(item,"Nutrient",""))%>%
+  mutate(item=str_replace(item,"\\(total\\)",""))%>%
   select(year,share_squared,item)
 
 ########
@@ -41,7 +43,7 @@ fertiliser_concertrations_chart<-ggplot()+
   scale_colour_manual(values = af_colours("categorical",n=3)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "percent")
+       y = "HHI")
 
 save_graphic(fertiliser_concertrations_chart, "1.2.1", "fertiliser concertrations")
 save_csv(fertiliser_concertrations_out, "1.2.1", "fertiliser concertrations")

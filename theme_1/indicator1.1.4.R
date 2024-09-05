@@ -87,7 +87,8 @@ p_out<-(p1+p2)/(p3+p4)/(p5+p6)
 
 cereal_production_yield <- aws.s3::s3read_using(FUN = read_csv,
                                               bucket = ukfsr::s3_bucket(),
-                                              object = "theme_1/t1_1_4/input/csv/cereal_yield_production.csv")
+                                              object = "theme_1/t1_1_4/input/csv/cereal_yield_production.csv")%>%
+  mutate(Area=factor(Area,levels=c("Europe","Asia","Africa","South America","Northern America","World")))
 
 ### Processing
 
@@ -147,7 +148,8 @@ cereal_yield_chart <- cereal_yield |>
   #filter(area!="Australia and New Zealand") |>
   ggplot() +
   facet_wrap(~item)+
-  geom_line(aes(x = year, y = value/1000, colour = area), lwd = 1) +
+  geom_line(aes(x = year, y = value/10000, colour = area), lwd = 1) +
+  geom_point(aes(x=year, y=value/1E4,colour=area,shape=area),size=2)+
   scale_x_continuous(limits = c(1970,2022),breaks =seq(1970,2022,10)) +
   #scale_y_continuous(limits = c(0,9),breaks =seq(0,8,2)) +
   scale_colour_manual(values = af_colours("categorical",n=6),limits=c("Europe","Asia","Africa","South America","Northern America","World")) +

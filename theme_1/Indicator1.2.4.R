@@ -22,22 +22,22 @@ psd<-psd_temp%>%
 
 psd_exports<-psd%>%
   filter(Attribute=="Exports")%>%
-  pivot_longer(cols=5:7,names_to="year",values_to="value")%>%
+  pivot_longer(cols=4:24,names_to="year",values_to="value")%>%
   mutate(year2=as.numeric(substr(year,1,4)))
 
 psd_production<-psd%>%
   filter(Attribute=="Production")%>%
-  pivot_longer(cols=5:7,names_to="year",values_to="value")%>%
+  pivot_longer(cols=4:24,names_to="year",values_to="value")%>%
   mutate(year2=as.numeric(substr(year,1,4)))%>%
   mutate(year2=as.numeric(substr(year,1,4)))
 
 percentage<-psd_exports%>%
-  left_join(psd_production,by=c("Commodity"="Commodity","Type"="Type","year2"="year2"))%>%
+  left_join(psd_production,by=c("Commodity"="Commodity","year2"="year2"))%>%
   mutate(Per=round((value.x/value.y)*100,1))%>%
   mutate(Commodity=as.factor(Commodity))%>%
-  select(year2,Type,Commodity,Per)%>%
+  select(year2,Commodity,Per)%>%
   rename(year=year2)%>%
-  rename(type=Type)%>%
+  #rename(type=Type)%>%
   rename(commodity=Commodity)%>%
   rename(per=Per)
 
@@ -45,12 +45,12 @@ percentage<-psd_exports%>%
 ########
 
 percentage_production_globally_traded_chart<-ggplot()+
-  geom_col(data=percentage,aes(x = year, y = per,group=year,fill=as.character(year))) +
-  #scale_y_continuous(limits = c(0,50)) +
-  facet_wrap(~commodity)+
-  scale_x_continuous(limits = c(1999,2030),breaks=seq(2004,2024,10),labels=c("04/05","14/15","24/25"))+
-  scale_fill_manual(values = af_colours("categorical")) +
+  geom_line(data=percentage,aes(x = year, y = per,group=commodity,color=as.character(commodity),shape=commodity),size=3) +
+  scale_x_continuous(limits = c(2004,2024),breaks=seq(2004,2024,5),labels=c("04/05","09/10","14/15","19/20","24/25"))+
+  scale_shape_manual(values=c())+
+  scale_color_manual(values = c(af_colours("categorical"),"#F46A25")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
+  guides(color=guide_legend(nrow=3,byrow=TRUE))+
   labs(x = NULL,
        y = "percent")
 
@@ -81,6 +81,29 @@ world_map_ifpri_chart<-ggplot()+
 
 save_graphic(world_map_ifpri_chart, "1.2.4", "food_import_vulnerability_index_food_import_dependence_ratio")
 save_csv(ifpri, "1.2.4", "food_import_vulnerability_index_food_import_dependence_ratio.csv")
+
+rice_chart_source_data_wb <- aws.s3::s3read_using(FUN = read_csv,
+                                 bucket = ukfsr::s3_bucket(),
+                                 object = "theme_1/t1_2_4/input/csv/Rice_chart_source_data_WB.csv")%>%
+  mutate(Date=dmy(Date))
+
+date_1<-c(dmy("01-09-2007"),dmy("01-09-2008"))
+date_2<-c(dmy("01-09-2022"),dmy("01-05-2024"))
+
+rice_chart_source_data_wb_chart<-ggplot()+
+  geom_area(aes(x=date_1,y=1000),fill="grey",alpha=0.6)+
+  geom_area(aes(x=date_2,y=1000),fill="grey",alpha=0.6)+
+  geom_vline(xintercept = dmy("23-03-2020"), col = "grey", linewidth = 2)+
+  geom_vline(xintercept = dmy("24-02-2022"), col = "red", linewidth = 2)+
+  geom_line(data=rice_chart_source_data_wb,aes(x = Date, y = `Thai 5% rice ($/mt)`)) +
+  scale_x_continuous(breaks=seq(dmy("01-01-2004"),dmy("01-01-2024"),"years"),labels=str_pad(seq(04,24,1),width=2,pad="0"))+
+  scale_color_manual(values = af_colours("duo")) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "$/mt")
+
+save_graphic(rice_chart_source_data_wb_chart, "1.2.4", "rice_chart_source_data_wb")
+save_csv(rice_chart_source_data_wb, "1.2.4", "rice_source_data_wb")
 
 # FSI Indicator 2 --------------------------------------------------------------
 

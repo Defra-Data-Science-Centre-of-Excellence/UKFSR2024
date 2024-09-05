@@ -69,8 +69,9 @@ daily_chokepoint_transit_calls_and_trade_volume_estimates <- aws.s3::s3read_usin
   select(-`Row Labels`)
 
 daily_chokepoint_transit_calls_and_trade_volume_estimates_chart<-ggplot()+
-geom_line(data=daily_chokepoint_transit_calls_and_trade_volume_estimates,aes(x=date,y=value/1E6,group=chokepoint,color=chokepoint))+
-geom_vline(data=daily_chokepoint_transit_calls_and_trade_volume_estimates,aes(xintercept = as.Date("2023-11-01"), linetype="dashed"))+
+  geom_line(data=daily_chokepoint_transit_calls_and_trade_volume_estimates,aes(x=date,y=value/1E6,group=chokepoint,color=chokepoint))+
+  geom_vline(data=daily_chokepoint_transit_calls_and_trade_volume_estimates,aes(xintercept = as.Date("2023-11-01")),linetype="dashed")+
+  geom_text(aes(x=as.Date("2023-08-01"),y=3,label="dashed line\nindicates start of houthi attacks"),size=6)+
   scale_y_continuous(limits = c(0,10),breaks=seq(0,9,1)) +
   scale_x_date(date_labels = "%b %y",breaks = date_breaks("3 months"))+
   scale_colour_manual(values = af_colours("categorical",n=4)) +
