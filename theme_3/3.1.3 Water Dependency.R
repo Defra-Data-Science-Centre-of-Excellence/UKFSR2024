@@ -13,6 +13,8 @@ source(here::here("utils", "load-font.R"))
 
 contents <- get_bucket_df("s3-ranch-054")
 
+# Spray irrigation and storage -------------------------------------------------
+
 FSR_3_1_3a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_3/input_data/Water irrigation storage.csv")
@@ -29,20 +31,19 @@ FSR_3_1_3a <- FSR_3_1_3a %>%
 FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = Region, y = Volume / 1e3, fill = Type)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = afcolours::af_colours("duo"), labels = c("spray irrigation - storage", "spray irrigation")) +
-  labs(y = "Volume (millions m3)",
+  labs(y = expression(Volume~(millions~m^3)),
        x = NULL,
        fill = "Type") +
   scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
-  theme_ukfsr() 
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) 
 
 FSR_3_1_3a_plot
 
-save_graphic(FSR_3_1_3a_plot, '3.1.3a', 'spray irrigation and storage') + 
-  save_csv(FSR_3_1_3a, '3.1.3a', 'spray irrigation and storage')
+save_graphic(FSR_3_1_3a_plot, '3.1.3', 'spray irrigation and storage') + 
+  save_csv(FSR_3_1_3a, '3.1.3', 'spray irrigation and storage')
 
 
-----------------------------------------------------------------------------------------------------------------------------------------------------
-  ### Support x: Map (Water Resource Availability)
+# Map (Water Resource Availability) --------------------------------------------
   
 library(dplyr)
 library(tidyr)
@@ -77,38 +78,12 @@ water <- water |>
                                         "Restricted water\navailable for licensing",
                                         "Water not available\nfor licensing")))
 
-
-
-map <- ggplot(ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN"))) +
-  geom_sf() +
-  geom_sf(data = water, aes(fill = camscdsq95), lwd = 0) +
-  scale_fill_manual(values = af_colours(type = "categorical", n = 4)) +
-  theme_void() +
-  theme(text = element_text(family = "GDS Transport Website", size = 18),
-        legend.title = element_blank(),
-        legend.position = "inside", 
-        legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
-
-save_graphic(map, "3.1.3b", "water resource availability")
-
 # Experimental simplification since the original svg came out at 63mb. Gets file
 # size down to 19mb. We combine polygons of the same type into a single
 # multipolygon
 
 sf_use_s2(FALSE)
 watersimple <- water |> group_by(camscdsq95) |> summarise(geometry = st_union(geometry))
-
-map <- ggplot(ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN"))) +
-  geom_sf() +
-  geom_sf(data = watersimple, aes(fill = camscdsq95), lwd = 0) +
-  scale_fill_manual(values = af_colours(type = "categorical", n = 4)) +
-  theme_void() +
-  theme(text = element_text(family = "GDS Transport Website", size = 18),
-        legend.title = element_blank(),
-        legend.position = "inside", 
-        legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
-
-save_graphic(map, "3.1.3b", "water resource availability simplified")
 
 # Further simplification gets us down to 1.7mb. This just reduces the complexity
 # of the polygons
@@ -126,4 +101,4 @@ xmap <- ggplot(ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN"))) +
         legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
 
 
-save_graphic(xmap, "3.1.3b", "water resource availability super simplified")
+save_graphic(xmap, "3.1.3a", "water resource availability super simplified")
