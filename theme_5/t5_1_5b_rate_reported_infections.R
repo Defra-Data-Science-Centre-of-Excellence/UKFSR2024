@@ -20,7 +20,7 @@ t_5_1_5b <- aws.s3::s3read_using(FUN = read_csv,
 # https://stackoverflow.com/questions/11335836/increase-number-of-axis-ticks
 # https://stackoverflow.com/questions/20037843/how-to-use-italics-for-facet-labels-in-ggplot2
 
-t_5_1_5b$Year <- factor(t_5_1_5b$Year, levels = c("2015","2016","2017","2018","2019","2020","2021","2022"))
+t_5_1_5b$Year <- factor(t_5_1_5b$Year, levels = c("2015","2016","2017","2018","2019","2020","2021","2022","2023"))
 
 t_5_1_5b_long <- t_5_1_5b |> 
   group_by(Year) |>
@@ -42,10 +42,8 @@ t_5_1_5b_long_plot <- ggplot(t_5_1_5b_long, aes(x=factor(Year), y=value, group=s
   geom_line(linewidth=1, colour = af_colours_1) +
   labs(x = "Year", y = str_wrap("Number of UK laboratory confirmed cases per 100,000 population", width = 40)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
-  theme(axis.text.x = element_text(angle = 45)) +
-  theme(
-    axis.text.x = element_text(size=20, angle = 45),
-    axis.text.y = element_text(size=20))
+  theme(axis.ticks.x = element_line(color = "black")) +
+  theme(axis.ticks.length = unit(0.2, "cm"))
 
 t_5_1_5b_long_plot_facet <- t_5_1_5b_long_plot + facet_wrap(~ species, ncol=2, scales = "free_y") +
   geom_blank(aes(y = y_min)) +
