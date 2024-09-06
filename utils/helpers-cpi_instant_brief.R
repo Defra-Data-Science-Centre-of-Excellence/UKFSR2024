@@ -128,7 +128,7 @@ eval_change <- function(now, previous) {
 #' @export
 #'
 #' @examples
-line_chart <- function(df, cdids, start_date = "2014-01-01", labels){
+line_chart <- function(df, cdids, start_date = "2003-01-01", labels){
   
 palette <- c("#414487FF", # DEFAULT BLUE
              "#FDE725FF") # YELLOW
@@ -147,10 +147,6 @@ palette <- c("#414487FF", # DEFAULT BLUE
   
   return(data)
 }
-
-
-
-
 
 
 

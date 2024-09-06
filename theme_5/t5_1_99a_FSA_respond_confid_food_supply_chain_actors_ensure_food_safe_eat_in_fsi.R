@@ -96,8 +96,7 @@ textbox <- textbox_grob(
   x = unit(0.89, "npc"), y = unit(0.17, "npc"),
   gp = gpar(fontsize = 22),
   box_gp = gpar(col = "black"),
-  r = unit(5, "pt"),
-  
+  r = unit(5, "pt"),  
   padding = unit(c(10, 0, 7, 10), "pt"),
   margin = unit(c(10, 1075, 0, 20), "pt")
 )
