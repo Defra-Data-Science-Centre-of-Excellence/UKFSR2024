@@ -51,7 +51,7 @@ usda <- aws.s3::s3read_using(FUN = read_csv,
                             object = "theme_1/input_data/usda-ers-iap-tfp.csv")
 
 
-
+# rebase to 2000
 tfp_countries <- usda |> 
   mutate(land_partial = (outall_index/land_index) * 100,
          labour_partial = (outall_index/labor_index) * 100,
