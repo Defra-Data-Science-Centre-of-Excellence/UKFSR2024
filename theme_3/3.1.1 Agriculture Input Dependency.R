@@ -47,8 +47,8 @@ FSR_3_1_1plot <- ggplot(FSR_3_1_1, aes(x=Year, y=value, group=variable, color = 
 
 FSR_3_1_1plot
 
-save_graphic(FSR_3_1_1plot, '3.1.1', ' UK principal farm costs') 
-save_csv(FSR_3_1_1, '3.1.1', ' UK principal farm costs')
+save_graphic(FSR_3_1_1plot, '3.1.1', 'UK principal farm costs final') 
+# save_csv(FSR_3_1_1, '3.1.1', ' UK principal farm costs')
 
 # Fertilizer Usage -------------------------------------------------------------
   
@@ -74,8 +74,8 @@ FSR_3_1_1aplot <- ggplot(FSR_3_1_1a, aes(x=Year, y=value, colour=variable, group
 
 FSR_3_1_1aplot
 
-save_graphic(FSR_3_1_1aplot, '3.1.1a', ' UK Fertiliser usage') + 
-  save_csv(FSR_3_1_1a, '3.1.1a', ' UK Fertiliser usage')
+save_graphic(FSR_3_1_1aplot, '3.1.1a', 'UK Fertiliser usage final')  
+# save_csv(FSR_3_1_1a, '3.1.1a', ' UK Fertiliser usage')
 
 # Nitrogen soil balance --------------------------------------------------------
 # Data is table 5 from UK and England soil nutrients time series 
@@ -95,7 +95,7 @@ nue_chart <- soil_balance |> ggplot() +
   labs(x= NULL, y = "percentage") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(nue_chart, "3.1.1b", "nitrogen use efficiency england")
+save_graphic(nue_chart, "3.1.1b", "nitrogen use efficiency england final")
 
 # Pesticides Usage NOT USED-------------------------------------------------------------
   
@@ -186,7 +186,7 @@ fera_chart <- pesticides_fera |>
   labs(x = NULL, y = "metric kilotons (kT)") +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)
 
-save_graphic(fera_chart, "3.1.1c", "pesticides fera")
+save_graphic(fera_chart, "3.1.1c", "pesticides fera final")
 
 
 # Animal feed ------------------------------------------------------------------
@@ -203,7 +203,7 @@ feed_chart <- ggplot(feed) +
   guides(colour = guide_legend(nrow = 2)) + 
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(feed_chart, "3.1.1d", "animal feed use auk ch9")
+save_graphic(feed_chart, "3.1.1d", "animal feed use auk ch9 final")
 
 # Collect charts for download --------------------------------------------------
 

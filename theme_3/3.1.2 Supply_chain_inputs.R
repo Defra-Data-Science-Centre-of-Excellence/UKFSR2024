@@ -384,17 +384,17 @@ co2_net <- net_trade("theme_3/input_data/3_1_11a_co2_trade_data.csv", "co2")
 hypo_net <- net_trade("theme_3/input_data/3_1_11b_hypochlorite_trade_data.csv", "hypochlorite")
 pet_net <- net_trade("theme_3/input_data/3_1_11c_pet_trade_data.csv", "pet")
 cardboard_net <- net_trade( "theme_3/input_data/3_1_11d_cardboard_trade_data.csv", "cardboard")
-wheat_net <- net_trade("theme_3/input_data/3_1_11f_wheat_trade_data.csv", "wheat")
+# wheat_net <- net_trade("theme_3/input_data/3_1_11f_wheat_trade_data.csv", "wheat")
 sunflower_net <- net_trade("theme_3/input_data/3_1_11e_sunflower_oil_trade_data.csv", "sunflower")
 
-all_net <- bind_rows(co2_net,hypo_net,pet_net,cardboard_net, wheat_net, sunflower_net) |> 
+all_net <- bind_rows(co2_net,hypo_net,pet_net,cardboard_net, sunflower_net) |> 
             filter(flow == "net")
 
 
 all_net_cht <- all_net |> 
   mutate(product = factor(product,
-                          levels = c("co2", "hypochlorite", "cardboard", "pet", "wheat", "sunflower"),
-                          labels = c("CO2", "Hypochlorite", "Cardboard", "PET", "Wheat", "Sunflower oil"))) |> 
+                          levels = c("co2", "hypochlorite", "cardboard", "pet", "sunflower"),
+                          labels = c("CO2", "Hypochlorite", "Cardboard", "PET", "Sunflower oil"))) |> 
   ggplot() +
   geom_col(aes(x = year, y = value), fill = af_colours(n =1)) +
   scale_x_continuous(breaks = c(2000, 2010, 2020)) +
