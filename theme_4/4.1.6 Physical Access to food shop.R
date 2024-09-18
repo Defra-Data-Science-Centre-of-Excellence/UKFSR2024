@@ -36,7 +36,7 @@ FSR_4_1_6_plot <- ggplot(FSR_4_1_6, aes(x= Region, y=Average_Distance)) +
   theme(axis.text.x = element_text(size=18)) +
   theme(axis.text.y = element_text(size=16)) +
     labs(x = "Region", 
-         y = "Average distace teavelled per person per year") + 
+         y = "Average distance travelled per person per trip in miles") + 
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
   theme( # remove the vertical grid lines
     panel.grid.major.y = element_blank() ,
