@@ -53,6 +53,92 @@ country_trade <- function(file, product) {
   return(data)
 }
 
+
+
+# Final graphics----------------------------------------------------------------
+
+# Wheat net trade---------------------------------------------------------------
+wheat_net <- net_trade("theme_3/input_data/3_1_11f_wheat_trade_data.csv", "wheat")
+
+wheat_net_cht <- wheat_net |> 
+  filter(flow == "net") |> 
+  ggplot() +
+  geom_col(aes(x = year, y = value), fill = af_colours(n =1)) +
+  scale_x_continuous(breaks = c(2000, 2010, 2020)) +
+  labs(y = "kilotonnes", x = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website")
+
+save_graphic(wheat_net_cht, "3.1.2", "wheat net trade final")
+
+# Combined net data ------------------------------------------------------------
+
+co2_net <- net_trade("theme_3/input_data/3_1_11a_co2_trade_data.csv", "co2")
+hypo_net <- net_trade("theme_3/input_data/3_1_11b_hypochlorite_trade_data.csv", "hypochlorite")
+pet_net <- net_trade("theme_3/input_data/3_1_11c_pet_trade_data.csv", "pet")
+cardboard_net <- net_trade( "theme_3/input_data/3_1_11d_cardboard_trade_data.csv", "cardboard")
+sunflower_net <- net_trade("theme_3/input_data/3_1_11e_sunflower_oil_trade_data.csv", "sunflower")
+
+all_net <- bind_rows(co2_net,hypo_net,pet_net,cardboard_net, sunflower_net) |> 
+  filter(flow == "net")
+
+
+all_net_cht <- all_net |> 
+  mutate(product = factor(product,
+                          levels = c("co2", "hypochlorite", "cardboard", "pet", "sunflower"),
+                          labels = c("CO2", "Hypochlorite", "Cardboard", "PET", "Sunflower oil"))) |> 
+  ggplot() +
+  geom_col(aes(x = year, y = value), fill = af_colours(n =1)) +
+  scale_x_continuous(breaks = c(2000, 2010, 2020)) +
+  facet_wrap(vars(product), ncol = 2) +
+  labs(y = "kilotonnes", x = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website")
+
+save_graphic(all_net_cht, "3.1.2", "net trade by product final")
+
+# ------------------------------------------------------------------------------
+
+co2_cnt <- country_trade("theme_3/input_data/3_1_11a_co2_trade_data.csv", "co2")
+hypo_cnt <- country_trade("theme_3/input_data/3_1_11b_hypochlorite_trade_data.csv", "hypochlorite")
+pet_cnt <- country_trade("theme_3/input_data/3_1_11c_pet_trade_data.csv", "pet")
+cardboard_cnt <- country_trade( "theme_3/input_data/3_1_11d_cardboard_trade_data.csv", "cardboard")
+sunflower_cnt <- country_trade("theme_3/input_data/3_1_11e_sunflower_oil_trade_data.csv", "sunflower")
+wheat_cnt <- country_trade("theme_3/input_data/3_1_11f_wheat_trade_data.csv", "wheat")
+
+
+country_chart <- function(data, threshold = 1) {
+  cht <- data |> 
+    filter(year > 2020, flow == "Imports") |> 
+    group_by(country) |> 
+    summarise(value = mean(value)) |> 
+    mutate(country = case_when(value <= threshold ~ "Other", .default = country)) |> 
+    ggplot() +
+    geom_col(aes(x = fct_reorder(country, value), y = value), fill = af_colours(n=1)) +
+    labs(y = "kilotonnes", x = NULL) +
+    coord_flip() +
+    theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE)
+  
+  return(cht)
+}
+
+co2_country_cht <- country_chart(co2_cnt)
+hypo_country_cht <- country_chart(hypo_cnt, threshold = 0.5)
+pet_country_cht <- country_chart(pet_cnt, threshold = 5)
+cardboard_country_cht <- country_chart(cardboard_cnt,threshold = 3)
+sunflower_country_cht <- country_chart(sunflower_cnt)
+wheat_country_cht <- country_chart(wheat_cnt, threshold = 15)
+
+
+
+x <- co2_cnt  |> 
+  filter(year > 2020, flow == "Imports") |> 
+  group_by(country) |> 
+  summarise(value = mean(value)) |> 
+  ungroup() |> 
+  mutate(pc = value/sum(value) *100)
+
+
+
+# OLD WORKINGS -----------------------------------------------------------------
 # CO2 --------------------------------------------------------------------------
 
 # Original data table from uktradeinfo
@@ -83,7 +169,7 @@ save_graphic(co2_cht, "3.1.2a", "CO2 trade")
 co2_net <- co2_out |> 
   pivot_wider(names_from = flow) |> 
   mutate(net = Imports - Exports)
- 
+
 co2_net_cht <-   ggplot(co2_net) +
   geom_col(aes(x = year, y = net), fill = af_colours()[1]) +
   labs(y = "kilotonnes", x = NULL) +
@@ -122,8 +208,8 @@ save_graphic(co2_country_cht, "3.1.2a", "CO2 imports by country")
 
 
 hypo <- aws.s3::s3read_using(FUN = read_csv,
-                            bucket = ukfsr::s3_bucket(),
-                            object = "theme_3/input_data/3_1_11b_hypochlorite_trade_data.csv")
+                             bucket = ukfsr::s3_bucket(),
+                             object = "theme_3/input_data/3_1_11b_hypochlorite_trade_data.csv")
 
 hypo_out <- hypo |> 
   clean_names() |> 
@@ -184,15 +270,15 @@ save_graphic(hypo_country_cht, "3.1.2b", "hypochlorite imports by country")
 # https://www.uktradeinfo.com/trade-data/ots-custom-table/?id=62cfd6e7-7906-4486-9fe6-af75b925d420
 
 pet <- aws.s3::s3read_using(FUN = read_csv,
-                             bucket = ukfsr::s3_bucket(),
-                             object = "theme_3/input_data/3_1_11c_pet_trade_data.csv")
+                            bucket = ukfsr::s3_bucket(),
+                            object = "theme_3/input_data/3_1_11c_pet_trade_data.csv")
 
 pet_out <- pet |> 
   clean_names() |> 
   separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
   group_by(date_hierarchy_year, flow) |> 
   summarise(value = sum(net_mass_kg)/1000000)
-  
+
 pet_cht <- pet_out |> 
   ggplot() +
   geom_col(aes(x = date_hierarchy_year, y = value, fill = flow), position = position_dodge()) +
@@ -293,8 +379,8 @@ save_graphic(pet_country_cht, "3.1.2c", "pet imports by country")
 
 
 cardboard <- aws.s3::s3read_using(FUN = read_csv,
-                            bucket = ukfsr::s3_bucket(),
-                            object = "theme_3/input_data/3_1_11d_cardboard_trade_data.csv")
+                                  bucket = ukfsr::s3_bucket(),
+                                  object = "theme_3/input_data/3_1_11d_cardboard_trade_data.csv")
 
 cardboard_out <- cardboard |> 
   clean_names() |> 
@@ -353,11 +439,11 @@ save_graphic(cardboard_country_cht, "3.1.2d", "cardboard imports by country")
 # https://www.uktradeinfo.com/trade-data/ots-custom-table/?id=dd25c5cd-0669-47c2-bd73-246b8cb4bc13
 
 wheat <- aws.s3::s3read_using(FUN = read_csv,
-                                  bucket = ukfsr::s3_bucket(),
-                                  object = "theme_3/input_data/3_1_11f_wheat_trade_data.csv")
+                              bucket = ukfsr::s3_bucket(),
+                              object = "theme_3/input_data/3_1_11f_wheat_trade_data.csv")
 
 wheat |> 
-clean_names() |> 
+  clean_names() |> 
   separate_wider_delim(flow_type, delim = " - ", names = c("area", "flow")) |> 
   group_by(year, flow) |> 
   summarise(value = sum(net_mass_kg)/1000000) |> 
@@ -370,49 +456,24 @@ clean_names() |>
 
 
 sunflower <- aws.s3::s3read_using(FUN = read_csv,
-                              bucket = ukfsr::s3_bucket(),
-                              object = "theme_3/input_data/3_1_11e_sunflower_oil_trade_data.csv")
+                                  bucket = ukfsr::s3_bucket(),
+                                  object = "theme_3/input_data/3_1_11e_sunflower_oil_trade_data.csv")
 
 
 
 
 
 
-# Combined net data ------------------------------------------------------------
-
-co2_net <- net_trade("theme_3/input_data/3_1_11a_co2_trade_data.csv", "co2")
-hypo_net <- net_trade("theme_3/input_data/3_1_11b_hypochlorite_trade_data.csv", "hypochlorite")
-pet_net <- net_trade("theme_3/input_data/3_1_11c_pet_trade_data.csv", "pet")
-cardboard_net <- net_trade( "theme_3/input_data/3_1_11d_cardboard_trade_data.csv", "cardboard")
-# wheat_net <- net_trade("theme_3/input_data/3_1_11f_wheat_trade_data.csv", "wheat")
-sunflower_net <- net_trade("theme_3/input_data/3_1_11e_sunflower_oil_trade_data.csv", "sunflower")
-
-all_net <- bind_rows(co2_net,hypo_net,pet_net,cardboard_net, sunflower_net) |> 
-            filter(flow == "net")
-
-
-all_net_cht <- all_net |> 
-  mutate(product = factor(product,
-                          levels = c("co2", "hypochlorite", "cardboard", "pet", "sunflower"),
-                          labels = c("CO2", "Hypochlorite", "Cardboard", "PET", "Sunflower oil"))) |> 
-  ggplot() +
-  geom_col(aes(x = year, y = value), fill = af_colours(n =1)) +
-  scale_x_continuous(breaks = c(2000, 2010, 2020)) +
-  facet_wrap(vars(product), ncol = 2) +
-  labs(y = "kilotonnes", x = NULL) +
-  theme_ukfsr(base_family = "GDS Transport Website")
-
-save_graphic(all_net_cht, "3.1.2e", "net trade by product")
 
 
 # --------------------------------------------------------------------------------
-  
+
 # Wheat UK Import/Export data.
-  
+
 
 FSR_3_1_2f <- aws.s3::s3read_using(FUN = readr::read_csv,
-                                     bucket = "s3-ranch-054",
-                                     object = "theme_3/input_data/UK Wheat trade data.csv")
+                                   bucket = "s3-ranch-054",
+                                   object = "theme_3/input_data/UK Wheat trade data.csv")
 
 FSR_3_1_2f <- FSR_3_1_2f %>%
   gather(variable,value,`Export`,`Import`)
