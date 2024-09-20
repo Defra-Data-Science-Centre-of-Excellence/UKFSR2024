@@ -121,12 +121,22 @@ country_chart <- function(data, threshold = 1) {
 }
 
 co2_country_cht <- country_chart(co2_cnt)
-hypo_country_cht <- country_chart(hypo_cnt, threshold = 0.5)
-pet_country_cht <- country_chart(pet_cnt, threshold = 5)
-cardboard_country_cht <- country_chart(cardboard_cnt,threshold = 3)
-sunflower_country_cht <- country_chart(sunflower_cnt)
-wheat_country_cht <- country_chart(wheat_cnt, threshold = 15)
+save_graphic(co2_country_cht, "3.1.2", "co2 trade by country")
 
+hypo_country_cht <- country_chart(hypo_cnt, threshold = 0.5)
+save_graphic(hypo_country_cht, "3.1.2", "hypo trade by country")
+
+pet_country_cht <- country_chart(pet_cnt, threshold = 5)
+save_graphic(pet_country_cht, "3.1.2", "pet trade by country")
+
+cardboard_country_cht <- country_chart(cardboard_cnt,threshold = 3)
+save_graphic(cardboard_country_cht, "3.1.2", "cardboard trade by country")
+
+sunflower_country_cht <- country_chart(sunflower_cnt)
+save_graphic(sunflower_country_cht, "3.1.2", "sunflower trade by country")
+
+wheat_country_cht <- country_chart(wheat_cnt, threshold = 15)
+save_graphic(wheat_country_cht, "3.1.2", "wheat trade by country")
 
 
 x <- co2_cnt  |> 
