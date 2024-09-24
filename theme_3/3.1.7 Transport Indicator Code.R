@@ -43,7 +43,7 @@ af_colors <- af_colours(type = "categorical", n = length(delay_breaks) - 1) # Ge
 # Create the map plot
 FSR_3_1_7_plot <- ggplot() +
               # Add UK border as the base layer
-              geom_sf(data = uk_border, aes(fill = CTRY22NM), color = "black", size = 0.5) +
+              geom_sf(data = uk_border |> filter(CTRY22NM == "England"), aes(fill = CTRY22NM), color = "black", size = 0.5) +
               scale_fill_manual(values = fill_colors) +
               guides(fill = FALSE) +
               
@@ -58,9 +58,9 @@ FSR_3_1_7_plot <- ggplot() +
                                  labels = delay_labels,
                                  name = "Avg Delay (seconds/vehicle/mile)",
                                  drop = FALSE) + 
-              theme_ukfsr() +
-              
+              theme_ukfsr(base_family = "GDS Transport Website") +
               theme_void()
+              
 
 FSR_3_1_7_plot  
 
