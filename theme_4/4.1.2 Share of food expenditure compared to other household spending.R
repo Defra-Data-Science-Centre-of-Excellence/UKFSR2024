@@ -23,9 +23,6 @@ library(viridis)
 library(showtext)
 library(svglite)
 library(cowplot)
-
-
-
 library(here)
 library(sf)
 library(janitor)
@@ -45,13 +42,15 @@ FSR_4_1_2 <- F4_1_2 %>%
   filter(Year>2011) %>% 
   mutate(key = case_when(key=="percentage spend on food and non-alcoholic drinks for all households"~"all households",
                          key=="percentage spend on food and non-alcoholic drinks for middle 20% by income"~"middle 20% by income",
-                         key=="percentage spend on food and non-alcoholic drinks for lowest 20% by income"~"lowest 20% by income"))
+                         key=="percentage spend on food and non-alcoholic drinks for lowest 20% by income"~"lowest 20% by income")) %>% 
+  mutate(key = factor(key, levels = c("lowest 20% by income","middle 20% by income","all households"), ordered = TRUE))
 
-
+  
 
 FSR_4_1_2plot <- ggplot(FSR_4_1_2) + 
   geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
   scale_y_continuous(limits = c(0,20), breaks=seq(0,20,2)) +
+  scale_x_discrete(breaks = unique(FSR_4_1_2$Year)[c(T,F)])+
   scale_colour_manual(values = af_colours()) +
   labs(y = "% spend on food and non-alcoholic drinks",
        x = NULL) +
@@ -60,6 +59,7 @@ FSR_4_1_2plot <- ggplot(FSR_4_1_2) +
         legend.position = "bottom",
         legend.box = "vertical",
         legend.justification = c(0,0)) 
+
 
 FSR_4_1_2plot
 
@@ -128,14 +128,14 @@ F4_1_2d <- F4_1_2d %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01")),
          variable = factor(variable, levels = variable_order)) 
 
-af_colours <- function() {c("US" = "#12436D", "Canada" = "#12436D", "Japan" = "#12436D",
+af_colours_2 <- function() {c("US" = "#12436D", "Canada" = "#12436D", "Japan" = "#12436D",
                            "France" = "#12436D", "Germany" = "#12436D", "Italy" = "#12436D",
                            "UK" = "#F46A25" )}
 
 F4_1_2d_plot <- ggplot(F4_1_2d, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
   facet_wrap(~ variable) +
-  scale_colour_manual(values = af_colours())+
+  scale_colour_manual(values = af_colours_2())+
   scale_y_continuous(breaks = seq(from = 0, to = 17, by = 4), limits = c(0,17)) +
   labs(x = NULL,
        y = "Proportion of household expenditure (%)") +
