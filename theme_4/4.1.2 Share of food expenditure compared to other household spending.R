@@ -39,7 +39,7 @@ F4_1_2 <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 FSR_4_1_2 <- F4_1_2 %>% 
   gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`,`percentage spend on food and non-alcoholic drinks for middle 20% by income`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`)  %>%
-  filter(Year>2011) %>% 
+  #filter(Year>2011) %>% 
   mutate(key = case_when(key=="percentage spend on food and non-alcoholic drinks for all households"~"all households",
                          key=="percentage spend on food and non-alcoholic drinks for middle 20% by income"~"middle 20% by income",
                          key=="percentage spend on food and non-alcoholic drinks for lowest 20% by income"~"lowest 20% by income")) %>% 
