@@ -45,11 +45,13 @@ percentage<-psd_exports%>%
 ########
 
 percentage_production_globally_traded_chart<-ggplot()+
-  geom_line(data=percentage,aes(x = year, y = per,group=commodity,color=as.character(commodity),shape=commodity),size=3) +
-  scale_x_continuous(limits = c(2004,2024),breaks=seq(2004,2024,5),labels=c("04/05","09/10","14/15","19/20","24/25"))+
-  scale_shape_manual(values=c())+
-  scale_color_manual(values = c(af_colours("categorical"),"#F46A25")) +
+  geom_line(data=percentage,aes(x = year, y = per,group=commodity),color=af_colours("duo")[1]) +
+  facet_wrap(~commodity,scales="free")+
+  scale_x_continuous(limits = c(2004,2024),breaks=c(seq(2004,2018,7),2024),labels=c("04/05","11/12","18/19","24/25"))+
+  scale_y_continuous(limits =c(0,50))+
   theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(panel.spacing = unit(1, "cm"),
+        plot.margin=unit(c(0.2,1,0.2,0.2),"cm"))+
   guides(color=guide_legend(nrow=3,byrow=TRUE))+
   labs(x = NULL,
        y = "percent")
@@ -62,21 +64,46 @@ neg<-function(x) -x
 ifpri <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
                                  object = "theme_1/t1_2_4/input/csv/Food_Import_Dependence_Index.csv")%>%
-  mutate(IndexCat=if_else(Index<neg(5),"exporter",if_else(Index<5,"self sufficent",if_else(Index<20,"very low",if_else(Index<30,"low",if_else(Index<40,"medium",if_else(Index>50,"high","very high")))))))
+  mutate(IndexCat=if_else(Index<neg(5),"exporter",if_else(Index<5,"self sufficent",if_else(Index<20,"very low",if_else(Index<30,"low",if_else(Index<40,"medium",if_else(Index>50,"high","very high")))))))%>%
+  mutate(Country=if_else(Country=="United States of America","USA",Country))%>%
+  mutate(Country=if_else(Country=="Viet Nam","Vietnam",Country))%>%
+  mutate(Country=if_else(Country=="Venezuela (Bolivarian Republic of)","Venezuela",Country))%>%
+  mutate(Country=if_else(Country=="Russian Federation","Russia",Country))%>%
+  mutate(Country=if_else(Country=="Antigua and Barbuda","Antigua",Country))%>%
+  mutate(Country=if_else(Country=="Antigua and Barbuda","Barbuda",Country))%>%
+  mutate(Country=if_else(Country=="Bolivia (Plurinational State of)","Bolivia",Country))%>%
+  mutate(Country=if_else(Country=="Côte d'Ivoire","Ivory Coast",Country))%>%
+  mutate(Country=if_else(Country=="Congo","Republic of Congo",Country))%>%
+  mutate(Country=if_else(Country=="Micronesia (Federated States of)","Micronesia",Country))%>%
+  mutate(Country=if_else(Country=="United Kingdom","UK",Country))%>% 
+  mutate(Country=if_else(Country=="Iran (Islamic Republic of)","Iran",Country))%>%
+  mutate(Country=if_else(Country=="Saint Kitts and Nevis","Saint Kitts",Country))%>% 
+  mutate(Country=if_else(Country=="Saint Kitts and Nevis","Nevis",Country))%>%
+  mutate(Country=if_else(Country=="Republic of Korea","Venezuela",Country))%>%
+  mutate(Country=if_else(Country=="Lao People's Democratic Republic","Laos",Country))%>%
+  mutate(Country=if_else(Country=="Republic of Moldova","Moldova",Country))%>%
+  mutate(Country=if_else(Country=="The former Yugoslav Republic of Macedonia","North Macedonia",Country))%>%
+  mutate(Country=if_else(Country=="Eswatini","Swaziland",Country))%>%
+  mutate(Country=if_else(Country=="Syrian Arab Republic","Syria",Country))%>%
+  mutate(Country=if_else(Country=="Trinidad and Tobago","Trinidad",Country))%>%
+  mutate(Country=if_else(Country=="Trinidad and Tobago","Tobago",Country))%>%
+  mutate(Country=if_else(Country=="United Republic of Tanzania","Tanzania",Country))%>%
+  mutate(Country=if_else(Country=="Saint Vincent and the Grenadines","Saint Vincent",Country))%>%
+  mutate(Country=if_else(Country=="Saint Vincent and the Grenadines","Grenadines",Country))%>%
+  filter(Commodity=="Top3")
   
 
-world_map <- aws.s3::s3read_using(FUN = read_sf,
-                              bucket = ukfsr::s3_bucket(),
-                              object = "theme_1/t1_2_4/input/csv/world.geo.json")
+world_map <- map_data("world")
 
 world_map_ifpri<-world_map%>%
-  left_join(ifpri,by=c("sov_a3"="ISO3CODE"))%>%
-  filter(Commodity=="All")
+  left_join(ifpri,by=c("region"="Country"))%>%
+  mutate(IndexCat=if_else(is.na(IndexCat),"very low",IndexCat))
+  
 
-world_map_ifpri_chart<-ggplot()+ 
-  geom_sf(data=world_map)+
-  geom_sf(data = world_map_ifpri,aes(fill=IndexCat))+
-  scale_color_manual(values = af_colours("categorical")) +
+world_map_ifpri_chart<-ggplot()+
+  geom_polygon(data = world_map_ifpri,aes(x=long,y=lat,group=group))+
+  geom_polygon(data = world_map_ifpri,aes(x=long,y=lat,group=group,fill=IndexCat))+
+  scale_fill_manual(values = af_colours("categorical")) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
 save_graphic(world_map_ifpri_chart, "1.2.4", "food_import_vulnerability_index_food_import_dependence_ratio")

@@ -28,9 +28,9 @@ average_annual_growth_in_demand_for_key_commodity_groups <- average_annual_growt
 average_annual_growth_in_demand_for_key_commodity_groups_chart <- average_annual_growth_in_demand_for_key_commodity_groups |> 
   ggplot() +
   geom_col(aes(x=year,y=value,fill=growth_type))+
-  facet_wrap(~commodity)+
+  facet_wrap(~commodity,scales="free")+
   theme_ukfsr()+
-  #scale_y_continuous(limits = c(2000,3000)) +
+  scale_y_continuous(limits = c(0,2)) +
   scale_fill_manual(values = af_colours("duo")) +
   scale_color_manual(values = c("white","black"))+ 
   theme_ukfsr(base_family = "GDS Transport Website") +
@@ -41,10 +41,14 @@ average_annual_growth_in_demand_for_key_commodity_groups_chart <- average_annual
 save_graphic(average_annual_growth_in_demand_for_key_commodity_groups_chart, "1.1.3", "average annual growth in demand for key commodity groups")
 save_csv(average_annual_growth_in_demand_for_key_commodity_groups, "1.1.3", "average annual growth in demand for key commodity groups")
 
-
 grfc2024 <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
                                   object = "theme_1/t1_1_3/input/csv/GRFC2024_Master.csv")
+
+grfc2024_in2 <- aws.s3::s3read_using(FUN = read_csv,
+                                     bucket = ukfsr::s3_bucket(),
+                                     object = "theme_1/t1_1_3/input/csv/grfc_number_of_countries.csv") 
+
 grfc2024_in<-grfc2024%>%
   mutate(`Total country population`=as.numeric(`Total country population`,na.rm=FALSE))%>%
   mutate(`Population analysed`=as.numeric(`Population analysed`,na.rm=FALSE))%>%
@@ -68,7 +72,7 @@ grfc2024_chart<-grfc2024_out%>%
   ggplot()+
   geom_col(aes(x=year,y=value/1e6,fill=category))+
   theme_ukfsr()+
-  scale_fill_manual(values = af_colours("sequential"),labels=c("rest of population","1+2 No/Minimal+Stressed","3 Crisis")) +
+  scale_fill_manual(values = af_colours("categorical",n=3),labels=c("rest of population","1+2 No/Minimal+Stressed","3+ Crisis")) +
   #scale_color_manual(values = c("white","black"))+ 
   scale_x_continuous(breaks=seq(2016,2023,1))+
   theme_ukfsr(base_family = "GDS Transport Website") +
@@ -79,6 +83,30 @@ save_graphic(grfc2024_chart, "1.1.3", "numbers of people and share of analysed p
 facing high levels of acute food insecurity, 2016–2023 ")
 save_csv(grfc2024_out, "1.1.3", "numbers of people and share of analysed population in GRFC countries-territories 
 facing high levels of acute food insecurity, 2016–2023")
+
+grfc2024_out2<-grfc2024_out%>%
+  group_by(year)%>%
+  summarise(value=sum(value,sum.na=TRUE))%>%
+  left_join(grfc2024_in2,by=c("year"="year"))%>%
+  left_join(grfc2024_out,by=c("year"="year"))
+
+
+grfc2024_chart_2<-grfc2024_out2%>%
+  ggplot()+
+  geom_col(aes(x=year,y=value.y/1e6,fill=category))+
+  geom_line(aes(x=year,y=percentage*20))+
+  geom_text(aes(x=year,y=value.x/1E6+200,label=paste0("In ",`number of countries`,"\n countries")),size=7)+
+  theme_ukfsr()+
+  scale_fill_manual(values = af_colours("categorical",n=3),labels=c("rest of population","1+2 No/Minimal+Stressed","3+ Crisis")) +
+  #scale_color_manual(values = c("white","black"))+ 
+  scale_x_continuous(breaks=seq(2016,2023,1))+
+  scale_y_continuous(limits=c(0,2200),sec.axis = sec_axis( ~ . / 20, name="percentage"))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "Millions")
+
+save_graphic(grfc2024_chart_2, "1.1.3", "numbers of people and share of analysed population in GRFC countries-territories 
+facing high levels of acute food insecurity, 2016–2023 2")
 
 number_of_moderately_or_severely_food_insecure_people <- aws.s3::s3read_using(FUN = read_csv,
                                                                               bucket = ukfsr::s3_bucket(),
@@ -95,16 +123,24 @@ number_of_moderately_or_severely_food_insecure_people_world<-number_of_moderatel
 
 number_of_moderately_or_severely_food_insecure_people_world_chart<-number_of_moderately_or_severely_food_insecure_people_world%>%
   ggplot()+
-  geom_col(aes(x=year,y=value))+
+  geom_col(aes(x=year,y=value),fill=af_colours("duo")[1])+
   theme_ukfsr(base_family = "GDS Transport Website") +
-  scale_color_manual(values = af_colours("duo")) +
-  scale_fill_manual(values = af_colours("duo")) +
   #scale_x_continuous(breaks=seq(2016,2023,1))+
   labs(x = NULL,
        y = "Millions")
 
+
 save_graphic(number_of_moderately_or_severely_food_insecure_people_world_chart, "1.1.3", "Number of moderately or severely food insecure people")
 save_csv(number_of_moderately_or_severely_food_insecure_people_world, "1.1.3", "Number of moderately or severely food insecure people")
+
+number_of_moderately_or_severely_food_insecure_people_world_chart<-number_of_moderately_or_severely_food_insecure_people_world%>%
+  ggplot()+
+  geom_col(aes(x=year,y=value),fill=af_colours("duo")[1])+
+  geom_text(aes(x=year,y=value,label=round(household_estimates/1E6,0)), hjust = -0.5, size = 6,position = position_dodge(width = 1),inherit.aes = TRUE)+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  #scale_x_continuous(breaks=seq(2016,2023,1))+
+  labs(x = NULL,
+       y = "Millions")
 
 coahd <- aws.s3::s3read_using(FUN = read_csv,
                                                                               bucket = ukfsr::s3_bucket(),
@@ -118,8 +154,12 @@ coahd <- aws.s3::s3read_using(FUN = read_csv,
 coahd_chart<-coahd%>%
   ggplot()+
   geom_line(aes(x=year,y=value,group=area,color=area))+
+  geom_point(aes(x=year,y=value,shape=area,fill=area),size=4)+
   theme_ukfsr(base_family = "GDS Transport Website") +
-  scale_color_manual(values = af_colours("categorical",n=6)) +
+  scale_color_manual(values = c("#A285D1","#28A197","#801650","#F46A25","#3D3D3D","#12436D")) +
+  scale_fill_manual(values = c("#A285D1","#28A197","#801650","#F46A25","#3D3D3D","#12436D")) +
+  scale_shape_manual(values = c(NA,NA,NA,NA,NA,24)) +
+  guides(color=guide_legend(nrow=3, byrow=TRUE))+
   #scale_x_continuous(breaks=seq(2016,2023,1))+
   labs(x = NULL,
        y = "percent")
@@ -269,3 +309,56 @@ world_map_food_supply_diff_chart<-ggplot()+
 
 save_graphic(world_map_food_supply_diff_chart, "1.1.3", "food supply difference")
 save_csv(food_supply_diff, "1.1.3", "food supply difference.csv")
+
+
+prevalance_of_undernourised <- aws.s3::s3read_using(FUN = read_csv,
+                                              bucket = ukfsr::s3_bucket(),
+                                              object = "theme_1/t1_1_3/input/csv/prevalance_of_undernourised.csv")%>%
+  filter(`Year Code`<2025)%>%
+  mutate(name="prevalence of undernourised")
+
+prevalance_of_undernourised_chart<-prevalance_of_undernourised%>%
+  ggplot()+
+  geom_line(aes(x=`Year Code`,y=Value,group=Area))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  scale_color_manual(values = af_colours("duo")) +
+  #scale_x_continuous(breaks=seq(2016,2023,1))+
+  labs(x = NULL,
+       y = "percent")
+
+
+save_graphic(prevalance_of_undernourised_chart, "1.1.3", "prevalance_of_undernourised")
+save_csv(prevalance_of_undernourised, "1.1.3", "prevalance_of_undernourised.csv")
+
+number_of_undernourised <- aws.s3::s3read_using(FUN = read_csv,
+                                              bucket = ukfsr::s3_bucket(),
+                                              object = "theme_1/t1_1_3/input/csv/number_of_people_undernourised.csv")%>%
+  filter(`Year Code`<2025)%>%
+  mutate(name="number of undernourised")
+
+number_of_undernourised_chart<-ggplot()+
+  geom_col(data=number_of_undernourised,aes(x=`Year Code`,y=Value,group=Area,fill=Area))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  scale_fill_manual(values = af_colours("duo")) +
+  scale_color_manual(values = af_colours("duo")[2]) +
+  #scale_x_continuous(breaks=seq(2016,2023,1))+
+  labs(x = NULL,
+       y = "million people")
+
+
+save_graphic(number_of_undernourised_chart, "1.1.3", "number_of_people_undernourised")
+save_csv(number_of_undernourised, "1.1.3", "number_of_people_undernourised.csv")
+
+prevalance_number_of_undernourised_chart<-ggplot()+
+  geom_col(data=number_of_undernourised,aes(x=`Year Code`,y=Value,group=name,fill=name))+
+  geom_line(data=prevalance_of_undernourised,aes(x=`Year Code`,y=Value*80,group=name,color=name))+
+  scale_y_continuous(sec.axis = sec_axis(~ . * 4.80/100, name = "prevalence"))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  scale_fill_manual(values = af_colours("duo")) +
+  scale_color_manual(values = af_colours("duo")[2]) +
+  #scale_x_continuous(breaks=seq(2016,2023,1))+
+  labs(x = NULL,
+       y = "million people")
+
+
+save_graphic(prevalance_number_of_undernourised_chart, "1.1.3", "prevalance number_of_people_undernourised")

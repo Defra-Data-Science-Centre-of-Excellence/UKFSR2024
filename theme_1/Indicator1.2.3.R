@@ -40,8 +40,8 @@ tfp_out_2017_2021 <- aws.s3::s3read_using(FUN = read_csv,
 
 tfp_out_2017_2021_chart<-ggplot()+
   geom_col(data=tfp_out_2017_2021,aes(x = year, y = growth,fill=year)) +
-  facet_wrap(~`income group`)+
-  #scale_y_continuous(limits=c(95,115))+
+  facet_wrap(~`income group`,scales='free')+
+  scale_y_continuous(limits=c(0,2.5),breaks=c(0,0.5,1,1.5,2))+
   scale_fill_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,

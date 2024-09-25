@@ -355,8 +355,7 @@ production <- aws.s3::s3read_using(FUN = read_csv,
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(item=Item) |>
-  select(year,value,item)|>
-  filter(year>1970)
+  select(year,value,item)
 
 cereals_production <- aws.s3::s3read_using(FUN = read_csv,
                                    bucket = ukfsr::s3_bucket(),
@@ -365,8 +364,7 @@ cereals_production <- aws.s3::s3read_using(FUN = read_csv,
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(item=Item) |>
-  select(year,value,item)|>
-  filter(year>1970)
+  select(year,value,item)
 
 population <- aws.s3::s3read_using(FUN = read_csv,
                                    bucket = ukfsr::s3_bucket(),
@@ -374,8 +372,7 @@ population <- aws.s3::s3read_using(FUN = read_csv,
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(item=Item) |>
-  select(year,value)|>
-  filter(year>1970)
+  select(year,value)
 
 production_per_capita<-production%>%
   left_join(population,by=c("year"="year"))%>%
@@ -397,8 +394,10 @@ production_chart <- production_per_capita|>
   ggplot() +
   geom_line(aes(x = year, y = value, colour = item), lwd = 1) +
   geom_point(aes(x = year, y = value, colour = item, shape = item),size=3) +
-  scale_x_continuous(limits = c(1969.5,2022.5),breaks =seq(1970,2022,10)) +
+  scale_x_continuous(limits = c(1959.5,2022.5),breaks =seq(1960,2022,10)) +
   scale_colour_manual(values = af_colours("categorical",n=6))+#,limits=c("Cereals, primary","Eggs Primary","Meat, Total","Milk, Total","Roots and Tubers, Total","Fruit and Vegetables, Primary + Citrus Fruit"))+
+  scale_shape_manual(values = c(16,32,32,32,32,32))+
+  guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "production g per capita per day",
@@ -413,14 +412,266 @@ food_supply_2 <- aws.s3::s3read_using(FUN = read_csv,
                                     object = "theme_1/t1_1_1/input/csv/food_supply_output.csv")
 
 food_supply_2_chart<-ggplot(food_supply_2)+
-  geom_line(aes(x=Year,y=Value,color=Area))+
+  geom_line(aes(x=Year,y=Value),color=af_colours("duo")[1])+
   geom_vline(aes(xintercept = 2010),linetype="dashed")+
-  annotate("text",x=1997,y=4500,size=6,label="change in methodology")+
-  #scale_color_manual(values = c(af_colours("categorical"),)) +
+  facet_wrap(~Area,scales="free")+
+  annotate("text",x=2000,y=1500,size=6,label="change in\nmethodology")+
+  scale_y_continuous(limits=c(0,4000))+
   theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(panel.spacing = unit(1, "cm"),
+        plot.margin=unit(c(0.2,1,0.2,0.2),"cm"))+
   labs(x = "Year",
        y = "kcals per capita per day")
 
 save_graphic(food_supply_2_chart, "1.1.1", "global food supply")
 save_csv(food_supply_2, "1.1.1", "global food supply")
 
+production_ <- aws.s3::s3read_using(FUN = read_csv,
+                                   bucket = ukfsr::s3_bucket(),
+                                   object = "theme_1/t1_1_1/input/csv/production_.csv")%>%
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(item=Item) |>
+  select(year,value,item)
+
+production_per_capita_<-production_%>%
+  left_join(population,by=c("year"="year"))%>%
+  mutate(value=(((value.x)/value.y)*1000)/365)%>%
+  #mutate(item=if_else(item%in%c("Citrus Fruit, Total","Fruit Primary","Vegetables Primary"),"Fruit and Vegetables, Primary + Citrus Fruit",item))%>%
+  #mutate(item=as.factor(item))%>%
+  #mutate(item=ordered(item,levels=c("Cereals, primary","Eggs Primary","Meat, Total","Milk, Total","Roots and Tubers, Total","Fruit and Vegetables, Primary + Citrus Fruit")))%>%
+  group_by(year,item)%>%
+  summarise(value=sum(value,na.rm=TRUE))
+
+production_per_capita_cereals<-production_per_capita_%>%
+  filter(item=="Cereals, primary")%>%
+  filter(year>2009)
+
+production_per_capita_sugar<-production_per_capita_%>%
+  filter(item=="Sugar Crops Primary")
+
+supply_ <- aws.s3::s3read_using(FUN = read_csv,
+                                    bucket = ukfsr::s3_bucket(),
+                                    object = "theme_1/t1_1_1/input/csv/supply_.csv")%>%
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(item=Item) |>
+  mutate(value=(value*1000)/365)|>
+  select(year,value,item)
+
+supply_cereals<-supply_%>%
+  filter(item=="Cereals - Excluding Beer")%>%
+  filter(year>2009)
+
+supply_sugar<-supply_%>%
+  filter(item=="Sugar Crops")
+
+ggplot()+
+geom_line(data=production_per_capita_cereals,aes(x=year,y=value))+
+geom_line(data=supply_cereals,aes(x=year,y=value))
+
+ggplot()+
+geom_line(data=production_per_capita_sugar,aes(x=year,y=value))+
+geom_line(data=supply_sugar,aes(x=year,y=value))
+
+
+supply_sugar<-supply_%>%
+  filter(item=="Sugar Crop")
+
+supply_wheat_rice_maize <- aws.s3::s3read_using(FUN = read_csv,
+                                bucket = ukfsr::s3_bucket(),
+                                object = "theme_1/t1_1_1/input/csv/wheat_rice_maize_supply.csv")%>%
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(item=Item) |>
+  mutate(value=(value*1000)/365)|>
+  select(year,value,item)
+
+wheat_rice_maize_production <- aws.s3::s3read_using(FUN = read_csv,
+                                    bucket = ukfsr::s3_bucket(),
+                                    object = "theme_1/t1_1_1/input/csv/wheat_rice_maize_production.csv")%>%
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(item=Item) |>
+  select(year,value,item)
+
+production_per_capita_wheat_rice_maize<-wheat_rice_maize_production%>%
+  left_join(population,by=c("year"="year"))%>%
+  mutate(value=(((value.x)/value.y)*1000)/365)%>%
+  #mutate(item=if_else(item%in%c("Citrus Fruit, Total","Fruit Primary","Vegetables Primary"),"Fruit and Vegetables, Primary + Citrus Fruit",item))%>%
+  #mutate(item=as.factor(item))%>%
+  #mutate(item=ordered(item,levels=c("Cereals, primary","Eggs Primary","Meat, Total","Milk, Total","Roots and Tubers, Total","Fruit and Vegetables, Primary + Citrus Fruit")))%>%
+  group_by(year,item)%>%
+  summarise(value=sum(value,na.rm=TRUE))
+
+production_supply<-ggplot()+
+  geom_line(data=production_per_capita_wheat_rice_maize,aes(x=year,y=value,color=item))+
+  geom_line(data=supply_wheat_rice_maize,aes(x=year,y=value,color=item),linetype="dashed")+
+  geom_vline(aes(xintercept = 2010),linetype="dashed")+
+  annotate("text",x=1997,y=450,size=6,label="change in methodology")+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
+  labs(x = "year",
+       y = "grams per capita per day")
+
+save_graphic(production_supply, "1.1.1", "global_production_supply")
+save_csv(production_per_capita_wheat_rice_maize, "1.1.1", "global_production_supply")
+
+ghg <- aws.s3::s3read_using(FUN = read_csv,
+                                                    bucket = ukfsr::s3_bucket(),
+                                                    object = "theme_1/t1_1_1/input/csv/ghg.csv")%>%
+  select(-`Deviation from mean`)%>%
+  pivot_longer(cols=2:8,names_to = "statistic",values_to = "value")
+
+
+
+ghg_chart<-ggplot()+
+  coord_flip()+
+  geom_boxplot(data=ghg,outlier.colour="black", outlier.shape=16,outlier.size=2, notch=FALSE,aes(x= fct_reorder(Name, value),y=value,fill=food_type))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  guides(color=guide_legend(nrow=5, byrow=TRUE))+ 
+  labs(x = "",
+       y = "kg CO2-eq/kg produce")
+
+save_graphic(ghg_chart, "1.1.1", "greenhousegas")
+save_csv(ghg, "1.1.1", "greenhousegas")
+
+fbs <- aws.s3::s3read_using(FUN = read_csv,
+                            bucket = ukfsr::s3_bucket(),
+                            object = "theme_1/t1_1_1/input/csv/FoodBalanceSheets_E_All_Data_NOFLAG.csv")%>%
+  filter(Element%in%c("Domestic supply quantity","Feed","Seed","Losses","Processing","Other uses (non-food)","Residuals","Food"))%>%
+  pivot_longer(cols=10:22,names_to = "Year",values_to = "Value")%>%
+  mutate(Year=as.numeric(substr(Year,2,5)))%>%
+  select(-`Area Code`,-`Area Code (M49)`,-`Item Code`,-`Item Code (FBS)`,-`Element Code`)
+
+fbs_domestic_supply_quantity<-fbs%>%
+  filter(Element=="Domestic supply quantity")%>%
+  group_by(Area,Item,Element,Unit,Year)%>%
+  summarise(Value=first(Value))%>%
+  rename(domestic_supply_quantity=Value)%>%
+  select(-Element)
+
+
+fbs_feed<-fbs%>%
+  filter(Element=="Feed")%>%
+  group_by(Area,Item,Element,Unit,Year)%>%
+  summarise(Value=first(Value))%>%
+  rename(feed=Value)%>%
+  select(-Element)
+
+
+fbs_seed<-fbs%>%
+  filter(Element=="Seed")%>%
+  group_by(Area,Item,Element,Unit,Year)%>%
+  summarise(Value=first(Value))%>%
+  rename(seed=Value)%>%
+  select(-Element)
+
+fbs_losses<-fbs%>%
+  filter(Element=="Losses")%>%
+  group_by(Area,Item,Element,Unit,Year)%>%
+  summarise(Value=first(Value))%>%
+  ungroup()%>%
+  rename(losses=Value)%>%
+  select(-Element)
+
+fbs_processing<-fbs%>%
+  filter(Element=="Processing")%>%
+  group_by(Area,Item,Element,Unit,Year)%>%
+  summarise(Value=first(Value))%>%
+  ungroup()%>%
+  rename(processing=Value)%>%
+  select(-Element)
+
+fbs_other_uses<-fbs%>%
+  filter(Element=="Other uses (non-food)")%>%
+  group_by(Area,Item,Element,Unit,Year)%>%
+  summarise(Value=first(Value))%>%
+  ungroup()%>%
+  rename(other_uses=Value)%>%
+  select(-Element)
+
+fbs_residuals<-fbs%>%
+  filter(Element=="Residuals")%>%
+  group_by(Area,Item,Element,Unit,Year)%>%
+  summarise(Value=first(Value))%>%
+  ungroup()%>%
+  rename(residuals=Value)%>%
+  select(-Element)
+
+fbs_food<-fbs%>%
+  filter(Element=="Food")%>%
+  group_by(Area,Item,Element,Unit,Year)%>%
+  summarise(Value=first(Value))%>%
+  ungroup()%>%
+  rename(food=Value)%>%
+  select(-Element)
+
+fbs_new<-fbs%>%
+  group_by(Area,Item,Unit,Year)%>%
+  summarise(n=n())%>%
+  ungroup()%>%
+  select(-n)
+  
+fbs_new2<-fbs_new%>%
+  left_join(fbs_domestic_supply_quantity,by=c("Year"="Year","Area"="Area","Item"="Item","Unit"="Unit"))%>%
+  left_join(fbs_feed,by=c("Year"="Year","Area"="Area","Item"="Item","Unit"="Unit"))%>%
+  left_join(fbs_seed,by=c("Year"="Year","Area"="Area","Item"="Item","Unit"="Unit"))%>%
+  left_join(fbs_losses,by=c("Year"="Year","Area"="Area","Item"="Item","Unit"="Unit"))%>%
+  left_join(fbs_processing,by=c("Year"="Year","Area"="Area","Item"="Item","Unit"="Unit"))%>%
+  left_join(fbs_other_uses,by=c("Year"="Year","Area"="Area","Item"="Item","Unit"="Unit"))%>%
+  left_join(fbs_residuals,by=c("Year"="Year","Area"="Area","Item"="Item","Unit"="Unit"))%>%
+  left_join(fbs_food,by=c("Year"="Year","Area"="Area","Item"="Item","Unit"="Unit"))%>%
+  filter(!Item%in%c("Cereals - Excluding Beer",
+                   "Starchy Roots",
+                   "Sugar Crops",
+                   "Sugar & Sweeteners",
+                   "Pulses",
+                   "Treenuts",
+                   "Oilcrops",
+                   "Vegetable Oils",
+                   "Vegetables",
+                   "Fruits - Excluding Wine",
+                   "Stimulants",
+                   "Spices",
+                   "Alcoholic Beverages",
+                   "Meat",
+                   "Offals",
+                   "Animal fats",
+                   "Eggs",
+                   "Milk - Excluding Butter",
+                   "Fish, Seafood",
+                   "Aquatic Products, Other"))%>%
+  filter(Area=="World")
+
+production <- aws.s3::s3read_using(FUN = read_csv,
+                            bucket = ukfsr::s3_bucket(),
+                            object = "theme_1/t1_1_1/input/csv/Production_Crops_Livestock_E_All_Data_NOFLAG.csv")%>%
+  filter(Element%in%c("Area harvested"))%>%
+  pivot_longer(cols=10:71,names_to = "Year",values_to = "Value")%>%
+  mutate(Year=as.numeric(substr(Year,2,5)))%>%
+  select(-`Area Code`,-`Area Code (M49)`,-`Item Code`,-`Item Code (CPC)`,-`Element Code`)%>%
+  filter(Area=="World")%>%
+  rename(Area_harvested=Value)%>%
+  filter(!Item%in%c("Beef and Buffalo Meat, primary",
+         "Cereals, primary",
+         "Citrus Fruit, Total",
+         "Eggs Primary",
+         "Fibre Crops, Fibre Equivalent",
+         "Meat, Poultry",
+         "Meat, Total",
+         "Milk, Total",
+         "Oilcrops, Cake Equivalent",
+         "Pulses, Total",
+         "Roots and Tubers, Total",
+         "Sheep and Goat Meat",
+         "Sugar Crops Primary",
+         "Treenuts, Total",
+         "Vegetables Primary"))%>%
+  select(-Element)
+
+land_area<-fbs_new2%>%
+  left_join(production,by=c("Area"="Area","Item"="Item","Year"="Year"))%>%
+  filter(is.na(Area_harvested))
+
+  

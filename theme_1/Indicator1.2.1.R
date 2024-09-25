@@ -64,6 +64,12 @@ phosphate_production<-fertiliser_production%>%
 potash_production<-fertiliser_production%>%
   filter(str_detect(Item,"potash"))
 
+total_production<-fertiliser_production%>%
+  rename(item=Item)%>%
+  mutate(item=str_replace(item,"Nutrient",""))%>%
+  mutate(item=str_replace(item,"\\(total\\)",""))%>%
+  filter(area=="World")
+
 nitrogen_production_chart<-ggplot()+
   geom_line(data=nitrogen_production,aes(x = year, y = value/1E6, colour = area)) +
   scale_colour_manual(values = af_colours("categorical",n=6)) +
@@ -93,6 +99,17 @@ potash_production_chart<-ggplot()+
 
 save_graphic(potash_production_chart, "1.2.1", "potash production chart")
 save_csv(potash_production, "1.2.1", "potash production")
+
+total_production_chart<-ggplot()+
+  geom_line(data=total_production,aes(x = year, y = value/1E6, colour = item)) +
+  scale_colour_manual(values = af_colours("categorical",n=6)) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
+  labs(x = NULL,
+       y = "Million Tonnes")
+
+save_graphic(total_production_chart, "1.2.1", "total_production_chart")
+save_csv(total_production, "1.2.1", "total_production")
 
 ################################
 
