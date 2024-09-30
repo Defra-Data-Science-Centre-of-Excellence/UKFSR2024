@@ -181,7 +181,7 @@ flw_chart<-flw%>%
 save_graphic(flw_chart, "1.1.2", "food_loss_waste_3")
 
 conf_levels <- c(
-  "Very low", "Low", "Medium", "High", "Eurostat"
+  "Very low confidence","Low confidence","Medium confidence","High confidence","Eurostat"    
 )
 
 
@@ -191,13 +191,17 @@ food_loss_waste <- aws.s3::s3read_using(FUN = read_csv,
   mutate(`HOUSEHOLD ESTIMATE (TONNES/YEAR)`=as.numeric(`HOUSEHOLD ESTIMATE (TONNES/YEAR)`))%>%
   group_by(REGION,`CONFIDENCE IN ESTIMATE`)%>%
   summarise(household_estimates=sum(`HOUSEHOLD ESTIMATE (TONNES/YEAR)`,na.rm=TRUE))%>%
-  mutate(REGION<-factor(REGION,levels=c("Southern Asia","Eastern Asia","Sub-Saharan Africa","Latin America and the Caribbean","South-eastern Asia","Northern Africa","Western Asia","Northern America","Western Europe","Eastern Europe","Southern Europe","Northern Europe","Central Asia","Australia and New Zealand","Melanesia","Polynesia","Micronesia")))%>%
-  mutate(`CONFIDENCE IN ESTIMATE`<-factor(`CONFIDENCE IN ESTIMATE`,levels =conf_levels ))
+  mutate(CONFIDENCE=factor(`CONFIDENCE IN ESTIMATE`,levels =conf_levels ))
+
+food_loss_waste_2<-food_loss_waste%>%
+  group_by(REGION)%>%
+  summarise(he=sum(household_estimates,na.rm=TRUE))%>%
+  left_join(food_loss_waste,by=c("REGION"="REGION"))
   
-flw_chart<-food_loss_waste%>%
+flw_chart<-food_loss_waste_2%>%
   ggplot() +
-  geom_col(aes(x=REGION,y=household_estimates/1E6,fill=`CONFIDENCE IN ESTIMATE`), lwd = 1)+
-  geom_text(aes(x=REGION,y=household_estimates/1E6,label=round(household_estimates/1E6,0)), hjust = -0.5, size = 6,
+  geom_col(aes(x=fct_reorder(REGION,he),y=household_estimates/1E6,fill=CONFIDENCE),lwd = 1)+
+  geom_text(aes(x=fct_reorder(REGION,he),y=he/1E6,label=round(he/1E6,0)), hjust = -0.5, size = 6,
             position = position_dodge(width = 1),
             inherit.aes = TRUE)+
   theme_ukfsr()+
@@ -211,3 +215,5 @@ flw_chart<-food_loss_waste%>%
   guides(fill=guide_legend(nrow=2, byrow=TRUE))+ 
   labs(x = NULL,
        y = "million tonnes")
+
+save_graphic(flw_chart, "1.1.2", "food_loss_waste_4")
