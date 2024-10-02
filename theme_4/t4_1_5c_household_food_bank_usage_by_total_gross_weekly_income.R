@@ -13,7 +13,7 @@ source(here("utils", "load-font.R"))
 
 t4_1_5c <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_4/t4_1_2/output/csv/4_1_5c_household_food_bank_usage_by_total_gross_weekly_income.csv")
+                                 object = "theme_4/t4_1_5/output/csv/4_1_5c_household_food_bank_usage_by_total_gross_weekly_income.csv")
 
 # https://stackoverflow.com/questions/76540961/special-characters-when-reading-in-csv-file-in-r
 # t4_1_5c <- fread("4_1_5c_household_food_bank_usage_by_total_gross_weekly_income.csv", encoding = 'Latin-1')
@@ -29,14 +29,15 @@ t4_1_5c_long <- t4_1_5c |>
 
 t4_1_5c_long$Usage <- factor(t4_1_5c_long$Usage, levels = c("30 day food bank usage","12 month food bank usage"))
 
-level_order <- c("30 day food bank usage","12 month food bank usage")
-
 af_categorical_colours <- afcolours::af_colours("duo")
 names(af_categorical_colours)=levels(t4_1_5c_long$Usage)
 
 t4_1_5c_long$Value[t4_1_5c_long$Value == 0] <- NA
 
 t4_1_5c_long$age_wrap = str_wrap(t4_1_5c_long$`Age group`, width = 12)
+
+t4_1_5c_long$age_wrap <- factor(t4_1_5c_long$age_wrap, levels = c("Less than\n£200","From £200\nbut less\nthan £400","From £400\nbut less\nthan £600",
+                                                                  "From £600\nbut less\nthan £800","From £800\nbut less\nthan £1,000","£1,000 or\nmore"))
 
 # https://kohske.wordpress.com/2010/12/25/various-position-adjustments-of-legend-in-ggplot2/
 t4_1_5c_plot <- ggplot(t4_1_5c_long, aes(x=factor(age_wrap), y=Value, fill=Usage)) +
@@ -46,7 +47,6 @@ t4_1_5c_plot <- ggplot(t4_1_5c_long, aes(x=factor(age_wrap), y=Value, fill=Usage
             aes(label=Value, vjust = -0.5, hjust = 2.7), size=8) +
   geom_text(data = subset(t4_1_5c_long, Usage == "12 month food bank usage"),
             aes(label=Value, vjust = -0.5, hjust = -1.8), size=8) +
-  guides(fill = guide_legend(byrow = TRUE)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   scale_fill_manual(values = af_categorical_colours) +
   theme(
@@ -57,6 +57,7 @@ t4_1_5c_plot <- ggplot(t4_1_5c_long, aes(x=factor(age_wrap), y=Value, fill=Usage
   theme(axis.text.x = element_text(size=20)) +
   theme(legend.text=element_text(size=24)) +
   labs(y = "Percentage of households (%)") +
+  guides(fill = guide_legend(byrow = TRUE)) +
   guides(colour=guide_legend(override.aes=list(size=1))) +
   theme(legend.direction = "vertical", legend.position = "bottom", legend.box = "vertical") 
 
