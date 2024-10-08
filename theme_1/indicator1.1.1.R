@@ -414,8 +414,8 @@ food_supply_2 <- aws.s3::s3read_using(FUN = read_csv,
 food_supply_2_chart<-ggplot(food_supply_2)+
   geom_line(aes(x=Year,y=Value),color=af_colours("duo")[1])+
   geom_vline(aes(xintercept = 2010),linetype="dashed")+
-  facet_wrap(~Area,scales="free")+
-  annotate("text",x=2000,y=1500,size=6,label="change in\nmethodology")+
+  facet_wrap(~Area)+#,scales="free")+
+  #annotate("text",x=2000,y=1500,size=6,label="change in\nmethodology")+
   scale_y_continuous(limits=c(0,4000))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing = unit(1, "cm"),
@@ -516,6 +516,60 @@ production_supply<-ggplot()+
 
 save_graphic(production_supply, "1.1.1", "global_production_supply")
 save_csv(production_per_capita_wheat_rice_maize, "1.1.1", "global_production_supply")
+
+oilseed_stuff <- aws.s3::s3read_using(FUN = read_csv,
+                            bucket = ukfsr::s3_bucket(),
+                            object = "theme_1/t1_1_1/input/csv/Oilseeds+other_stuff.csv")%>%
+  rename(year=Year) |>
+  rename(value=Value) |> 
+  rename(item=Item) |>
+  select(year,value,item)
+
+
+production_per_capita_oilseed_stuff<-oilseed_stuff%>%
+  left_join(population,by=c("year"="year"))%>%
+  mutate(value=(((value.x)/value.y)*1000)/365)%>%
+  mutate(item=if_else(item%in%c("Citrus Fruit, Total","Fruit Primary","Vegetables Primary"),"Fruit and Vegetables, Primary + Citrus Fruit",item))%>%
+  #mutate(item=as.factor(item))%>%
+  #mutate(item=ordered(item,levels=c("Cereals, primary","Eggs Primary","Meat, Total","Milk, Total","Roots and Tubers, Total","Fruit and Vegetables, Primary + Citrus Fruit")))%>%
+  group_by(year,item)%>%
+  summarise(value=sum(value,na.rm=TRUE))
+
+production_per_capita_animal_products<-production_per_capita_oilseed_stuff%>%
+  filter(item%in%c("Eggs Primary","Meat, Total","Milk, Total"))
+
+
+production_per_capita_vegetal<-production_per_capita_oilseed_stuff%>%
+  filter(item%in%c("Soya beans","Cereals, primary","Fruit and Vegetables, Primary + Citrus Fruit","Pulses, Total","Roots and Tubers, Total"))
+
+production_vegetal_chart <- production_per_capita_vegetal|>
+  ggplot() +
+  geom_line(aes(x = year, y = value, colour = item), lwd = 1) +
+  scale_x_continuous(limits = c(1959.5,2022.5),breaks =seq(1960,2022,10)) +
+  scale_colour_manual(values = af_colours("categorical",n=5))+#,limits=c("Cereals, primary","Eggs Primary","Meat, Total","Milk, Total","Roots and Tubers, Total","Fruit and Vegetables, Primary + Citrus Fruit"))+
+  guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "production g per capita per day",
+       shape="",
+       colour="")
+
+save_graphic(production_vegetal_chart, "1.1.1", "global vegetal food production")
+save_csv(production_per_capita_vegetal, "1.1.1", "global vegetal food production")
+
+production_animal_products_chart <- production_per_capita_animal_products|>
+  ggplot() +
+  geom_line(aes(x = year, y = value, colour = item), lwd = 1) +
+  scale_x_continuous(limits = c(1959.5,2022.5),breaks =seq(1960,2022,10)) +
+  scale_colour_manual(values = af_colours("categorical",n=3))+#,limits=c("Cereals, primary","Eggs Primary","Meat, Total","Milk, Total","Roots and Tubers, Total","Fruit and Vegetables, Primary + Citrus Fruit"))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "production g per capita per day",
+       shape="",
+       colour="")
+
+save_graphic(production_animal_products_chart, "1.1.1", "global animal food production")
+save_csv(production_per_capita_animal_products, "1.1.1", "global animal food production")
 
 ghg <- aws.s3::s3read_using(FUN = read_csv,
                                                     bucket = ukfsr::s3_bucket(),

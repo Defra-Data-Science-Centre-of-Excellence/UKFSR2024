@@ -41,7 +41,6 @@ sdg_15_3_1_chart<-ggplot()+
   annotate("text", x = 11, y = 24, label = "Note\nregions and sub regions\nmay not include\nall countries",size=6)+
   coord_flip()+
   scale_color_manual(values = af_colours("duo")) +
-  sca
   theme_ukfsr(base_family = "GDS Transport Website",horizontal = TRUE) +
   labs(x = NULL,
        y = "percent") 
