@@ -50,7 +50,7 @@ FSR_4_1_2 <- F4_1_2 %>%
 FSR_4_1_2plot <- ggplot(FSR_4_1_2) + 
   geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
   scale_y_continuous(limits = c(0,20), breaks=seq(0,20,2)) +
-  scale_x_discrete(breaks = unique(FSR_4_1_2$Year)[c(T,F)])+
+  scale_x_discrete(breaks = unique(FSR_4_1_2$Year)[c(T,F,F)])+
   scale_colour_manual(values = af_colours()) +
   labs(y = "% spend on food and non-alcoholic drinks",
        x = NULL) +
