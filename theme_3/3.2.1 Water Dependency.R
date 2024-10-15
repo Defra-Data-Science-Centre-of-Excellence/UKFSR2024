@@ -34,13 +34,13 @@ FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = Region, y = Volume / 1e3, fill = T
   labs(y = expression(Volume~(millions~m^3)),
        x = NULL,
        fill = "Type") +
-  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 5)) +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) 
 
 FSR_3_1_3a_plot
 
-save_graphic(FSR_3_1_3a_plot, '3.1.3', 'spray irrigation and storage') + 
-  save_csv(FSR_3_1_3a, '3.1.3', 'spray irrigation and storage')
+save_graphic(FSR_3_1_3a_plot, '3.2.1a', 'spray irrigation and storage') + 
+  save_csv(FSR_3_1_3a, '3.2.1a', 'spray irrigation and storage')
 
 
 # Map (Water Resource Availability) --------------------------------------------
@@ -101,4 +101,4 @@ xmap <- ggplot(ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN"))) +
         legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
 
 
-save_graphic(xmap, "3.1.3a", "water resource availability super simplified")
+save_graphic(xmap, "3.2.1c", "water resource availability super simplified")
