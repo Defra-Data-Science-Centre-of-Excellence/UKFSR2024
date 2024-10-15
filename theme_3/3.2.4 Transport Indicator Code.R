@@ -56,10 +56,16 @@ FSR_3_2_4_plot <- ggplot() +
               
               scale_color_manual(values = c(af_colors),
                                  labels = delay_labels,
-                                 name = "Avg Delay (seconds/vehicle/mile)",
+                                 name = "Avg Delay\n(seconds/vehicle/mile)",
                                  drop = FALSE) + 
               theme_ukfsr(base_family = "GDS Transport Website") +
-              theme_void()
+              theme(axis.text.x = element_blank(), 
+                    axis.text.y = element_blank(),
+                    axis.line.x = element_blank(),axis.ticks.x = element_blank(),
+                    panel.grid = element_blank(),
+                    legend.direction = "vertical",
+                    legend.position = "inside", legend.position.inside = c(0.1, 0.5),
+                    legend.text = element_text(size = 16), legend.title = element_text(size = 16)) 
               
 
 FSR_3_2_4_plot  
