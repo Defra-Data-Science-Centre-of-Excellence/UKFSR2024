@@ -12,7 +12,7 @@ source(here::here("utils", "load-font.R"))
 # FBS net margin data ----------------------------------------------------------
   net_margins <- aws.s3::s3read_using(FUN = read_csv,
                                        bucket = ukfsr::s3_bucket(),
-                                       object = "theme_3/input_data/3_1_11_fbs_net_margins.csv")
+                                       object = "theme_3/input_data/3_4_2_fbs_net_margins.csv")
 
   
  margin_cht <-  net_margins |> 
@@ -54,13 +54,57 @@ source(here::here("utils", "load-font.R"))
     theme(axis.line.y = element_line(colour = "white"))
 
  
-save_graphic(margin_cht, "3.1.11a", "fbs net margins")  
+# save_graphic(margin_cht, "3.4.2f", "fbs net margins")  
+
+
+# FBS mean incomes -------------------------------------------------------------
+
+income <- aws.s3::s3read_using(FUN = read_csv,
+                             bucket = ukfsr::s3_bucket(),
+                             object = "theme_3/input_data/3_4_2_fbs_mean_income_2022_23.csv")  
+
+
+income_data <- income |> 
+  filter(survey_year %in% c("2021/22", "2022/23"),
+         prices == "Current",
+         variable == "Farm Business Income") |> 
+  mutate(farm_type = factor(farm_type, levels = c("Cereals",
+                                                  "General Cropping",
+                                                  "Dairy", 
+                                                  "Grazing Livestock (Lowland)", 
+                                                  "Grazing Livestock (Less Favoured Area)",
+                                                  "Specialist Pigs",
+                                                  "Specialist Poultry", 
+                                                  "Mixed",
+                                                  "Horticulture",
+                                                  "All Types"),
+                            labels = c("Cereals",
+                                       "General\nCropping",
+                                       "Dairy", 
+                                       "Grazing\nLivestock\n(Lowland)", 
+                                       "Grazing\nLivestock\n(LFA)",
+                                       "Specialist\nPigs",
+                                       "Specialist\nPoultry", 
+                                       "Mixed",
+                                       "Horticulture",
+                                       "All Types")))
+income_cht <- income_data|> 
+  ggplot(aes(x = farm_type, y = value, fill = survey_year)) +
+  geom_col(position = position_dodge(width = 0.9)) +
+  geom_errorbar(aes(y = value, ymin = lower_ci, ymax = upper_ci), position = position_dodge(width = 0.9), width = 0.25) +
+  scale_y_continuous(labels = scales::label_currency(prefix = "£")) +
+  scale_fill_manual(values = af_colours(type = "duo")) +
+  labs(x = NULL, y = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website",base_size = 10,x_axis = FALSE)
+
+save_csv(income_data, "3.4.2e", "fbs average farm business income")
+save_graphic(income_cht, "3.4.2e", "fbs average farm business income")  
+
   
-  
-# FBS economic performance data ----------------------------------------------------------
+# NOT USED FBS economic performance data ---------------------------------------
 econ <- aws.s3::s3read_using(FUN = read_csv,
                                     bucket = ukfsr::s3_bucket(),
-                                    object = "theme_3/input_data/3_1_11_fbs_economic_performance.csv")  
+                                    object = "theme_3/input_data/3_4_2_fbs_economic_performance.csv")  
 
 
 econ_cht <- econ |> 
@@ -102,7 +146,7 @@ econ_cht <- econ |>
   
                                
                                 
-save_graphic(econ_cht, "3.1.11b", "fbs economic performance")                                 
+# save_graphic(econ_cht, "3.1.11b", "fbs economic performance")                                 
                        
   
            
