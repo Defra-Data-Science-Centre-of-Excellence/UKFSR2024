@@ -14,7 +14,7 @@ source(here::here("utils", "load-font.R"))
 
 FSR_visas <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
-                                  object = "theme_3/t3_1_3/output/csv/3_1_3a_seasonal_worker_visas.csv")
+                                  object = "theme_3/input_data/seasonal_worker_visas.csv")
 #to add commas to numbers
 marks_sci <- function(`Seasonal worker visas issued`) format(`Seasonal worker visas issued`, big.mark = ",", scientific = FALSE)
 
@@ -26,4 +26,5 @@ chart <-
 
 print(chart)
 
-save_graphic(chart, "3.1.3a", "Seasonal worker visas chart")
+save_graphic(chart, "3.1.3b", "Seasonal worker visas chart")
+save_csv(FSR_visas, "3.1.3b", "seasonal worker visas data")
