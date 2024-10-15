@@ -91,7 +91,8 @@ income_data <- income |>
 income_cht <- income_data|> 
   ggplot(aes(x = farm_type, y = value, fill = survey_year)) +
   geom_col(position = position_dodge(width = 0.9)) +
-  geom_errorbar(aes(y = value, ymin = lower_ci, ymax = upper_ci), position = position_dodge(width = 0.9), width = 0.25) +
+  geom_errorbar(aes(y = value, ymin = lower_ci, ymax = upper_ci),linewidth = 2, colour = "white", position = position_dodge(width = 0.9), width = 0.4) +
+  geom_errorbar(aes(y = value, ymin = lower_ci, ymax = upper_ci),position = position_dodge(width = 0.9), width = 0.25) +
   scale_y_continuous(labels = scales::label_currency(prefix = "£")) +
   scale_fill_manual(values = af_colours(type = "duo")) +
   labs(x = NULL, y = NULL) +
