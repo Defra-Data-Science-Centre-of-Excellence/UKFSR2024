@@ -16,7 +16,7 @@ source(here::here("utils", "load-font.R"))
 
 gms <- s3read_using(FUN = read_csv,
                     bucket = ukfsr::s3_bucket(),
-                    object = "theme_3/t3_1_9/output/csv/3_1_9_grocery_market_share.csv")
+                    object = "theme_3/input_data/grocery_market_share.csv")
 
 # Year comparison 2021-2023-----------------------------------------------------
 # Poss could switch to 2024 at the last minute if we can get nearly a whole year
@@ -43,7 +43,7 @@ comp_barchart <- gms |> group_by(year, company) |>
   theme(legend.position = "inside", legend.position.inside = c(0.8, 0.15))
 
 
-save_graphic(comp_barchart, "3.1.10", "grocery market share comparison")
+save_graphic(comp_barchart, "3.4.1a", "grocery market share comparison")
 
 
 # ------------------------------------------------------------------------------
