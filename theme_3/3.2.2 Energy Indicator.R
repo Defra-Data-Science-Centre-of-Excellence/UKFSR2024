@@ -84,11 +84,11 @@ combined_data <- bind_rows(
 dual_axis_plot_side_by_side <- ggplot(combined_data, aes(x=Year, y=value, colour=variable, group=interaction(variable, Sector))) +
   geom_line() +
   scale_colour_manual(values = af_colours("categorical")) + 
+  scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "5 year"),labels=scales::label_date(format = "%Y"))+
   facet_wrap(~ Sector, nrow = 1) +
-  guides(fill = guide_legend(byrow = TRUE)) +
+  guides(colour = guide_legend(nrow = 2, byrow = TRUE)) +
   labs(x = NULL,
        y = "Thousand tonnes oil equivalent") +
-  scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "3 year"),labels=scales::label_date(format = "%Y"))+
   theme_ukfsr(base_family = "GDS Transport Website")
 
 dual_axis_plot_side_by_side
