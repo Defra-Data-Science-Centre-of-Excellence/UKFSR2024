@@ -20,7 +20,7 @@ contents <- get_bucket_df("s3-ranch-054")
 
 FSR_3_1_5 <- aws.s3::s3read_using(FUN = readr::read_csv,
                           bucket = "s3-ranch-054",
-                          object = "theme_3/input_data/3_1_2a_aggregate_energy_demand_agric_food_drink_manufact.csv")
+                          object = "theme_3/input_data/aggregate_energy_demand_agric_food_drink_manufact.csv")
 
 
 
@@ -37,17 +37,17 @@ FSR_3_1_5plot <- ggplot(FSR_3_1_5, aes(x=Year, y=value, colour=key, group=key)) 
   scale_colour_manual(values = af_colours("categorical")) + 
   labs(x = NULL,
        y = "Thousand tonnes oil equivalent") +
-  scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "3 year"),labels=date_format("%Y"))+
+  scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "3 year"),labels=scales::label_date(format = "%Y"))+
   theme_ukfsr(base_family = "GDS Transport Website") 
 
 
 FSR_3_1_5plot
 
-save_graphic(FSR_3_1_5plot, '3.1.5', ' Aggregate energy demand for agriculture and food and drink manufacturing') + 
-  save_csv(FSR_3_1_5, '3.1.5', ' Aggregate energy demand for agriculture and food and drink manufacturing')
+save_graphic(FSR_3_1_5plot, '3.2.2a', ' Aggregate energy demand for agriculture and food and drink manufacturing') + 
+  save_csv(FSR_3_1_5, '3.2.2a', ' Aggregate energy demand for agriculture and food and drink manufacturing')
 
 
-------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # Support 1 - Energy demand by energy type in the food / drink manufacturing sector and Agriculture combined
@@ -56,11 +56,11 @@ save_graphic(FSR_3_1_5plot, '3.1.5', ' Aggregate energy demand for agriculture a
 
 FSR_3_1_5a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                 bucket = "s3-ranch-054",
-                                object = "theme_3/input_data/3_1_2b_energy_demand_food_drink_manufact_energy_type.csv")
+                                object = "theme_3/input_data/energy_demand_food_drink_manufact_energy_type.csv")
 
 FSR_3_1_5ab <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
-                                   object = "theme_3/input_data/3_1_2c_energy_demand_agric_energy_type.csv")
+                                   object = "theme_3/input_data/energy_demand_agric_energy_type.csv")
 
 
 FSR_3_1_5a <- FSR_3_1_5a %>%
@@ -88,17 +88,17 @@ dual_axis_plot_side_by_side <- ggplot(combined_data, aes(x=Year, y=value, colour
   guides(fill = guide_legend(byrow = TRUE)) +
   labs(x = NULL,
        y = "Thousand tonnes oil equivalent") +
-  scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "3 year"),labels=date_format("%Y"))+
+  scale_x_date(breaks=seq(as.Date("2002-01-01"),Sys.Date()-lubridate::years(1),by = "3 year"),labels=scales::label_date(format = "%Y"))+
   theme_ukfsr(base_family = "GDS Transport Website")
 
 dual_axis_plot_side_by_side
 
 # Save the dual axis plot
-save_graphic(dual_axis_plot_side_by_side, '3.1.5a', 'Energy demand by energy type in food/drink manufacturing and agriculture sectors') + 
-  save_csv(combined_data, '3.1.5a', 'Energy demand by energy type in food/drink manufacturing and agriculture sectors')
+save_graphic(dual_axis_plot_side_by_side, '3.2.2b', 'Energy demand by energy type in food/drink manufacturing and agriculture sectors') + 
+  save_csv(combined_data, '3.2.2b', 'Energy demand by energy type in food/drink manufacturing and agriculture sectors')
 
 
-------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------
   
   # Support 2 - Energy demand by energy type in the food and drink manufacturing sector 
  
@@ -124,7 +124,7 @@ ndcolspec <- cols(
 
 nd_fuel <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
-                                object = "theme_fsi/tfsi_5_1/output/csv/fsi_5_1_non_domestic_fuel_price_index.csv",
+                                object = "theme_3/input_data/non_domestic_fuel_price_index.csv",
                                 col_types = ndcolspec)
 
 nd_fuel <- nd_fuel |> 
@@ -143,8 +143,8 @@ chart <- nd_fuel |>
 
 chart
 
-save_graphic(chart, '3.1.5b', '  Energy prices') + 
-  save_csv(nd_fuel, '3.1.5b', ' Energy prices')
+save_graphic(chart, '3.2.2c', 'non domestic Energy price index') + 
+  save_csv(nd_fuel, '3.2.2c', 'non domestic Energy price index')
 
 
 
