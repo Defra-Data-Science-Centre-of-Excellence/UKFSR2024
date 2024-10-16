@@ -68,7 +68,8 @@ wheat_net_cht <- wheat_net |>
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(wheat_net_cht, "3.1.2", "wheat net trade final")
+save_graphic(wheat_net_cht, "3.1.2b", "wheat net trade final")
+save_csv(wheat_net, "3.1.2b", "wheat net trade final")
 
 # Combined net data ------------------------------------------------------------
 
@@ -93,9 +94,11 @@ all_net_cht <- all_net |>
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(all_net_cht, "3.1.2", "net trade by product final")
+save_graphic(all_net_cht, "3.1.2a", "net trade by product final")
+save_csv(all_net, "3.1.2a", "net trade by product final")
 
-# ------------------------------------------------------------------------------
+# OLD WORKINGS -----------------------------------------------------------------
+# Trade by country--------------------------------------------------------------
 
 co2_cnt <- country_trade("theme_3/input_data/3_1_11a_co2_trade_data.csv", "co2")
 hypo_cnt <- country_trade("theme_3/input_data/3_1_11b_hypochlorite_trade_data.csv", "hypochlorite")
@@ -148,7 +151,6 @@ x <- co2_cnt  |>
 
 
 
-# OLD WORKINGS -----------------------------------------------------------------
 # CO2 --------------------------------------------------------------------------
 
 # Original data table from uktradeinfo
