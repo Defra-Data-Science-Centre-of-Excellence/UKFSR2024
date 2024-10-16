@@ -16,7 +16,7 @@ source(here::here("utils", "load-font.R"))
 
 cyber <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
-                            object = "theme_3/t3_1_6/output/csv/3_1_6_cyber_security_breaches.csv")
+                            object = "theme_3/input_data/cyber_security_breaches.csv")
 
 cht <- ggplot(cyber, aes(x = year, y = value, colour = sector)) +
   geom_line(data = filter(cyber, year >= 2022 & sector == "Businesses"), linetype = "dotted") +
@@ -37,5 +37,5 @@ cht <- ggplot(cyber, aes(x = year, y = value, colour = sector)) +
 # intended to produce a representative sample of businesses. We have therefore
 # used a dotted line for 2023 business trends
 
-save_graphic(cht, "3.1.6", "cyber security breaches")
-
+save_graphic(cht, "3.2.3a", "cyber security breaches")
+save_csv(cyber, "3.2.3a", "cyber security breaches")
