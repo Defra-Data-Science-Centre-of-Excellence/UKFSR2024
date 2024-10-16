@@ -15,7 +15,7 @@ source(here::here("utils", "load-font.R"))
 
 FSR_3_1_1 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
-                                  object = "theme_3/input_data/2.2.1aFarmCosts.csv")
+                                  object = "theme_3/input_data/farm_costs.csv")
 
 variable_order <- c("Fertilisers", "Pesticides", "Seeds", 
                     "Animal feed", "Veterinary expenses", "Energy", 
@@ -47,8 +47,8 @@ FSR_3_1_1plot <- ggplot(FSR_3_1_1, aes(x=Year, y=value, group=variable, color = 
 
 FSR_3_1_1plot
 
-save_graphic(FSR_3_1_1plot, '3.1.1', 'UK principal farm costs final') 
-# save_csv(FSR_3_1_1, '3.1.1', ' UK principal farm costs')
+save_graphic(FSR_3_1_1plot, '3.1.1a', 'UK principal farm costs final') 
+save_csv(FSR_3_1_1, '3.1.1a', ' UK principal farm costs')
 
 # Fertilizer Usage -------------------------------------------------------------
   
@@ -74,8 +74,8 @@ FSR_3_1_1aplot <- ggplot(FSR_3_1_1a, aes(x=Year, y=value, colour=variable, group
 
 FSR_3_1_1aplot
 
-save_graphic(FSR_3_1_1aplot, '3.1.1a', 'UK Fertiliser usage final')  
-# save_csv(FSR_3_1_1a, '3.1.1a', ' UK Fertiliser usage')
+save_graphic(FSR_3_1_1aplot, '3.1.1b', 'UK Fertiliser usage final')  
+save_csv(FSR_3_1_1a, '3.1.1b', ' UK Fertiliser usage')
 
 # Nitrogen soil balance --------------------------------------------------------
 # Data is table 5 from UK and England soil nutrients time series 
@@ -83,7 +83,7 @@ save_graphic(FSR_3_1_1aplot, '3.1.1a', 'UK Fertiliser usage final')
 
 soil_balance <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
-                                   object = "theme_3/t3_1_1/output/csv/3_1_1_england_soil_balance_nitrogen.csv")
+                                   object = "theme_3/input_data/england_soil_balance_nitrogen.csv")
 
 
 soil_balance <- soil_balance |> 
@@ -95,7 +95,8 @@ nue_chart <- soil_balance |> ggplot() +
   labs(x= NULL, y = "percentage") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(nue_chart, "3.1.1b", "nitrogen use efficiency england final")
+save_graphic(nue_chart, "3.1.1c", "nitrogen use efficiency england final")
+save_csv(soil_balance, "3.1.1c", "nitrogen use efficiency england")
 
 # Pesticides Usage NOT USED-------------------------------------------------------------
   
@@ -174,7 +175,7 @@ save_graphic(nue_chart, "3.1.1b", "nitrogen use efficiency england final")
 
 pesticides_fera <- aws.s3::s3read_using(FUN = readr::read_csv,
                              bucket = "s3-ranch-054",
-                             object = "theme_3/t3_1_1/output/csv/3_1_1_pesticides_fera.csv")
+                             object = "theme_3/input_data/pesticides_fera.csv")
 
 fera_chart <- pesticides_fera |> 
   filter(name != "Total") |> 
@@ -186,14 +187,14 @@ fera_chart <- pesticides_fera |>
   labs(x = NULL, y = "metric kilotons (kT)") +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)
 
-save_graphic(fera_chart, "3.1.1c", "pesticides fera final")
-
+save_graphic(fera_chart, "3.1.1d", "pesticides fera final")
+save_csv(pesticides_fera, "3.1.1d", "pesticides fera final")
 
 # Animal feed ------------------------------------------------------------------
 
 feed <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
-                                   object = "theme_3/t3_1_1/output/csv/3_1_1d_animal_feed_use_auk_ch9.csv")
+                                   object = "theme_3/input_data/animal_feed_use_auk_ch9.csv")
 
 feed_chart <- ggplot(feed) +
   geom_line(aes(x = year, y = value, colour = Type)) +
@@ -203,7 +204,8 @@ feed_chart <- ggplot(feed) +
   guides(colour = guide_legend(nrow = 2)) + 
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(feed_chart, "3.1.1d", "animal feed use auk ch9 final")
+save_graphic(feed_chart, "3.1.1e", "animal feed use auk ch9 final")
+save_csv(feed, "3.1.1e", "animal feed use")
 
 # Collect charts for download --------------------------------------------------
 
