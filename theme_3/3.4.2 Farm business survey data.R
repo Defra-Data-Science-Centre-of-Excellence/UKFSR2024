@@ -147,12 +147,67 @@ econ_cht <- econ |>
   
                                
                                 
-# save_graphic(econ_cht, "3.1.11b", "fbs economic performance")                                 
-                       
-  
-           
-                            
+# save_graphic(econ_cht, "3.1.11b", "fbs economic performance")                 
+
+
+# EXPERIMENT------------------------------------------------------------------------------
+
+# Table 5a from https://www.gov.uk/government/statistics/farm-accounts-in-england-data-sets
+ 
+margins <-  read_csv(file = "https://assets.publishing.service.gov.uk/media/65816325ed3c34000d3bfb0f/fae_table5a_2022_23.csv")                           
                                   
-                         
-                     
-  
+cropping_types <- c("Cereals", "General Cropping", "Mixed", "Horticulture")
+livestock_types <- c("Dairy", "Grazing Livestock (Lowland)",
+                     "Grazing Livestock (Less Favoured Area)",
+                     "Specialist Pigs", "Specialist Poultry")
+cht_data <- margins |> 
+filter(stringr::str_detect(sda_status, "All"), stringr::str_detect(measure, "Farm Business Income")) |>
+  mutate(chart_type = if_else(cost_centre == "Farm Business", "point", "bar"),
+         farm_category = case_when(farm_type %in% cropping_types ~ "crops",
+                                   farm_type %in% livestock_types ~ "livestock",
+                                   TRUE ~ "all"),
+         farm_type = forcats::fct_recode(farm_type, "Grazing Livestock (LFA)" = "Grazing Livestock (Less Favoured Area)")) |>
+  select(survey_year, chart_type, farm_category, farm_type, cost_centre, value)                         
+
+livestock_cht <- 
+  ggplot() +
+  geom_col(data = cht_data |> filter(chart_type == "bar", farm_category %in% c("livestock", "all")),
+           aes(x = survey_year, y = value, fill = cost_centre)) +
+  geom_point(data = cht_data |> filter(chart_type == "point", farm_category %in% c("livestock", "all")),
+             aes(x = survey_year, y = value, colour = cost_centre), size = 3, shape = 21, fill = "black", stroke = 2, inherit.aes = FALSE) +
+  scale_colour_manual(values = "white") +
+  scale_fill_manual(values = af_colours()) +
+  scale_x_discrete(limits = rev(unique(cht_data$survey_year))) +
+  facet_wrap(vars(farm_type), labeller = label_wrap_gen(width = 15),
+             ncol = 1, dir = "h", strip.position = "left") +
+  coord_flip() +
+  guides(fill = guide_legend(ncol = 1, byrow = TRUE)) +
+  labs(x = NULL, y = NULL) +
+    theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
+    theme(strip.placement = "outside",
+          strip.text.y.left = element_text(size = 20, hjust = 1, angle = 0),
+          strip.background = element_rect(fill = "white")) 
+
+save_graphic(livestock_cht, "3.4.2z", "test fbs chart")
+
+
+crops_cht <- 
+  ggplot() +
+  geom_col(data = cht_data |> filter(chart_type == "bar", farm_category %in% c("crops", "all")),
+           aes(x = survey_year, y = value, fill = cost_centre)) +
+  geom_point(data = cht_data |> filter(chart_type == "point", farm_category %in% c("crops", "all")),
+             aes(x = survey_year, y = value, colour = cost_centre), size = 3, shape = 21, fill = "black", stroke = 2, inherit.aes = FALSE) +
+  scale_colour_manual(values = "white") +
+  scale_fill_manual(values = af_colours()) +
+  scale_x_discrete(limits = rev(unique(cht_data$survey_year))) +
+  facet_wrap(vars(farm_type), labeller = label_wrap_gen(width = 15),
+             ncol = 1, dir = "h", strip.position = "left") +
+  coord_flip() +
+  guides(fill = guide_legend(ncol = 1, byrow = TRUE)) +
+  labs(x = NULL, y = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
+  theme(strip.placement = "outside",
+        strip.text.y.left = element_text(size = 20, hjust = 1, angle = 0),
+        strip.background = element_rect(fill = "white")) 
+
+save_graphic(crops_cht, "3.4.2z", "test fbs chart")
