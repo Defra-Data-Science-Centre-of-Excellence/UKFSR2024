@@ -101,6 +101,78 @@ income_cht <- income_data|>
 save_csv(income_data, "3.4.2e", "fbs average farm business income")
 save_graphic(income_cht, "3.4.2e", "fbs average farm business income")  
 
+# FBS income by cost centre ----------------------------------------------------
+
+# data collated from http://fbs.int.sce.network/shiny/FBS-GOVUK-dashboard/
+# using real terms
+
+fbs_data <- aws.s3::s3read_using(FUN = read_csv,
+                                 bucket = ukfsr::s3_bucket(),
+                                 object = "theme_3/input_data/fbs_all_data.csv")
+
+cropping_types <- c("Cereals", "General cropping", "Mixed", "Horticulture")
+livestock_types <- c("Dairy", "Lowland Grazing Livestock",
+                     "LFA Grazing Livestock",
+                     "Pigs", "Poultry")
+
+
+cht_data <- fbs_data |> 
+  # filter(stringr::str_detect(sda_status, "All"), stringr::str_detect(measure, "Farm Business Income")) |>
+  mutate(chart_type = if_else(variable_label == "Farm Business Income", "point", "bar"),
+         farm_category = case_when(level %in% cropping_types ~ "crops",
+                                   level %in% livestock_types ~ "livestock",
+                                   TRUE ~ "all"),
+         variable_label = factor(variable_label, levels = c("Farm Business Income", "Direct Payment income", "Agricultural income", "Agri-environment income", "Diversified income"),
+                                 labels = c("Farm Business Income", "Basic Payment Scheme", "Agriculture", "Agri-environment and other payments", "Diversification out of agriculture"))) |> 
+  filter(survey_year %in% c("2022/23", "2020/21")) |> 
+  select(survey_year, chart_type, farm_category, farm_type = level, cost_centre = variable_label, value)
+
+
+livestock_chart <-  
+  ggplot() +
+  geom_col(data = cht_data |> filter(chart_type == "bar", farm_category %in% c("livestock", "all")),
+           aes(x = survey_year, y = value, fill = cost_centre)) +
+  geom_point(data = cht_data |> filter(chart_type == "point", farm_category %in% c("livestock", "all")),
+             aes(x = survey_year, y = value, colour = cost_centre), size = 3, shape = 21, fill = "black", stroke = 2, inherit.aes = FALSE) +
+  scale_colour_manual(values = "white") +
+  scale_fill_manual(values = af_colours()) +
+  scale_x_discrete(limits = rev(unique(cht_data$survey_year))) +
+  scale_y_continuous(labels = scales::label_currency(prefix = "£")) +
+  facet_wrap(vars(farm_type), labeller = label_wrap_gen(width = 15),
+             ncol = 1, dir = "h", strip.position = "left") +
+  coord_flip() +
+  guides(fill = guide_legend(ncol = 1, byrow = TRUE)) +
+  labs(x = NULL, y = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
+  theme(strip.placement = "outside",
+        strip.text.y.left = element_text(size = 20, hjust = 1, angle = 0),
+        strip.background = element_rect(fill = "white"), legend.location = "plot") 
+
+save_graphic(livestock_chart, "3.4.2f", "fbi livestock by cost centre")
+
+crops_chart <-  
+  ggplot() +
+  geom_col(data = cht_data |> filter(chart_type == "bar", farm_category %in% c("crops", "all")),
+           aes(x = survey_year, y = value, fill = cost_centre)) +
+  geom_point(data = cht_data |> filter(chart_type == "point", farm_category %in% c("crops", "all")),
+             aes(x = survey_year, y = value, colour = cost_centre), size = 3, shape = 21, fill = "black", stroke = 2, inherit.aes = FALSE) +
+  scale_colour_manual(values = "white") +
+  scale_fill_manual(values = af_colours()) +
+  scale_x_discrete(limits = rev(unique(cht_data$survey_year))) +
+  scale_y_continuous(labels = scales::label_currency(prefix = "£")) +
+  facet_wrap(vars(farm_type), labeller = label_wrap_gen(width = 15),
+             ncol = 1, dir = "h", strip.position = "left") +
+  coord_flip() +
+  guides(fill = guide_legend(ncol = 1, byrow = TRUE)) +
+  labs(x = NULL, y = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
+  theme(strip.placement = "outside",
+        strip.text.y.left = element_text(size = 20, hjust = 1, angle = 0),
+        strip.background = element_rect(fill = "white"), legend.location = "plot") 
+
+save_graphic(crops_chart, "3.4.2g", "fbi cereals by cost centre")
+save_csv(cht_data, "3.4.2", "farm business income by cost centre")
+
   
 # NOT USED FBS economic performance data ---------------------------------------
 econ <- aws.s3::s3read_using(FUN = read_csv,
@@ -210,4 +282,4 @@ crops_cht <-
         strip.text.y.left = element_text(size = 20, hjust = 1, angle = 0),
         strip.background = element_rect(fill = "white")) 
 
-save_graphic(crops_cht, "3.4.2z", "test fbs chart")
+
