@@ -36,5 +36,5 @@ FSR_3_1_4_plot <- ggplot(FSR_3_1_4, aes(x=Year, y=value, colour=variable, group=
 
 FSR_3_1_4_plot
 
-save_graphic(FSR_3_1_4_plot, '3.1.4', ' Agri food sector employees self employed farmers') + 
-  save_csv(FSR_3_1_4, '3.1.4', ' Agri food sector employees self employed farmers')
+save_graphic(FSR_3_1_4_plot, '3.1.3a', ' Agri food sector employees self employed farmers') + 
+  save_csv(FSR_3_1_4, '3.1.3a', ' Agri food sector employees self employed farmers')

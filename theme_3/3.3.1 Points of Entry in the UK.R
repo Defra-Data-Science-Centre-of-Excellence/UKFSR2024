@@ -5,6 +5,7 @@ library('dplyr')
 library('tidyr')
 library('aws.s3')
 library('lubridate')
+library(forcats)
 
 source(here::here("utils", "load-font.R"))
 
@@ -31,19 +32,19 @@ FSR_3_1_8_plot <- ggplot(FSR_3_1_8, aes(x = Port, y = Value, fill = Year)) +
   geom_text(aes(label = round(Value, 1)), 
             position = position_dodge(width = 0.9),  # Use position_dodge here
             size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
-  labs(y = "% of import", x = NULL, fill = "Year") +
+  labs(y = "% of imports", x = NULL, fill = "Year") +
   scale_fill_manual(values = af_colours('duo')) +
   coord_flip() +
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(legend.position = "bottom", legend.title = element_blank())
 
 # Print the plot
 print(FSR_3_1_8_plot)
 
-save_graphic(FSR_3_1_8_plot, '3.1.8', ' UK % of import by port') + 
-  save_csv(FSR_3_1_8, '3.1.8', ' UK % of import by port')
+save_graphic(FSR_3_1_8_plot, '3.3.1a', ' UK pct of import by port') + 
+  save_csv(FSR_3_1_8, '3.3.1a', ' UK pct of import by port')
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
   
 # Import % by Short Straits from EU
   
@@ -67,21 +68,21 @@ FSR_3_1_8a_plot <- ggplot(FSR_3_1_8a, aes(x = Food, y = Value, fill = Year)) +
   geom_text(aes(label = round(Value, 1)), 
             position = position_dodge(width = 0.9),  # Use position_dodge here
             size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
-  labs(y = "% of import", x = NULL, fill = "Year") +
+  labs(y = "% of imports", x = NULL, fill = "Year") +
   scale_fill_manual(values = af_colours('duo')) +
   coord_flip() +
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(legend.position = "bottom", legend.title = element_blank())
 
 # Print the plot
 print(FSR_3_1_8a_plot)
 
-save_graphic(FSR_3_1_8a_plot, '3.1.8a', 'Import % by short straits from EU') + 
-  save_csv(FSR_3_1_8a, '3.1.8a', ' Import % by short straits from EU')
+save_graphic(FSR_3_1_8a_plot, '3.3.1d', 'Import pct by product from short straits from EU') + 
+  save_csv(FSR_3_1_8a, '3.3.1d', ' Import pct by product from short straits from EU')
 
   
   
---------------------------------------------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------------------
   
 # Import % by Short Straits from EU + Non EU
 
@@ -106,7 +107,7 @@ FSR_3_1_8b <- FSR_3_1_8b %>%
 
 
 # Create the plot
-FSR_3_1_8b_plot <- ggplot(FSR_3_1_8, aes(x = Food, y = Value, fill = Year)) +
+FSR_3_1_8b_plot <- ggplot(FSR_3_1_8b, aes(x = Food, y = Value, fill = Year)) +
   geom_bar(stat = "identity", position = "dodge") +
   geom_text(aes(label = round(Value, 1)), 
             position = position_dodge(width = 0.9),  # Use position_dodge here
@@ -114,11 +115,11 @@ FSR_3_1_8b_plot <- ggplot(FSR_3_1_8, aes(x = Food, y = Value, fill = Year)) +
   labs(y = "% of import", x = NULL, fill = "Year") +
   scale_fill_manual(values = af_colours('duo')) +
   coord_flip() +
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(legend.position = "bottom", legend.title = element_blank())
 
 # Print the plot
 print(FSR_3_1_8b_plot)
 
-save_graphic(FSR_3_1_8b_plot, '3.1.8b', ' Import % by short straits from EU + Non EU') + 
-  save_csv(FSR_3_1_8b, '3.1.8b', ' Import % by short straits from EU + Non EU')
+save_graphic(FSR_3_1_8b_plot, '3.3.1e', ' Import pct by prodcut from short straits from EU + Non EU') + 
+  save_csv(FSR_3_1_8b, '3.3.1e', ' Import pct by product from short straits from EU + Non EU')

@@ -19,7 +19,7 @@ source(here::here("utils", "load-font.R"))
 # Need to deal with revised data appearing as text
 mfg_investment <- aws.s3::s3read_using(FUN = read_csv,
                                        bucket = ukfsr::s3_bucket(),
-                                       object = "theme_3/t3_1_10/output/csv/3_1_10_food_mfg_investment_cdid_ds4t.csv")
+                                       object = "theme_3/input_data/food_mfg_investment_cdid_ds4t.csv")
 
 
 mfg_investment <- mfg_investment |> 
@@ -36,7 +36,7 @@ chart <- mfg_investment |>
        y = "£m") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(chart, "3.1.11", "food mfg investment")
-
+save_graphic(chart, "3.4.2a", "food mfg investment")
+save_csv(mfg_investment, "3.4.2a", "food mfg investment")
 
 

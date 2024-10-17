@@ -41,7 +41,7 @@ delay_labels <- c("Less than 5 seconds", "5 - 10 seconds", "10 - 15 seconds", "1
 af_colors <- af_colours(type = "categorical", n = length(delay_breaks) - 1) # Get 5 colors
 
 # Create the map plot
-FSR_3_1_7_plot <- ggplot() +
+FSR_3_2_4_plot <- ggplot() +
               # Add UK border as the base layer
               geom_sf(data = uk_border |> filter(CTRY22NM == "England"), aes(fill = CTRY22NM), color = "black", size = 0.5) +
               scale_fill_manual(values = fill_colors) +
@@ -56,21 +56,63 @@ FSR_3_1_7_plot <- ggplot() +
               
               scale_color_manual(values = c(af_colors),
                                  labels = delay_labels,
-                                 name = "Avg Delay (seconds/vehicle/mile)",
+                                 name = "Avg Delay\n(seconds/vehicle/mile)",
                                  drop = FALSE) + 
               theme_ukfsr(base_family = "GDS Transport Website") +
-              theme_void()
+              theme(axis.text.x = element_blank(), 
+                    axis.text.y = element_blank(),
+                    axis.line.x = element_blank(),axis.ticks.x = element_blank(),
+                    panel.grid = element_blank(),
+                    legend.direction = "vertical",
+                    legend.position = "inside", legend.position.inside = c(0.1, 0.5),
+                    legend.text = element_text(size = 16), legend.title = element_text(size = 16)) 
               
 
-FSR_3_1_7_plot  
+FSR_3_2_4_plot  
 
 # Output the plot
-save_graphic(FSR_3_1_7_plot, '3.1.7','Road Congestion and Travel Time Statistics (average speed and delay)') 
+save_graphic(FSR_3_2_4_plot, '3.2.4a','Road Congestion and Travel Time Statistics (average speed and delay)') 
 #+ save_csv(FSR_3_1_7, '3.1.7','Road Congestion and Travel Time Statistics (average speed and delay)')
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
+# SIMPLIFIED VERSION TO REDUCE FILESIZE
+
+shp2 <- shp |> 
+  mutate(colour = factor(cut(AvgDelay, breaks = delay_breaks, labels = delay_labels, include.lowest = TRUE))) |> 
+  group_by(colour) |> 
+  summarise(geometry = st_union(geometry)) |> st_simplify(dTolerance = 1000)
+
+
+FSR_3_2_4_plot <- ggplot() +
+  # Add UK border as the base layer
+  geom_sf(data = uk_border |> filter(CTRY22NM == "England"), aes(fill = CTRY22NM), color = "black", size = 0.5) +
+  scale_fill_manual(values = fill_colors) +
+  guides(fill = FALSE) +
   
-# Support 1 : Average delay per vehicle/second
+  # Add transport delay data with color encoding on top
+  geom_sf(data = shp2,
+          aes(color = colour),
+          linewidth = 1) +
+  scale_color_manual(values = c(af_colors),
+                     labels = delay_labels,
+                     name = "Avg Delay\n(seconds/vehicle/mile)",
+                     drop = FALSE) + 
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.line.x = element_blank(),axis.ticks.x = element_blank(),
+        panel.grid = element_blank(),
+        legend.direction = "vertical",
+        legend.position = "inside", legend.position.inside = c(0.1, 0.5),
+        legend.text = element_text(size = 16), legend.title = element_text(size = 16)) 
+
+
+FSR_3_2_4_plot 
+
+# Output the plot
+save_graphic(FSR_3_2_4_plot, '3.2.4a','Road Congestion and Travel Time Statistics (average speed and delay)') 
+
+
+# NOT USED Support 1 : Average delay per vehicle/second----------------------------------
   
 FSR_3_1_7a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
@@ -111,4 +153,5 @@ FSR_3_1_7a_plot <- ggplot(FSR_3_1_7a, aes(x = Month, y = value, colour = variabl
 FSR_3_1_7a_plot
 
 # Output the plot
-save_graphic(FSR_3_1_7a_plot, '3.1.7a','Average Delay (second per vehicle)') + save_csv(FSR_3_1_7a, '3.1.7a','Average Delay (second per vehicle)')
+# save_graphic(FSR_3_1_7a_plot, '3.1.7a','Average Delay (second per vehicle)')
+# save_csv(FSR_3_1_7a, '3.1.7a','Average Delay (second per vehicle)')

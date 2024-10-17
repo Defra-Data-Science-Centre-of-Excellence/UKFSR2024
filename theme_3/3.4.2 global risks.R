@@ -10,7 +10,7 @@ source(here::here("utils", "load-font.R"))
 
 risks <- s3read_using(FUN = read_csv,
                     bucket = ukfsr::s3_bucket(),
-                    object = "theme_3/t3_1_11/output/csv/3_1_11_top_10_risks.csv")
+                    object = "theme_3/input_data/top_10_risks.csv")
 
 cols <- c("Economic" = "#12436D", "Environmental" = "#28A197", "Geopolitical" = "#801650", "Societal" = "#F46A25" , "Technological" = "#A285D1")
 
@@ -66,4 +66,4 @@ r10 <- risks |>
 
 chart <-  l + r2 + r10 + plot_layout(guides = "collect", widths = c(1,4,4))
 
-save_graphic(chart, "3.1.11", "top 10 risks")
+save_graphic(chart, "3.4.2", "top 10 risks")

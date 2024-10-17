@@ -11,7 +11,7 @@ source(here::here("utils", "load-font.R"))
 
 tfp <- aws.s3::s3read_using(FUN = read_csv,
                                        bucket = ukfsr::s3_bucket(),
-                                       object = "theme_3/t3_1_11/output/csv/3_1_11_food_chain_tfp.csv")
+                                       object = "theme_3/input_data/food_chain_tfp.csv")
 
 
 
@@ -22,12 +22,10 @@ sector_chart <- tfp |>
   geom_line(aes(x = Year, y = Productivity, colour = Sector)) +
   scale_colour_manual(values = af_colours(n = 4)) +
   labs(x = NULL, y = "index (2000 = 100)") +
-  theme_ukfsr(base_family = "GDS Transport Website") + 
-  theme(axis.ticks.x = element_line(colour = "black"),
-        axis.line.x = element_line(colour = "black")) 
+  theme_ukfsr(base_family = "GDS Transport Website")
 
 
-save_graphic(sector_chart, "3.1.11", "food chain sector tfp")
+save_graphic(sector_chart, "3.4.2d", "food chain sector tfp")
 
 
 chain_chart <- tfp |> 
@@ -37,9 +35,7 @@ chain_chart <- tfp |>
   geom_line(aes(x = Year, y = Productivity, colour = Sector)) +
   scale_colour_manual(values = af_colours(n = 2)) +
   labs(x = NULL, y = "index (2000 = 100)") +
-  theme_ukfsr(base_family = "GDS Transport Website") + 
-  theme(axis.ticks = element_line(colour = "black"),
-        axis.line.x = element_line(colour = "black"))
+  theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(chain_chart, "3.1.11", "food chain tfp")
-         
+save_graphic(chain_chart, "3.4.2c", "food chain tfp")
+save_csv(tfp, "3.4.2", "food chain tfp")         

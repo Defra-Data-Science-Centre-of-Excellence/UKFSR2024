@@ -8,7 +8,7 @@ source(here::here("utils", "load-font.R"))
 
 cp <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
-                                  object = "theme_3/t3_1_8/output/csv/3_1_8_chatham_house_chokepoints_share_of_trade_percent_volume.csv") |> 
+                                  object = "theme_3/input_data/chatham_house_chokepoints_share_of_trade_percent_volume.csv") |> 
   mutate(area = factor(area,
                        levels  = c(
                          "Panama Canal",
@@ -45,9 +45,9 @@ cereal_chart <- cp |>
   scale_fill_manual(values = af_colours(n = 4)) + 
   labs(x = NULL, y = NULL) +
   # coord_flip() +
-  theme_ukfsr(base_family = "GDS Transport Website") 
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) 
 
-save_graphic(cereal_chart, "3.1.8", "chokepoints share of trade cereals")
+save_graphic(cereal_chart, "3.3.1b", "chokepoints share of trade cereals")
 
 fert_chart <- cp |> 
   filter(category1 == "Fertilizers") |> 
@@ -69,7 +69,7 @@ fert_chart <- cp |>
   scale_fill_manual(values = af_colours(n = 5)) + 
   labs(x = NULL, y = NULL) +
   # coord_flip() +
-  theme_ukfsr(base_family = "GDS Transport Website") 
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) 
 
 
-save_graphic(fert_chart, "3.1.8", "chokepoints share of trade fertiliser")
+save_graphic(fert_chart, "3.3.1c", "chokepoints share of trade fertiliser")
