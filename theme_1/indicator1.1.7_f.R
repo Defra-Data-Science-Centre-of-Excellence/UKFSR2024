@@ -86,20 +86,3 @@ global_sustainable_fisheries_chart <- global_sustainable_fisheries|>
 
 save_graphic(global_sustainable_fisheries_chart, "1.1.7", "global sustainable fisheries production")
 save_csv(global_sustainable_fisheries, "1.1.7", "global sustainable fisheries production")
-
-global_sustainable_fisheries<-sustainable_fisheries%>%
-  filter(Area=="World")%>%
-  rename(year=Year)%>%
-  rename(value=Value)
-
-global_sustainable_fisheries_chart <- global_sustainable_fisheries|>
-  ggplot() +
-  geom_line(aes(x = year, y = value,), lwd = 1) +
-  #scale_x_continuous(limits = c(1950,2022),breaks =seq(1950,2022,5)) +
-  scale_color_manual(values = af_colours("categorical"))+
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "percent")
-
-save_graphic(global_sustainable_fisheries_chart, "1.1.7", "global sustainable fisheries production")
-save_csv(global_sustainable_fisheries, "1.1.7", "global sustainable fisheries production")

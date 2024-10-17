@@ -14,7 +14,7 @@ library(zoo)
 
 export_shares <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
-                                        object = "theme_1/t1_2_5/input/csv/export_shares.csv")%>%
+                                        object = "theme_1/t1_3_4/input/csv/export_shares.csv")%>%
   pivot_longer(cols=4:23,names_to="years",values_to = "value")%>%
   mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
   
@@ -57,12 +57,12 @@ export_shares_global<-export_shares_global%>%
   select(-year)%>%
   rename(year=years)
 
-save_graphic(herfindhal_indices_chart, "1.2.5", "herfindhal indices")
-save_csv(export_shares_global, "1.2.5", "herfindhal indices")
+save_graphic(herfindhal_indices_chart, "1.3.4", "herfindhal indices")
+save_csv(export_shares_global, "1.3.4", "herfindhal indices")
 
 daily_chokepoint_transit_calls_and_trade_volume_estimates <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
-                                      object = "theme_1/t1_2_5/input/csv/7day_moving_average_chokepoints.csv")%>%
+                                      object = "theme_1/t1_3_4/input/csv/7day_moving_average_chokepoints.csv")%>%
   pivot_longer(2:4,names_to = "chokepoint",values_to="value")%>%
   mutate(date=as.Date(`Row Labels`))%>%
   filter(date>as.Date("2022-12-31"))%>%
@@ -79,26 +79,8 @@ daily_chokepoint_transit_calls_and_trade_volume_estimates_chart<-ggplot()+
   labs(x = NULL,
        y = "million tonnes") 
 
-save_graphic(daily_chokepoint_transit_calls_and_trade_volume_estimates_chart, "1.2.5", "daily chokepoint transit calls and trade volume estimates chart")
-save_csv(daily_chokepoint_transit_calls_and_trade_volume_estimates, "1.2.5", "daily chokepoint transit calls and trade volume estimates")
+save_graphic(daily_chokepoint_transit_calls_and_trade_volume_estimates_chart, "1.3.4", "daily chokepoint transit calls and trade volume estimates chart")
+save_csv(daily_chokepoint_transit_calls_and_trade_volume_estimates, "1.3.4", "daily chokepoint transit calls and trade volume estimates")
 
-# FSI Indicator 2 --------------------------------------------------------------
 
-source(here::here("utils", "load-font.R"))
-
-for(i in c(14, 16, 22)) {
-  
-  cht <- percentage_production_globally_traded_chart +
-                  scale_x_continuous(breaks=seq(2015,2025,2),
-                                     labels=c("15/16","17/18","19/20","21/22","23/24","25/26")) +
-                  guides(colour = guide_legend(nrow=3)) +
-                 theme_ukfsr(base_family = "GDS Transport Website",
-                             base_size = i,
-                             chart_line_size = 2) +
-    theme(plot.margin = margin(5,50,5,5,unit = "pt"))+
-    theme(legend.key.width = unit(i*2, "pt"))
-  
-  save_graphic(cht, "fsi.2.1", paste("percentage production globally traded fsi base", i))
-  
-}
 

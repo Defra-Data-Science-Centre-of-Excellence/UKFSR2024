@@ -15,7 +15,7 @@ library(sf)
 
 psd_temp <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
-                                        object = "theme_1/t1_2_4/input/csv/proportion_traded.csv")
+                                        object = "theme_1/t1_3_3/input/csv/proportion_traded.csv")
 
 psd<-psd_temp%>%
   mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
@@ -56,14 +56,14 @@ percentage_production_globally_traded_chart<-ggplot()+
   labs(x = NULL,
        y = "percent")
 
-save_graphic(percentage_production_globally_traded_chart, "1.2.4", "percentage production globally traded")
-save_csv(percentage, "1.2.4", "percentage production globally traded")
+save_graphic(percentage_production_globally_traded_chart, "1.3.3", "percentage production globally traded")
+save_csv(percentage, "1.3.3", "percentage production globally traded")
 
 neg<-function(x) -x
 
 ifpri <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_1/t1_2_4/input/csv/Food_Import_Dependence_Index.csv")%>%
+                                 object = "theme_1/t1_3_3/input/csv/Food_Import_Dependence_Index.csv")%>%
   mutate(IndexCat=if_else(Index<neg(5),"exporter",if_else(Index<5,"self sufficent",if_else(Index<20,"very low",if_else(Index<30,"low",if_else(Index<40,"medium",if_else(Index>50,"high","very high")))))))%>%
   mutate(Country=if_else(Country=="United States of America","USA",Country))%>%
   mutate(Country=if_else(Country=="Viet Nam","Vietnam",Country))%>%
@@ -106,12 +106,12 @@ world_map_ifpri_chart<-ggplot()+
   scale_fill_manual(values = af_colours("categorical")) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(world_map_ifpri_chart, "1.2.4", "food_import_vulnerability_index_food_import_dependence_ratio")
-save_csv(ifpri, "1.2.4", "food_import_vulnerability_index_food_import_dependence_ratio.csv")
+save_graphic(world_map_ifpri_chart, "1.3.3", "food_import_vulnerability_index_food_import_dependence_ratio")
+save_csv(ifpri, "1.3.3", "food_import_vulnerability_index_food_import_dependence_ratio.csv")
 
 rice_chart_source_data_wb <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_1/t1_2_4/input/csv/Rice_chart_source_data_WB.csv")%>%
+                                 object = "theme_1/t1_3_3/input/csv/Rice_chart_source_data_WB.csv")%>%
   mutate(Date=dmy(Date))
 
 date_1<-c(dmy("01-09-2007"),dmy("01-09-2008"))
@@ -129,26 +129,5 @@ rice_chart_source_data_wb_chart<-ggplot()+
   labs(x = NULL,
        y = "$/mt")
 
-save_graphic(rice_chart_source_data_wb_chart, "1.2.4", "rice_chart_source_data_wb")
-save_csv(rice_chart_source_data_wb, "1.2.4", "rice_source_data_wb")
-
-# FSI Indicator 2 --------------------------------------------------------------
-
-source(here::here("utils", "load-font.R"))
-
-for(i in c(14, 16, 22)) {
-  
-  cht <- percentage_production_globally_traded_chart +
-                  scale_x_continuous(breaks=seq(2015,2025,2),
-                                     labels=c("15/16","17/18","19/20","21/22","23/24","25/26")) +
-                  guides(colour = guide_legend(nrow=3)) +
-                 theme_ukfsr(base_family = "GDS Transport Website",
-                             base_size = i,
-                             chart_line_size = 2) +
-    theme(plot.margin = margin(5,50,5,5,unit = "pt"))+
-    theme(legend.key.width = unit(i*2, "pt"))
-  
-  save_graphic(cht, "fsi.2.1", paste("percentage production globally traded fsi base", i))
-  
-}
-
+save_graphic(rice_chart_source_data_wb_chart, "1.3.3", "rice_chart_source_data_wb")
+save_csv(rice_chart_source_data_wb, "1.3.3", "rice_source_data_wb")
