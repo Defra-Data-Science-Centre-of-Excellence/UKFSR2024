@@ -78,7 +78,7 @@ global_sustainable_fisheries<-sustainable_fisheries%>%
 global_sustainable_fisheries_chart <- global_sustainable_fisheries|>
   ggplot() +
   geom_line(aes(x = year, y = value,), colour = af_colours(n=1)) +
-  scale_y_continuous(limits = c(0,100)) +
+  scale_y_continuous(limits = c(0,100), breaks = seq(0,100, by = 10)) +
   # scale_color_manual(values = af_colours("categorical", n = 1))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
