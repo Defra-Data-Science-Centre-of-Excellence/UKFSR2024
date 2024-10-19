@@ -90,7 +90,7 @@ food_supply_chart<-ggplot(food_supply)+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing = unit(1, "cm"),
         plot.margin=unit(c(0.2,1,0.2,0.2),"cm"))+
-  labs(x = "Year",
+  labs(x = NULL,
        y = "kcals per capita per day")
 
 save_graphic(food_supply_chart, "1.1.1d", "global food supply")
@@ -157,7 +157,7 @@ global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
 save_graphic(global_biofuel_production_chart, "1.1.1e", "global biofuel production")
 save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
 
-# annual growth in demand for key products--------------------------------------
+# Annual growth in demand for key products--------------------------------------
 
 average_annual_growth_in_demand_for_key_commodity_groups <- aws.s3::s3read_using(FUN = read_csv,
                                                                                  bucket = ukfsr::s3_bucket(),
@@ -181,7 +181,7 @@ average_annual_growth_in_demand_for_key_commodity_groups_chart <- average_annual
   scale_y_continuous(limits = c(0,2)) +
   scale_fill_manual(values = af_colours("duo")) +
   scale_color_manual(values = c("white","black"))+ 
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   labs(x = NULL,
        y = "percent per annum")
 

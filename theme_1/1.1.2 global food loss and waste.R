@@ -33,7 +33,7 @@ food_loss_percentage_chart <- food_loss_percentage |>
   #scale_y_continuous(limits = c(2000,3000)) +
   scale_fill_manual(values = af_colours("duo")) +
   scale_color_manual(values = c("white","black"))+ 
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(legend.position="none")+
   labs(x = NULL,
        y = "Food Loss Percentage(%)")
@@ -74,7 +74,7 @@ flw_chart<-food_loss_waste_2%>%
   coord_flip()+
   #scale_color_manual(values = af_colours("duo")) +
   scale_fill_manual(values = af_colours("categorical"),n=6) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(plot.margin=unit(c(0.2,2,0.2,0.2),"cm"))+
   annotate("text", x = 5, y = 120, label = "Note:\nregions may not include\nall countries and confidence\nin the data varies between\ncountries",size=6)+
   guides(fill=guide_legend(nrow=3, byrow=TRUE))+ 
@@ -85,7 +85,7 @@ save_graphic(flw_chart, "1.1.2b", "household food waste")
 save_csv(food_loss_waste_2, "1.1.2b", "household food waste")
 
 
-# food waste by commodity-------------------------------------------------------
+# Food waste by commodity-------------------------------------------------------
 food_waste_percentages <- aws.s3::s3read_using(FUN = read_csv,
                                                bucket = ukfsr::s3_bucket(),
                                                object = "theme_1/t1_1_2/input/csv/food_waste_percentages.csv")%>%
@@ -100,7 +100,7 @@ food_waste_percentages_chart<-food_waste_percentages%>%
   scale_color_manual(values = af_colours("duo")) +
   scale_fill_manual(values = af_colours("categorical"),n=5) +
   guides(fill=guide_legend(nrow=3, byrow=TRUE))+ 
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   labs(x = NULL,
        y = "percent")
 
