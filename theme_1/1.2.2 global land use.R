@@ -12,6 +12,8 @@ library(readxl)
 
 source(here("utils", "load-font.R"))
 
+# Agricultural land use --------------------------------------------------------
+
 agricultral_land_use <- aws.s3::s3read_using(FUN = read_csv,
                                              bucket = ukfsr::s3_bucket(),
                                              object = "theme_1/t1_2_2/input/csv/agricultral_land_use.csv")%>%
@@ -42,8 +44,11 @@ agricultural_land_use_chart <- agricultural_land_use|>
   labs(x = NULL,
        y = "index (100=1961)")
 
-save_graphic(agricultural_land_use_chart, "1.2.2", "agricultural_land_use")
-save_csv(agricultural_land_use, "1.2.2", "agricultural_land_use")
+save_graphic(agricultural_land_use_chart, "1.2.2b", "agricultural land use")
+save_csv(agricultural_land_use, "1.2.2b", "agricultural land use")
+
+
+# Cropland area per capita -----------------------------------------------------
 
 cropland_per_hectare <- aws.s3::s3read_using(FUN = read_csv,
                                              bucket = ukfsr::s3_bucket(),
@@ -55,11 +60,11 @@ cropland_per_hectare <- aws.s3::s3read_using(FUN = read_csv,
 cropland_per_hectare_chart <- cropland_per_hectare|>
   ggplot() +
   geom_line(aes(x = year, y = value,group=Area,color=Area), lwd = 1) +
-  geom_point(aes(x = year, y = value,group=Area,color=Area,shape=Area),size=2)+
+  # geom_point(aes(x = year, y = value,group=Area,color=Area),size=2)+
   scale_color_manual(values = af_colours("categorical"))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "ha per capita")
 
-save_graphic(cropland_per_hectare_chart, "1.2.2", "cropland_per_hectare")
-save_csv(cropland_per_hectare, "1.2.2", "cropland_per_hectare")
+save_graphic(cropland_per_hectare_chart, "1.2.2d", "cropland_per_hectare")
+save_csv(cropland_per_hectare, "1.2.2d", "cropland_per_hectare")

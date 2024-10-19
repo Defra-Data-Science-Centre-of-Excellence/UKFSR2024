@@ -123,8 +123,8 @@ scr_chart <- scr_out |>
 
 scr_out<-scr_out%>%select(-plot_year)
 
-save_graphic(scr_chart, "1.3.1", "stocks to consumption")
-save_csv(scr_out, "1.3.1", "stock to consumption ratio")
+save_graphic(scr_chart, "1.3.1a", "stocks to consumption ratio")
+save_csv(scr_out, "1.3.1a", "stock to consumption ratio")
 
 
 

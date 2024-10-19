@@ -13,6 +13,8 @@ library(rworldmap)
 library(tmap)
 library(sf)
 
+
+# % production globally traded -------------------------------------------------
 psd_temp <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
                                         object = "theme_1/t1_3_3/input/csv/proportion_traded.csv")
@@ -42,8 +44,6 @@ percentage<-psd_exports%>%
   rename(per=Per)
 
 
-########
-
 percentage_production_globally_traded_chart<-ggplot()+
   geom_line(data=percentage,aes(x = year, y = per,group=commodity),color=af_colours("duo")[1]) +
   facet_wrap(~commodity,scales="free")+
@@ -56,9 +56,11 @@ percentage_production_globally_traded_chart<-ggplot()+
   labs(x = NULL,
        y = "percent")
 
-save_graphic(percentage_production_globally_traded_chart, "1.3.3", "percentage production globally traded")
-save_csv(percentage, "1.3.3", "percentage production globally traded")
+save_graphic(percentage_production_globally_traded_chart, "1.3.3a", "percentage production globally traded")
+save_csv(percentage, "1.3.3a", "percentage production globally traded")
 
+
+# Food import dependence ratio -------------------------------------------------
 neg<-function(x) -x
 
 ifpri <- aws.s3::s3read_using(FUN = read_csv,
@@ -101,13 +103,22 @@ world_map_ifpri<-world_map%>%
   
 
 world_map_ifpri_chart<-ggplot()+
-  geom_polygon(data = world_map_ifpri,aes(x=long,y=lat,group=group))+
-  geom_polygon(data = world_map_ifpri,aes(x=long,y=lat,group=group,fill=IndexCat))+
+  # geom_polygon(data = world_map_ifpri,aes(x=long,y=lat,group=group))+
+  geom_polygon(data = world_map_ifpri |> filter(region != "Antarctica"),aes(x=long,y=lat,group=group,fill=IndexCat))+
   scale_fill_manual(values = af_colours("categorical")) +
-  theme_ukfsr(base_family = "GDS Transport Website")
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL, y = NULL) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(), 
+        axis.line.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        panel.grid.major.y = element_blank())
 
-save_graphic(world_map_ifpri_chart, "1.3.3", "food_import_vulnerability_index_food_import_dependence_ratio")
-save_csv(ifpri, "1.3.3", "food_import_vulnerability_index_food_import_dependence_ratio.csv")
+
+save_graphic(world_map_ifpri_chart, "1.3.3b", "food import dependence ratio")
+save_csv(ifpri, "1.3.3b", "food import dependence ratio")
+
+# Rice prices ------------------------------------------------------------------
 
 rice_chart_source_data_wb <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
@@ -122,12 +133,12 @@ rice_chart_source_data_wb_chart<-ggplot()+
   geom_area(aes(x=date_2,y=1000),fill="grey",alpha=0.6)+
   geom_vline(xintercept = dmy("23-03-2020"), col = "grey", linewidth = 2)+
   geom_vline(xintercept = dmy("24-02-2022"), col = "red", linewidth = 2)+
-  geom_line(data=rice_chart_source_data_wb,aes(x = Date, y = `Thai 5% rice ($/mt)`)) +
+  geom_line(data=rice_chart_source_data_wb,aes(x = Date, y = `Thai 5% rice ($/mt)`), colour = af_colours()[1]) +
   scale_x_continuous(breaks=seq(dmy("01-01-2004"),dmy("01-01-2024"),"years"),labels=str_pad(seq(04,24,1),width=2,pad="0"))+
-  scale_color_manual(values = af_colours("duo")) +
+  # scale_color_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "$/mt")
 
-save_graphic(rice_chart_source_data_wb_chart, "1.3.3", "rice_chart_source_data_wb")
-save_csv(rice_chart_source_data_wb, "1.3.3", "rice_source_data_wb")
+save_graphic(rice_chart_source_data_wb_chart, "1.3.3c", "wb rice nominal prices")
+save_csv(rice_chart_source_data_wb, "1.3.3c", "wb rice nominal prices")

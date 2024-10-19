@@ -12,6 +12,9 @@ library(readxl)
 library(scales)
 library(zoo)
 
+source(here("utils", "load-font.R"))
+
+# HHI export concentration -----------------------------------------------------
 export_shares <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
                                         object = "theme_1/t1_3_4/input/csv/export_shares.csv")%>%
@@ -41,8 +44,6 @@ export_shares_global_a<-export_shares_not_world%>%
   arrange(desc(year))
 
 
-########
-
 herfindhal_indices_chart<-ggplot()+
   geom_line(data=export_shares_global,aes(x = year, y = signif(hi,digits=3),group=commodity, colour = commodity)) +
   geom_point(data=export_shares_global,aes(x = year, y = signif(hi,digits=3),group=commodity, colour = commodity, shape = commodity),size=3) +
@@ -57,8 +58,11 @@ export_shares_global<-export_shares_global%>%
   select(-year)%>%
   rename(year=years)
 
-save_graphic(herfindhal_indices_chart, "1.3.4", "herfindhal indices")
-save_csv(export_shares_global, "1.3.4", "herfindhal indices")
+save_graphic(herfindhal_indices_chart, "1.3.4a", "hhi export concentration")
+save_csv(export_shares_global, "1.3.4a", "hhi export concentration")
+
+
+# Daily chokepoint transit trade volume-----------------------------------------
 
 daily_chokepoint_transit_calls_and_trade_volume_estimates <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
@@ -79,8 +83,8 @@ daily_chokepoint_transit_calls_and_trade_volume_estimates_chart<-ggplot()+
   labs(x = NULL,
        y = "million tonnes") 
 
-save_graphic(daily_chokepoint_transit_calls_and_trade_volume_estimates_chart, "1.3.4", "daily chokepoint transit calls and trade volume estimates chart")
-save_csv(daily_chokepoint_transit_calls_and_trade_volume_estimates, "1.3.4", "daily chokepoint transit calls and trade volume estimates")
+save_graphic(daily_chokepoint_transit_calls_and_trade_volume_estimates_chart, "1.3.4c", "daily chokepoint transit trade volume")
+save_csv(daily_chokepoint_transit_calls_and_trade_volume_estimates, "1.3.4c", "daily chokepoint transit trade volume")
 
 
 

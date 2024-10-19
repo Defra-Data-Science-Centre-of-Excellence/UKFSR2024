@@ -10,6 +10,11 @@ library(afcolours)
 library(here)
 library(readxl)
 
+source(here("utils", "load-font.R"))
+
+
+# Fertiliser concentration -----------------------------------------------------
+
 fertiliser_concertrations <- aws.s3::s3read_using(FUN = read_csv,
                                                   bucket = ukfsr::s3_bucket(),
                                                   object = "theme_1/t1_2_3/input/csv/FertiliserConcertrations.csv")
@@ -33,7 +38,6 @@ fertiliser_concertrations_out<-fertiliser_concertrations_countries%>%
   mutate(item=str_replace(item,"\\(total\\)",""))%>%
   select(year,share_squared,item)
 
-########
 
 fertiliser_concertrations_chart<-ggplot()+
   geom_line(data=fertiliser_concertrations_out,aes(x = year, y = share_squared, colour = item)) +
@@ -42,12 +46,15 @@ fertiliser_concertrations_chart<-ggplot()+
   labs(x = NULL,
        y = "HHI")
 
-save_graphic(fertiliser_concertrations_chart, "1.2.3", "fertiliser concertrations")
-save_csv(fertiliser_concertrations_out, "1.2.3", "fertiliser concertrations")
+save_graphic(fertiliser_concertrations_chart, "1.2.3c", "fertiliser concentrations")
+save_csv(fertiliser_concertrations_out, "1.2.3c", "fertiliser concentrations")
+
+
+# Fertiliser production --------------------------------------------------------
 
 fertiliser_production <- aws.s3::s3read_using(FUN = read_csv,
                                               bucket = ukfsr::s3_bucket(),
-                                              object = "theme_1/t1_2_1/input/csv/FertilserProduction.csv")%>%
+                                              object = "theme_1/t1_2_3/input/csv/FertilserProduction.csv")%>%
   rename(area=Area)%>%
   rename(year=Year)%>%
   rename(value=Value)
@@ -62,14 +69,14 @@ total_production_chart<-ggplot()+
   geom_line(data=total_production,aes(x = year, y = value/1E6, colour = item)) +
   scale_colour_manual(values = af_colours("categorical",n=6)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
-  guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
+  # guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
   labs(x = NULL,
        y = "Million Tonnes")
 
-save_graphic(total_production_chart, "1.2.3", "total_production_chart")
-save_csv(total_production, "1.2.3", "total_production")
+save_graphic(total_production_chart, "1.2.3a", "global fertiliser production")
+save_csv(total_production, "1.2.3a", "global fertiliser production")
 
-################################
+# Fertiliser prices ------------------------------------------------------------
 
 fertilizers_price_index <- aws.s3::s3read_using(FUN = read_csv,
                                                 bucket = ukfsr::s3_bucket(),
@@ -78,12 +85,12 @@ fertilizers_price_index <- aws.s3::s3read_using(FUN = read_csv,
   select(-day,-month,-year)
 
 fertilizers_price_index_chart<-ggplot()+
-  geom_line(data=fertilizers_price_index,aes(x = date, y = index)) +
-  scale_colour_manual(values = af_colours("duo")) +
+  geom_line(data=fertilizers_price_index,aes(x = date, y = index), colour = af_colours()[1]) +
+  scale_colour_manual(values = af_colours()[1]) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "index")
 
 
-save_graphic(fertilizers_price_index_chart, "1.2.3", "fertilizers price index chart")
-save_csv(fertilizers_price_index, "1.2.3", "fertilizers price index")
+save_graphic(fertilizers_price_index_chart, "1.2.3b", "fertilizers price index")
+save_csv(fertilizers_price_index, "1.2.3b", "fertilizers price index")

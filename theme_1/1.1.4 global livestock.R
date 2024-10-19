@@ -14,6 +14,8 @@ library(here)
 
 source(here("utils", "load-font.R"))
 
+# Regional Meat production -----------------------------------------------------
+
 meat_eggs <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
                                   object = "theme_1/t1_1_4/input/csv/meat_eggs_milk_poultry_production.csv")%>%
@@ -44,10 +46,11 @@ world_meat_production_chart <- meat |>
   labs(x = NULL,
        y = "Million tonnes")
 
-save_graphic(world_meat_production_chart, "1.1.4", "global meat production")
-save_csv(meat, "1.1.4", "global meat production")
+save_graphic(world_meat_production_chart, "1.1.4b", "regional meat production")
+save_csv(meat, "1.1.4b", "regional meat production")
 
 
+# GLobal meat prodcution -------------------------------------------------------
 meat_type_global_poultry<-meat_eggs%>%
   filter(area=="World")%>%
   filter(item=="Meat, Poultry")%>%
@@ -76,10 +79,10 @@ world_meat_production_chart <- meat_type_global |>
   ggplot() +
   geom_line(aes(x = year, y = value/1E6, colour = item), lwd = 1) +
   scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
-  scale_colour_manual(values = af_colours("categorical"),limits=c("Meat, Poultry","Pigmeat","Beef and Veal","Sheepmeat")) +
+  scale_colour_manual(values = af_colours(type = "categorical",n = 4),limits=c("Meat, Poultry","Pigmeat","Beef and Veal","Sheepmeat")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "Million tonnes")
 
-save_graphic(world_meat_production_chart, "1.1.4", "global meat production")
-save_csv(meat_type_global, "1.1.4", "global meat production")
+save_graphic(world_meat_production_chart, "1.1.4a", "global meat production")
+save_csv(meat_type_global, "1.1.4a", "global meat production")

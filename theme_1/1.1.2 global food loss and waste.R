@@ -11,6 +11,7 @@ library(here)
 
 source(here("utils", "load-font.R"))
 
+# Food loss percentage ---------------------------------------------------------
 food_loss_percentage <- aws.s3::s3read_using(FUN = read_csv,
                                              bucket = ukfsr::s3_bucket(),
                                              object = "theme_1/t1_1_2/input/csv/SDG12.3a.csv")%>%
@@ -38,8 +39,11 @@ food_loss_percentage_chart <- food_loss_percentage |>
        y = "Food Loss Percentage(%)")
 
 
-save_graphic(food_loss_percentage_chart, "1.1.2", "global food loss")
-save_csv(food_loss_percentage, "1.1.2", "global food loss")
+save_graphic(food_loss_percentage_chart, "1.1.2a", "global food loss")
+save_csv(food_loss_percentage, "1.1.2a", "global food loss")
+
+
+# Household food waste ---------------------------------------------------------
 
 conf_levels <- c(
   "Very low confidence","Low confidence","Medium confidence","High confidence","Eurostat"    
@@ -77,8 +81,11 @@ flw_chart<-food_loss_waste_2%>%
   labs(x = NULL,
        y = "million tonnes")
 
-save_graphic(flw_chart, "1.1.2", "food_loss_waste")
+save_graphic(flw_chart, "1.1.2b", "household food waste")
+save_csv(food_loss_waste_2, "1.1.2b", "household food waste")
 
+
+# food waste by commodity-------------------------------------------------------
 food_waste_percentages <- aws.s3::s3read_using(FUN = read_csv,
                                                bucket = ukfsr::s3_bucket(),
                                                object = "theme_1/t1_1_2/input/csv/food_waste_percentages.csv")%>%
@@ -98,5 +105,5 @@ food_waste_percentages_chart<-food_waste_percentages%>%
        y = "percent")
 
 
-save_graphic(food_waste_percentages_chart, "1.1.2", "food_waste_percentages")
-save_csv(food_waste_percentages, "1.1.2", "food_waste_percentages")
+save_graphic(food_waste_percentages_chart, "1.1.2c", "food waste percentages")
+save_csv(food_waste_percentages, "1.1.2c", "food waste percentages")

@@ -17,7 +17,7 @@ cereal_production_yield <- aws.s3::s3read_using(FUN = read_csv,
                                                 object = "theme_1/t1_1_3/input/csv/cereal_yield_production.csv")%>%
   mutate(Area=factor(Area,levels=c("Europe","Asia","Africa","South America","Northern America","World")))
 
-
+# Cereal production ------------------------------------------------------------
 
 cereal_production<-cereal_production_yield%>%
   filter(Element=="Production")%>%
@@ -49,8 +49,11 @@ cereal_production_chart <- cereal_production |>
   labs(x = NULL,
        y = "Million Tonnes")
 
-save_graphic(cereal_production_chart, "1.1.3", "global cereal production")
-save_csv(cereal_production, "1.1.3", "global cereal production")
+save_graphic(cereal_production_chart, "1.1.3a", "global cereal production")
+save_csv(cereal_production, "1.1.3a", "global cereal production")
+
+
+# Cereal yield -----------------------------------------------------------------
 
 cereal_yield_chart <- cereal_yield |>
   #filter(area!="Australia and New Zealand") |>
@@ -67,5 +70,5 @@ cereal_yield_chart <- cereal_yield |>
   labs(x = NULL,
        y = "tonnes per hectare")
 
-save_graphic(cereal_yield_chart, "1.1.3", "global cereal yields")
-save_csv(cereal_yield, "1.1.3", "global cereal yields")
+save_graphic(cereal_yield_chart, "1.1.3b", "global cereal yields")
+save_csv(cereal_yield, "1.1.3b", "global cereal yields")

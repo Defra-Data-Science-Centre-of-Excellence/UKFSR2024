@@ -12,6 +12,8 @@ library(here)
 
 source(here("utils", "load-font.R"))
 
+
+# Fruit and veg production -----------------------------------------------------
 fruit_veg <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
                                   object = "theme_1/t1_1_5/input/csv/fruit_and_vegetable_production.csv")%>%
@@ -30,5 +32,5 @@ fruit_veg_chart <- fruit_veg|>
   labs(x = NULL,
        y = "Million Tonnes")
 
-save_graphic(fruit_veg_chart, "1.1.5", "global fruit and vegetable production")
-save_csv(fruit_veg, "1.1.5", "global fruit and vegetable production")
+save_graphic(fruit_veg_chart, "1.1.5a", "global fruit and vegetable production")
+save_csv(fruit_veg, "1.1.5a", "global fruit and vegetable production")

@@ -15,6 +15,8 @@ library(here)
 
 source(here("utils", "load-font.R"))
 
+# Fisheries and aquaculture production------------------------------------------
+
 fish_species <- aws.s3::s3read_using(FUN = read_csv,
                                      bucket = ukfsr::s3_bucket(),
                                      object = "theme_1/t1_1_7/input/csv/CL_FI_SPECIES_GROUPS.csv")%>%
@@ -61,8 +63,11 @@ fisheries_chart <- fisheries|>
   labs(x = NULL,
        y = "Million Tonnes")
 
-save_graphic(fisheries_chart, "1.1.7", "global fish production")
-save_csv(fisheries, "1.1.7", "global fish production")
+save_graphic(fisheries_chart, "1.1.6a", "global fish production")
+save_csv(fisheries, "1.1.6a", "global fish production")
+
+
+# Sustainable fisheries --------------------------------------------------------
 
 sustainable_fisheries <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
@@ -84,5 +89,5 @@ global_sustainable_fisheries_chart <- global_sustainable_fisheries|>
   labs(x = NULL,
        y = "percent")
 
-save_graphic(global_sustainable_fisheries_chart, "1.1.7", "global sustainable fisheries production")
-save_csv(global_sustainable_fisheries, "1.1.7", "global sustainable fisheries production")
+save_graphic(global_sustainable_fisheries_chart, "1.1.6b", "global sustainable fisheries production")
+save_csv(global_sustainable_fisheries, "1.1.6b", "global sustainable fisheries production")

@@ -17,6 +17,8 @@ library(lubridate)
 
 source(here("utils", "load-font.R"))
 
+# Wheat prices in USD and EGP --------------------------------------------------
+
 exchange_rates_historical <- aws.s3::s3read_using(FUN = read_excel,
                                          bucket = ukfsr::s3_bucket(),
                                          object = "theme_1/t1_3_2/input/csv/Exchange Rates Historical.xlsx")%>%
@@ -63,8 +65,10 @@ egp_usd_chart <- egp_usd |>
   labs(x = NULL,
        y = "index 2019=100")
 
-save_graphic(egp_usd_chart, "1.3.1", "egp usd wheat")
-save_csv(egp_usd, "1.3.1", "egp usd wheat")
+save_graphic(egp_usd_chart, "1.3.2c", "egp usd wheat prices")
+save_csv(egp_usd, "1.3.2c", "egp usd wheat prices")
+
+# WB prices for chicken and beef -----------------------------------------------
 
 ppi <- aws.s3::s3read_using(FUN = read_excel,
                                                   bucket = ukfsr::s3_bucket(),
@@ -127,8 +131,10 @@ deflated_meat_sugar_chart <- deflated_meat_sugar |>
   labs(x = NULL,
        y = "US$/kg index real 100=2023")
 
-save_graphic(deflated_meat_sugar_chart, "1.3.2", "deflated meat sugar chart")
-save_csv(deflated_meat_sugar, "1.3.2", "deflated meat sugar")
+save_graphic(deflated_meat_sugar_chart, "1.3.2b", "wb commodity prices for chicken and beef")
+save_csv(deflated_meat_sugar, "1.3.2b", "wb commodity prices for chicken and beef")
+
+# WB prices for cereals --------------------------------------------------------
 
 deflated_cereals_chart <-deflated_cereals |> 
   ggplot() +
@@ -143,5 +149,5 @@ deflated_cereals_chart <-deflated_cereals |>
   labs(x = NULL,
        y = "US$/mt index,real 100=2023")
 
-save_graphic(deflated_cereals_chart, "1.3.2", "deflated cereals chart")
-save_csv(deflated_cereals, "1.3.2", "deflated cereals")
+save_graphic(deflated_cereals_chart, "1.3.2a", "wb commodity prices for cereals")
+save_csv(deflated_cereals, "1.3.2a", "wb commodity prices for cereals")

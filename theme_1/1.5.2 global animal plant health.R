@@ -27,5 +27,5 @@ bananas_chart <- bananas|>
   labs(x = NULL,
        y = "Million Tonnes")
 
-save_graphic(bananas_chart, "1.2.7", "global banana production")
-save_csv(bananas, "1.1.6", "global banana production")
+save_graphic(bananas_chart, "1.5.2c", "global banana production")
+save_csv(bananas, "1.5.2c", "global banana production")

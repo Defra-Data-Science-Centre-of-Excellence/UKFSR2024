@@ -17,6 +17,8 @@ population <- aws.s3::s3read_using(FUN = read_csv,
   rename(item=Item) |>
   select(year,value)
 
+# Vegetal production -----------------------------------------------------------
+
 oilseed_stuff <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
                                       object = "theme_1/t1_1_1/input/csv/Oilseeds+other_stuff.csv")%>%
@@ -53,8 +55,11 @@ production_vegetal_chart <- production_per_capita_vegetal|>
        shape="",
        colour="")
 
-save_graphic(production_vegetal_chart, "1.1.1", "global vegetal food production")
-save_csv(production_per_capita_vegetal, "1.1.1", "global vegetal food production")
+save_graphic(production_vegetal_chart, "1.1.1a", "global vegetal food production")
+save_csv(production_per_capita_vegetal, "1.1.1a", "global vegetal food production")
+
+
+# Animal products --------------------------------------------------------------
 
 production_animal_products_chart <- production_per_capita_animal_products|>
   ggplot() +
@@ -67,14 +72,16 @@ production_animal_products_chart <- production_per_capita_animal_products|>
        shape="",
        colour="")
 
-save_graphic(production_animal_products_chart, "1.1.1", "global animal food production")
-save_csv(production_per_capita_animal_products, "1.1.1", "global animal food production")
+save_graphic(production_animal_products_chart, "1.1.1b", "global animal food production")
+save_csv(production_per_capita_animal_products, "1.1.1b", "global animal food production")
 
+
+# Dietary energy supply --------------------------------------------------------
 food_supply <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
                                       object = "theme_1/t1_1_1/input/csv/food_supply_output.csv")
 
-food_supply_chart<-ggplot(food_supply_2)+
+food_supply_chart<-ggplot(food_supply)+
   geom_line(aes(x=Year,y=Value),color=af_colours("duo")[1])+
   geom_vline(aes(xintercept = 2010),linetype="dashed")+
   facet_wrap(~Area)+#,scales="free")+
@@ -86,9 +93,11 @@ food_supply_chart<-ggplot(food_supply_2)+
   labs(x = "Year",
        y = "kcals per capita per day")
 
-save_graphic(food_supply_chart, "1.1.1", "global food supply")
-save_csv(food_supply, "1.1.1", "global food supply")
+save_graphic(food_supply_chart, "1.1.1d", "global food supply")
+save_csv(food_supply, "1.1.1d", "global food supply")
 
+
+# Biofuel production -----------------------------------------------------------
 global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
                                                      bucket = ukfsr::s3_bucket(),
                                                      object = "theme_1/t1_1_1/input/csv/HIGH_AGLINK_2023_10052024183701187.csv")
@@ -113,9 +122,10 @@ global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
   labs(x = NULL,
        y = "Biofuel demand share of\nglobal crop production")
 
-save_graphic(global_biofuel_production_chart, "1.1.1", "global biofuel production")
-save_csv(global_biofuel_production, "1.1.1", "global_biofuel_production")
+save_graphic(global_biofuel_production_chart, "1.1.1e", "global biofuel production")
+save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
 
+# Alt biofuel chart ------------------------------------------------------------
 global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
                                                      bucket = ukfsr::s3_bucket(),
                                                      object = "theme_1/t1_1_1/input/csv/OECD.TAD.ATM,DSD_AGR@DF_OUTLOOK_2024_2033,1.1+W.A.CPC_01802+CPC_216+CPC_0112....csv")%>%
@@ -144,8 +154,10 @@ global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
   labs(x = NULL,
        y = "Biofuel demand share of\nglobal crop production")
 
-save_graphic(global_biofuel_production_chart, "1.1.1", "global biofuel production")
-save_csv(global_biofuel_production, "1.1.1", "global_biofuel_production")
+save_graphic(global_biofuel_production_chart, "1.1.1e", "global biofuel production")
+save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
+
+# annual growth in demand for key products--------------------------------------
 
 average_annual_growth_in_demand_for_key_commodity_groups <- aws.s3::s3read_using(FUN = read_csv,
                                                                                  bucket = ukfsr::s3_bucket(),
@@ -174,5 +186,5 @@ average_annual_growth_in_demand_for_key_commodity_groups_chart <- average_annual
        y = "percent per annum")
 
 
-save_graphic(average_annual_growth_in_demand_for_key_commodity_groups_chart, "1.1.1", "average annual growth in demand for key commodity groups")
-save_csv(average_annual_growth_in_demand_for_key_commodity_groups, "1.1.1", "average annual growth in demand for key commodity groups")
+save_graphic(average_annual_growth_in_demand_for_key_commodity_groups_chart, "1.1.1f", "average annual growth in demand for key commodity groups")
+save_csv(average_annual_growth_in_demand_for_key_commodity_groups, "1.1.1f", "average annual growth in demand for key commodity groups")

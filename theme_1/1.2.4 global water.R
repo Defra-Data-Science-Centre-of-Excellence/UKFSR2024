@@ -15,6 +15,8 @@ library(sf)
 
 world_data<-map_data("world")
 
+# Agricultural water withdrawal-------------------------------------------------
+
 aquastat <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
                                  object = "theme_1/t1_2_4/input/csv/aquastat.csv")
@@ -46,10 +48,10 @@ agricultural_water_withdrawal_chart<-ggplot()+
   labs(x = NULL,
        y = "10^9_M3_YEAR")
 
-save_graphic(agricultural_water_withdrawal_chart, "1.2.4", "agricultural_water_withdrawal")
-save_csv(agricultural_water_withdrawal, "1.2.4", "agricultural_water_withdrawal")
+save_graphic(agricultural_water_withdrawal_chart, "1.2.4a", "agricultural water withdrawal")
+save_csv(agricultural_water_withdrawal, "1.2.4a", "agricultural water withdrawal")
 
-#########################################################################################################
+# Percentage agriculture withdrawal --------------------------------------------
 
 agricultural_water_withdrawal_percentage_temp<-aquastat_country%>%
   filter(Variable=="Agricultural water withdrawal as % of total renewable water resources")%>%
@@ -99,13 +101,19 @@ world_map_agricultural_water_withdrawal_percentage<-world_data%>%
 
 agricultural_water_withdrawal_percentage_chart<-ggplot()+
   geom_polygon(data = world_map_agricultural_water_withdrawal_percentage,aes(x=long,y=lat,group=group,fill=key))+
-  scale_color_manual(values = af_colours("categorical",n=5)) +
-  theme_ukfsr(base_family = "GDS Transport Website")
+  scale_fill_manual(values = af_colours("categorical",n=5)) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL, y = NULL) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(), 
+        axis.line.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        panel.grid.major.y = element_blank())
 
-save_graphic(agricultural_water_withdrawal_percentage_chart, "1.2.4", "agricultural water withdrawal percentage")
-save_csv(agricultural_water_withdrawal_percentage, "1.2.4", "agricultural water withdrawal percentage")
+save_graphic(agricultural_water_withdrawal_percentage_chart, "1.2.4b", "agricultural water withdrawal percentage")
+save_csv(agricultural_water_withdrawal_percentage, "1.2.4b", "agricultural water withdrawal percentage")
 
-###########################################################################################
+# Water stress -----------------------------------------------------------------
 
 water_stress<-aquastat_country%>%
   filter(Variable=="SDG 6.4.2. Water Stress")%>%
@@ -149,11 +157,17 @@ world_map_water_stress<-world_data%>%
   mutate(key=ordered(key,levels=c("no data","no stress","low","medium","high","critical")))
 
 world_map_water_stress_chart<-ggplot()+ 
-  geom_polygon(data = world_map_water_stress,aes(x=long,y=lat,group=group,fill=key))+
-  scale_color_manual(values = af_colours("categorical",n=5)) +
-  theme_ukfsr(base_family = "GDS Transport Website")
+  geom_polygon(data = world_map_water_stress |> filter(region != "Antarctica"),aes(x=long,y=lat,group=group,fill=key))+
+  scale_fill_manual(values = af_colours("categorical",n=6)) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL, y = NULL) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(), 
+        axis.line.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        panel.grid.major.y = element_blank())
 
-save_graphic(world_map_water_stress_chart, "1.2.4", "water_stress")
-save_csv(water_stress, "1.2.4", "water stress.csv")
+save_graphic(world_map_water_stress_chart, "1.2.4c", "water stress")
+save_csv(water_stress, "1.2.4c", "water stress")
 
 
