@@ -81,7 +81,7 @@ ifpri <- aws.s3::s3read_using(FUN = read_csv,
   mutate(Country=if_else(Country=="Iran (Islamic Republic of)","Iran",Country))%>%
   mutate(Country=if_else(Country=="Saint Kitts and Nevis","Saint Kitts",Country))%>% 
   mutate(Country=if_else(Country=="Saint Kitts and Nevis","Nevis",Country))%>%
-  mutate(Country=if_else(Country=="Republic of Korea","Venezuela",Country))%>%
+  mutate(Country=if_else(Country=="Republic of Korea","South Korea",Country))%>%
   mutate(Country=if_else(Country=="Lao People's Democratic Republic","Laos",Country))%>%
   mutate(Country=if_else(Country=="Republic of Moldova","Moldova",Country))%>%
   mutate(Country=if_else(Country=="The former Yugoslav Republic of Macedonia","North Macedonia",Country))%>%
@@ -99,14 +99,19 @@ world_map <- map_data("world")
 
 world_map_ifpri<-world_map%>%
   left_join(ifpri,by=c("region"="Country"))%>%
-  mutate(IndexCat=if_else(is.na(IndexCat),"very low",IndexCat))
+  mutate(IndexCat=if_else(is.na(IndexCat),"no data",IndexCat),
+         IndexCat = factor(IndexCat,
+                           levels = c("self sufficent", "very low", "low", "medium", "high", "very high", "no data"),
+                           labels = c("Self sufficient", "Very low", "Low", "Medium", "High", "Very high", "No data")))
   
 
-world_map_ifpri_chart<-ggplot()+
+world_map_ifpri_chart <-
+  ggplot()+
   # geom_polygon(data = world_map_ifpri,aes(x=long,y=lat,group=group))+
   geom_polygon(data = world_map_ifpri |> filter(region != "Antarctica"),aes(x=long,y=lat,group=group,fill=IndexCat))+
-  scale_fill_manual(values = af_colours("categorical")) +
+  scale_fill_manual(values = c(rev(af_colours("categorical")), "grey")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
   labs(x = NULL, y = NULL) +
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(), 
@@ -128,13 +133,14 @@ rice_chart_source_data_wb <- aws.s3::s3read_using(FUN = read_csv,
 date_1<-c(dmy("01-09-2007"),dmy("01-09-2008"))
 date_2<-c(dmy("01-09-2022"),dmy("01-05-2024"))
 
-rice_chart_source_data_wb_chart<-ggplot()+
+rice_chart_source_data_wb_chart <-
+  ggplot()+
   geom_area(aes(x=date_1,y=1000),fill="grey",alpha=0.6)+
   geom_area(aes(x=date_2,y=1000),fill="grey",alpha=0.6)+
   geom_vline(xintercept = dmy("23-03-2020"), col = "grey", linewidth = 2)+
   geom_vline(xintercept = dmy("24-02-2022"), col = "red", linewidth = 2)+
   geom_line(data=rice_chart_source_data_wb,aes(x = Date, y = `Thai 5% rice ($/mt)`), colour = af_colours()[1]) +
-  scale_x_continuous(breaks=seq(dmy("01-01-2004"),dmy("01-01-2024"),"years"),labels=str_pad(seq(04,24,1),width=2,pad="0"))+
+  scale_x_continuous(breaks=seq(dmy("01-01-2004"),dmy("01-01-2024"),"4 years"),labels=scales::label_date(format = "%Y"))+
   # scale_color_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
