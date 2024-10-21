@@ -87,7 +87,7 @@ food_waste_percentages <- aws.s3::s3read_using(FUN = read_csv,
 food_waste_percentages_chart<-food_waste_percentages%>%
   ggplot() +
   geom_col(aes(x=measure,y=value,fill=food_type), lwd = 1)+
-  geom_text(aes(x = measure, y = value, label = value, group = food_type),size=6,color="white",position = position_stack(vjust = .5))+
+  geom_text(aes(x = measure, y = value, label = value, group = food_type),size=9,color="white",position = position_stack(vjust = .5))+
   theme_ukfsr()+
   #scale_y_continuous(limits = c(2000,3000)) +
   scale_color_manual(values = af_colours("duo")) +

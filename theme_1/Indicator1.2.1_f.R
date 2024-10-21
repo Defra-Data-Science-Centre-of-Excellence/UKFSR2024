@@ -11,38 +11,37 @@ library(here)
 library(readxl)
 library(tidyverse)
 
-tfp_out_2017_2021 <- aws.s3::s3read_using(FUN = read_csv,
+tfp_out_2013_2022 <- aws.s3::s3read_using(FUN = read_csv,
                                           bucket = ukfsr::s3_bucket(),
-                                          object = "theme_1/t1_2_1/input/csv/agricultural_productivity.csv")
+                                          object = "theme_1/t1_2_1/input/csv/agricultural_productivity_2.csv")%>%
+  mutate(Region=if_else(Region=="Upper-middle income, excluding China","Upper-middle\nincome,\nexcluding China",if_else(Region=="Upper-middle income","Upper-middle\nincome",if_else(Region=="Lower-middle income","Lower-middle\nincome",Region))))
 
 
-tfp_out_2017_2021_chart<-ggplot()+
-  geom_col(data=tfp_out_2017_2021,aes(x = year, y = growth,fill=year)) +
-  facet_wrap(~`income group`,scales='free')+
+tfp_out_2013_2022_chart<-ggplot()+
+  geom_col(data=tfp_out_2013_2022,aes(x = Year, y = Annual_Percentage,fill=Year)) +
+  facet_wrap(~Region)+
   scale_y_continuous(limits=c(0,2.5),breaks=c(0,0.5,1,1.5,2))+
   scale_fill_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "Average Annual Growth (%)")
 
-save_graphic(tfp_out_2017_2021_chart, "1.2.1", "total factor productivity 2017 2021")
-save_csv(tfp_out_2017_2021, "1.2.1", "total factor productivity 2017 2021")
+save_graphic(tfp_out_2013_2022_chart, "1.2.1", "total factor productivity 2013 2022")
+save_csv(tfp_out_2013_2022, "1.2.1", "total factor productivity 2013 2022")
 
 sources_of_output_growth_by_region_data <- aws.s3::s3read_using(FUN = read_csv,
                                                                 bucket = ukfsr::s3_bucket(),
-                                                                object = "theme_1/t1_2_3/input/csv/Sources of Output Growth by Region_data.csv")
+                                                                object = "theme_1/t1_2_1/input/csv/TFP.csv")
 
 sources_of_output_growth_by_region_data_world<-sources_of_output_growth_by_region_data%>%
-  filter(Region=="World")%>%
-  rename(decade=Decade)%>%
-  rename(`avg. growth (%/year)`=`Avg. Growth (%/year)`)%>%
-  rename(`sources of output growth`=`Sources of Output Growth`)
+  filter(!Element=="Total agricultural output growth rate")
 
 sources_of_output_growth_by_region_chart<-ggplot()+
-  geom_col(data=sources_of_output_growth_by_region_data_world,aes(x = decade, y = `avg. growth (%/year)`*100,fill=`sources of output growth`)) +
-  scale_y_continuous(breaks=seq(0,3,0.5))+
+  geom_col(data=sources_of_output_growth_by_region_data_world,aes(x = Date, y = Percentage,fill=Element)) +
+  scale_y_continuous(breaks=seq(0,6,0.5))+
   scale_fill_manual(values = af_colours("categorical"),n=4) +
   theme_ukfsr(base_family = "GDS Transport Website") +
+  guides(fill=guide_legend(nrow=4, byrow=TRUE))+
   labs(x = NULL,
        y = "Average Annual Growth (%)")
 
