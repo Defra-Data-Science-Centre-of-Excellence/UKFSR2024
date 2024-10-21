@@ -27,11 +27,15 @@ FSR_4_1_5 <- FSR_4_1_5 %>%
 
 FSR_4_1_5$Usage_Period <- factor(FSR_4_1_5$Usage_Period, levels = unique(FSR_4_1_5$Usage_Period))
 
-
+FSR_4_1_5$`Household food security status` <- factor(FSR_4_1_5$`Household food security status`, levels = c("All households" , "High", "Marginal", "Low", "Very low"))
 
 # Plot the bar chart
 FSR_4_1_5_plot <- ggplot(FSR_4_1_5, aes(x = `Household food security status`, y = Usage_Value, fill = Usage_Period)) +
   geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text (aes(label = round(`Usage_Value`, 1)),
+                 position = position_dodge(width = 0.9), 
+                 vjust = -0.5, hjust = 0.5, 
+                 size = 6, color = 'black') +
   scale_fill_manual(values = afcolours::af_colours("duo")) +
   labs(y = "% of households",
        x = NULL,
