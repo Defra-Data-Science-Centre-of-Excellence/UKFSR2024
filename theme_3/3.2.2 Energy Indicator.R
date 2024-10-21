@@ -2,14 +2,14 @@
 
 #devtools::install_github("FoodchainStats/ukfsr")
 
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('lubridate')
-library('zoo')
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(lubridate)
+library(zoo)
 
 source(here::here("utils", "load-font.R"))
 
@@ -25,7 +25,7 @@ FSR_3_1_5 <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 
 FSR_3_1_5 <- FSR_3_1_5 %>%
-  filter(Year >= 2002) %>%
+  filter(Year >= 2009) %>%
   gather(key,value, `Agriculture`, `Food and drink manufacturing`)  %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
   
@@ -64,12 +64,12 @@ FSR_3_1_5ab <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 
 FSR_3_1_5a <- FSR_3_1_5a %>%
-  filter(Year >= 2002) %>%
+  filter(Year >= 2009) %>%
   gather(variable,value, `Coal`,`Petroleum products`,`Natural gas`,`Electricity`)  %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
 
 FSR_3_1_5ab <- FSR_3_1_5ab %>%
-  filter(Year >= 2002) %>%
+  filter(Year >= 2009) %>%
   gather(variable,value, `Coal`,`Petroleum products`,`Natural gas`,`Bioenergy & waste`,`Electricity`) %>%
   mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
 
