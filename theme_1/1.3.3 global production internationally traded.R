@@ -13,6 +13,7 @@ library(rworldmap)
 library(tmap)
 library(sf)
 
+source(here::here("utils", "load-font.R"))
 
 # % production globally traded -------------------------------------------------
 psd_temp <- aws.s3::s3read_using(FUN = read_csv,
@@ -102,7 +103,7 @@ world_map_ifpri<-world_map%>%
   mutate(IndexCat=if_else(is.na(IndexCat),"no data",IndexCat),
          IndexCat = factor(IndexCat,
                            levels = c("self sufficent", "very low", "low", "medium", "high", "very high", "no data"),
-                           labels = c("Self sufficient", "Very low", "Low", "Medium", "High", "Very high", "No data")))
+                           labels = c("Self sufficient (-5% - 5%)", "Very low (5%-19%)", "Low (20%-29%)", "Medium (30%-39%)", "High (40%-49%)", "Very high (50%+)", "No data")))
   
 
 world_map_ifpri_chart <-
@@ -110,9 +111,9 @@ world_map_ifpri_chart <-
   # geom_polygon(data = world_map_ifpri,aes(x=long,y=lat,group=group))+
   geom_polygon(data = world_map_ifpri |> filter(region != "Antarctica"),aes(x=long,y=lat,group=group,fill=IndexCat))+
   scale_fill_manual(values = c(rev(af_colours("categorical")), "grey")) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
+  guides(fill = guide_legend(ncol = 3, byrow = TRUE)) +
   labs(x = NULL, y = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(), 
         axis.line.x = element_blank(),
