@@ -19,7 +19,7 @@ la_fte |>
   scale_x_discrete(labels = c("2010/11", "", "2012/13", "", "2014/15", "", "2016/17", "", "2018/19", "", "2020/21", "", "2022/23", "")) +
   scale_y_continuous(limits = c(0,2000)) +
   scale_colour_manual(values = af_colours("duo")) +
-  labs(x = NULL, y = NULL) +
+  labs(x = NULL, y = "FTE posts") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
 save_graphic(cht, "3.1.3c", "la allocated food safety fte")

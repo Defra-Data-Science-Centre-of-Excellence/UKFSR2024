@@ -21,6 +21,7 @@ cht <- data |>
   scale_x_continuous(breaks = seq(2017, 2022, by = 1)) +
   scale_y_continuous(limits = c(0,15), labels = scales::label_percent(scale = 1)) +
   scale_fill_manual(values = af_colours("duo")) +
+  labs(x = NULL, y = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)
 
 save_graphic(cht, "3.4.2b", "fdm business demography")

@@ -1,10 +1,10 @@
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('lubridate')
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(lubridate)
 library(forcats)
 
 source(here::here("utils", "load-font.R"))
@@ -32,7 +32,7 @@ FSR_3_1_8_plot <- ggplot(FSR_3_1_8, aes(x = Port, y = Value, fill = Year)) +
   geom_text(aes(label = round(Value, 1)), 
             position = position_dodge(width = 0.9),  # Use position_dodge here
             size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
-  labs(y = "% of imports", x = NULL, fill = "Year") +
+  labs(y = "% of FFD imports", x = NULL, fill = "Year") +
   scale_fill_manual(values = af_colours('duo')) +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
@@ -68,7 +68,7 @@ FSR_3_1_8a_plot <- ggplot(FSR_3_1_8a, aes(x = Food, y = Value, fill = Year)) +
   geom_text(aes(label = round(Value, 1)), 
             position = position_dodge(width = 0.9),  # Use position_dodge here
             size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
-  labs(y = "% of imports", x = NULL, fill = "Year") +
+  labs(y = "% of FFD imports", x = NULL, fill = "Year") +
   scale_fill_manual(values = af_colours('duo')) +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
@@ -112,7 +112,7 @@ FSR_3_1_8b_plot <- ggplot(FSR_3_1_8b, aes(x = Food, y = Value, fill = Year)) +
   geom_text(aes(label = round(Value, 1)), 
             position = position_dodge(width = 0.9),  # Use position_dodge here
             size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
-  labs(y = "% of import", x = NULL, fill = "Year") +
+  labs(y = "% of FFD imports", x = NULL, fill = "Year") +
   scale_fill_manual(values = af_colours('duo')) +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +

@@ -46,8 +46,7 @@ comp_barchart <- gms |> group_by(year, company) |>
 save_graphic(comp_barchart, "3.4.1a", "grocery market share comparison")
 
 
-# ------------------------------------------------------------------------------
-# Alternate showing the latest data
+# Alternate showing the latest data---------------------------------------------
 
 barchart <- gms |> 
   filter(date == max(date)) |> 
@@ -60,3 +59,38 @@ barchart <- gms |>
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE)
 
 # save_graphic(barchart, "3.1.10", "grocery market share latest")
+
+# Facet chart -------------------------------------------------------------------
+
+
+library(gghighlight)
+
+gms |> 
+  mutate(company = fct(company, levels = rev(shops))) |> 
+  ggplot() +
+  geom_line(aes(x = date, y = value, colour = company), colour = af_colours()[1]) +
+  gghighlight(value >= 0,use_direct_label = FALSE) +
+  facet_wrap(vars(company)) +
+  labs(x = NULL, y = NULL) +
+  theme_ukfsr() + theme(legend.position = "none")
+
+shops_trunc <- c("Other",
+           "Waitrose", "Co-op", "Lidl", "Morrisons",
+           "Aldi", "Asda", "Sainsbury's", "Tesco")
+
+facet_cht <- gms |> 
+  mutate(company = case_when(company %in% c("Iceland", "Other Outlets", "Ocado", "Symbols & Independent") ~ "Other",
+                   .default = company),
+         company = fct(company, levels = rev(shops_trunc))) |> 
+  group_by(date, company) |> 
+  summarise(value = sum(value)) |> 
+  
+  
+  ggplot() +
+  geom_line(aes(x = date, y = value, colour = company), colour = af_colours()[1]) +
+  gghighlight(value >= 0,use_direct_label = FALSE) +
+  facet_wrap(vars(company)) +
+  labs(x = NULL, y = NULL) +
+  theme_ukfsr() + theme(legend.position = "none")
+
+save_graphic(facet_cht, "3.4.1a", "grocery market share time series")

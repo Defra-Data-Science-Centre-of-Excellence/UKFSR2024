@@ -2,21 +2,21 @@
 
 
 # Load required libraries
-library('sf')
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('aws.ec2metadata')
-library('lubridate')
+library(sf)
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(aws.ec2metadata)
+library(lubridate)
 
 
 
 contents <- get_bucket_df("s3-ranch-054")
 
-
+# SRN Average delay map --------------------------------------------------------
 
 uk_border <- aws.s3::s3read_using(FUN = sf::st_read,
                                    bucket = "s3-ranch-054",
@@ -71,7 +71,7 @@ FSR_3_2_4_plot <- ggplot() +
 FSR_3_2_4_plot  
 
 # Output the plot
-save_graphic(FSR_3_2_4_plot, '3.2.4a','Road Congestion and Travel Time Statistics (average speed and delay)') 
+# save_graphic(FSR_3_2_4_plot, '3.2.4a','Road Congestion and Travel Time Statistics (average speed and delay)') 
 #+ save_csv(FSR_3_1_7, '3.1.7','Road Congestion and Travel Time Statistics (average speed and delay)')
 
 # SIMPLIFIED VERSION TO REDUCE FILESIZE
@@ -109,10 +109,10 @@ FSR_3_2_4_plot <- ggplot() +
 FSR_3_2_4_plot 
 
 # Output the plot
-save_graphic(FSR_3_2_4_plot, '3.2.4a','Road Congestion and Travel Time Statistics (average speed and delay)') 
+save_graphic(FSR_3_2_4_plot, '3.2.4b','Road Congestion and Travel Time Statistics (average speed and delay)') 
 
 
-# NOT USED Support 1 : Average delay per vehicle/second----------------------------------
+# SRN Average delay chart-------------------------------------------------------
   
 FSR_3_1_7a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
@@ -153,5 +153,5 @@ FSR_3_1_7a_plot <- ggplot(FSR_3_1_7a, aes(x = Month, y = value, colour = variabl
 FSR_3_1_7a_plot
 
 # Output the plot
-# save_graphic(FSR_3_1_7a_plot, '3.1.7a','Average Delay (second per vehicle)')
-# save_csv(FSR_3_1_7a, '3.1.7a','Average Delay (second per vehicle)')
+save_graphic(FSR_3_1_7a_plot, '3.2.4a','Average Delay (second per vehicle)')
+save_csv(FSR_3_1_7a, '3.2.4a','Average Delay (second per vehicle)')

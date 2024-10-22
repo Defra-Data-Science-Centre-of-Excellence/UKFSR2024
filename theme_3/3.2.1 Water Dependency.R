@@ -1,13 +1,13 @@
 #devtools::install_github("FoodchainStats/ukfsr")
 
 
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('lubridate')
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(lubridate)
 
 source(here::here("utils", "load-font.R"))
 
@@ -30,7 +30,7 @@ FSR_3_1_3a <- FSR_3_1_3a %>%
 # Plot the bar chart
 FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = Region, y = Volume / 1e3, fill = Type)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = afcolours::af_colours("duo"), labels = c("spray irrigation - storage", "spray irrigation")) +
+  scale_fill_manual(values = afcolours::af_colours("duo"), labels = c("Spray irrigation - storage", "Spray irrigation")) +
   labs(y = expression(Volume~(millions~m^3)),
        x = NULL,
        fill = "Type") +

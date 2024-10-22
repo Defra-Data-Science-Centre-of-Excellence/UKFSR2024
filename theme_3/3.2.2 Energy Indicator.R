@@ -16,7 +16,7 @@ source(here::here("utils", "load-font.R"))
 contents <- get_bucket_df("s3-ranch-054")
 
 
-# 3_1_2a_aggregate_energy_demand_agric_food_drink_manufact
+# Aggregate energy demand ------------------------------------------------------
 
 FSR_3_1_5 <- aws.s3::s3read_using(FUN = readr::read_csv,
                           bucket = "s3-ranch-054",
@@ -47,12 +47,7 @@ save_graphic(FSR_3_1_5plot, '3.2.2a', ' Aggregate energy demand for agriculture 
   save_csv(FSR_3_1_5, '3.2.2a', ' Aggregate energy demand for agriculture and food and drink manufacturing')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-# Support 1 - Energy demand by energy type in the food / drink manufacturing sector and Agriculture combined
-  
-
+# Energy demand by type --------------------------------------------------------
 
 FSR_3_1_5a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                 bucket = "s3-ranch-054",
@@ -129,7 +124,8 @@ nd_fuel <- aws.s3::s3read_using(FUN = read_csv,
 
 nd_fuel <- nd_fuel |> 
   pivot_longer(cols = c(-year, -quarter), names_to = "input") |> 
-  mutate(date = as.Date(paste0(year, "-", ((quarter - 1) * 3 + 1), "-01"))) |> 
+  mutate(date = as.Date(paste0(year, "-", ((quarter - 1) * 3 + 1), "-01")),
+         input = factor(input, levels = c("electricity", "gas"), labels = c("Electricity", "Gas"))) |> 
   select(date, value, input)
 
 chart <- nd_fuel |> 
