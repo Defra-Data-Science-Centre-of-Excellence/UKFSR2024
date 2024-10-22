@@ -37,10 +37,16 @@ FSR_4_1_5_plot <- ggplot(FSR_4_1_5, aes(x = `Household food security status`, y 
                  vjust = -0.5, hjust = 0.5, 
                  size = 6, color = 'black') +
   scale_fill_manual(values = afcolours::af_colours("duo")) +
-  labs(y = "% of households",
+  labs(y = NULL,
        x = NULL,
        fill = "Type") +
-  theme_ukfsr() 
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  theme_ukfsr() +
+  theme(plot.margin = margin(t = 10,  # Top margin
+                             r = 40,  # Right margin
+                             b = 10,  # Bottom margin
+                             l = 5))  # Left margin
+
 
 FSR_4_1_5_plot
 
