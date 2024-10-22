@@ -46,9 +46,12 @@ cereal_production_chart <- cereal_production |>
   ggplot() +
   facet_wrap(~item)+
   geom_line(aes(x = year, y = value/1E6, colour = area), lwd = 1) +
+  geom_point(aes(x=year, y=value/1E6,colour=area,shape=area,fill=area),size=2)+
   scale_x_continuous(limits = c(1970,2022),breaks =seq(1970,2022,10)) +
   guides(colour=guide_legend(nrow=2, byrow=TRUE))+ 
-  scale_colour_manual(values = af_colours("categorical")) +
+  scale_colour_manual(values = af_colours("categorical",n=5)) +
+  scale_fill_manual(values = af_colours("categorical",n=5)) +
+  scale_shape_manual(values=c(NA,NA,NA,NA,24))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "Million tonnes")

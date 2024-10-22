@@ -35,3 +35,4 @@ fruit_veg_chart <- fruit_veg|>
 
 save_graphic(fruit_veg_chart, "1.1.5a", "global fruit and vegetable production")
 save_csv(fruit_veg, "1.1.5a", "global fruit and vegetable production")
+

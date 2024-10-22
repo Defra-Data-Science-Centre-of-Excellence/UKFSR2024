@@ -102,7 +102,7 @@ scr_out<-rbind(scr_world,scr_world_minus_china,scr_top_exporters_maize,scr_top_e
   rename(comsumption="value.y")%>%
   filter(commodity!="Oilseed, Sunflowerseed")
   
-year_labels_temp<-tibble(year1=seq(4,24,4),year2=seq(5,25,4))%>%
+year_labels_temp<-tibble(year1=seq(4,24,5),year2=seq(5,25,5))%>%
   mutate(labels=paste0(str_pad(year1,width=2,pad="0"),"/",str_pad(year2,width=2,pad="0")))
 
 year_labels<-year_labels_temp$labels
@@ -113,13 +113,14 @@ scr_chart <- scr_out |>
   facet_wrap(~commodity,scales="free")+
   geom_line(aes(x=plot_year,y=scr/100,color=area))+
   scale_color_manual(values = af_colours("categorical"))+
-  scale_x_continuous(breaks=seq(2004,2024,4),labels=year_labels)+
+  scale_x_continuous(breaks=seq(2004,2024,5),labels=year_labels)+
   scale_y_continuous(breaks=seq(0,0.6,0.1),limits=c(0,0.6),labels = scales::percent)+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing=unit(2,"lines"),
         axis.ticks = element_line() ,
         axis.ticks.length = unit(.1, "cm"),
-        axis.line.x = element_line())+
+        axis.line.x = element_line(),
+        plot.margin=unit(c(0.4,0.5,0.4,1),"cm"))+
   labs(x = NULL,
        y = "")
 

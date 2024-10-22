@@ -24,10 +24,10 @@ tfp_out_2013_2022_chart<-ggplot()+
   scale_fill_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "Average Annual Growth")
+       y = "Average annual growth")
 
-save_graphic(tfp_out_2013_2022_chart, "1.2.1b", "total factor productivity 2013 2022")
-save_csv(tfp_out_2013_2022, "1.2.1b", "total factor productivity 2013 2022")
+save_graphic(tfp_out_2013_2022_chart, "1.2.1a", "total factor productivity 2013 2022")
+save_csv(tfp_out_2013_2022, "1.2.1a", "total factor productivity 2013 2022")
 
 sources_of_output_growth_by_region_data <- aws.s3::s3read_using(FUN = read_csv,
                                                                 bucket = ukfsr::s3_bucket(),
@@ -43,8 +43,8 @@ sources_of_output_growth_by_region_chart<-ggplot()+
   theme_ukfsr(base_family = "GDS Transport Website") +
   guides(fill=guide_legend(nrow=4, byrow=TRUE))+
   labs(x = NULL,
-       y = "Average Annual Growth")
+       y = "Average annual growth")
 
-save_graphic(sources_of_output_growth_by_region_chart, "1.2.1a", "total factor productivity world")
-save_csv(sources_of_output_growth_by_region_data_world, "1.2.1a", "total factor productivity world")
+save_graphic(sources_of_output_growth_by_region_chart, "1.2.1b", "total factor productivity world")
+save_csv(sources_of_output_growth_by_region_data_world, "1.2.1b", "total factor productivity world")
 

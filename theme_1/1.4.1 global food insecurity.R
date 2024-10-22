@@ -48,7 +48,7 @@ grfc2024_chart<-grfc2024_out%>%
   scale_x_continuous(breaks=seq(2016,2023,1))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "Millions")
+       y = "Million people")
 
 save_graphic(grfc2024_chart, "1.4.1c", "numbers of people facing high food insecurity")
 save_csv(grfc2024_out, "1.4.1c", "numbers of people facing high food insecurity")
@@ -74,7 +74,7 @@ grfc2024_chart_2<-grfc2024_out2%>%
   scale_y_continuous(limits=c(0,2200),sec.axis = sec_axis( ~ . / 20, name="percentage"))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "Millions")
+       y = "Million people")
 
 #save_graphic(grfc2024_chart_2, "1.1.3", "numbers of people and share of analysed population in GRFC countries-territories 
 #facing high levels of acute food insecurity, 2016–2023 2")
