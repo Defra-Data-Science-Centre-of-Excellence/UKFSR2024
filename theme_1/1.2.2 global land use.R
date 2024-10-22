@@ -64,7 +64,7 @@ cropland_per_hectare_chart <- cropland_per_hectare|>
   scale_color_manual(values = af_colours("categorical"))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "ha per capita")
+       y = "Hectares per capita")
 
 save_graphic(cropland_per_hectare_chart, "1.2.2d", "cropland_per_hectare")
 save_csv(cropland_per_hectare, "1.2.2d", "cropland_per_hectare")

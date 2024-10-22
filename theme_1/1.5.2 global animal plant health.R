@@ -18,14 +18,19 @@ bananas <- aws.s3::s3read_using(FUN = read_csv,
   mutate(Area=as.factor(Area))%>%
   mutate(Item=as.factor(Item))
 
+date_1<-c(2010,2019)
+
 bananas_chart <- bananas|>
   ggplot() +
   geom_line(aes(x = Year, y = Value/1E6, colour = Item), lwd = 1) +
+  geom_area(aes(x=c(2010,2019),y=150),fill="grey",alpha=0.6)+
   scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
+  scale_y_continuous(breaks =seq(25,150,25)) +
   scale_colour_manual(values = af_colours("duo"))+#,limits=c("South America","Africa","Asia","Northern America","Australia and New Zealand","Europe")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(legend.position = "none")+
   labs(x = NULL,
-       y = "Million Tonnes")
+       y = "Million tonnes")
 
 save_graphic(bananas_chart, "1.5.2c", "global banana production")
 save_csv(bananas, "1.5.2c", "global banana production")

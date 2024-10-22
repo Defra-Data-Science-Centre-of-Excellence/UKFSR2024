@@ -81,7 +81,7 @@ daily_chokepoint_transit_calls_and_trade_volume_estimates_chart<-ggplot()+
   scale_colour_manual(values = af_colours("categorical",n=4)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "million tonnes") 
+       y = "Million tonnes") 
 
 save_graphic(daily_chokepoint_transit_calls_and_trade_volume_estimates_chart, "1.3.4c", "daily chokepoint transit trade volume")
 save_csv(daily_chokepoint_transit_calls_and_trade_volume_estimates, "1.3.4c", "daily chokepoint transit trade volume")

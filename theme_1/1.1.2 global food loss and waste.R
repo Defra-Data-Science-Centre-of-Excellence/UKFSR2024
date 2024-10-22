@@ -26,17 +26,17 @@ food_loss_percentage <- aws.s3::s3read_using(FUN = read_csv,
 
 food_loss_percentage_chart <- food_loss_percentage |> 
   ggplot() +
-  geom_col(aes(fct_reorder(area,value), value, fill = region), lwd = 1)+
-  geom_text(aes(fct_reorder(area,value), value, color = region, label=round(value,1),hjust=1.3),size=5)+
+  geom_col(aes(fct_reorder(area,value), value/100, fill = region), lwd = 1)+
+  geom_text(aes(fct_reorder(area,value), value/100, color = region, label=round(value,1),hjust=1.3),size=5)+
   coord_flip()+
   theme_ukfsr()+
-  #scale_y_continuous(limits = c(2000,3000)) +
+  scale_y_continuous(labels = scales::percent) +
   scale_fill_manual(values = af_colours("duo")) +
   scale_color_manual(values = c("white","black"))+ 
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(legend.position="none")+
   labs(x = NULL,
-       y = "Food Loss Percentage(%)")
+       y = "")
 
 
 save_graphic(food_loss_percentage_chart, "1.1.2a", "global food loss")
@@ -79,7 +79,7 @@ flw_chart<-food_loss_waste_2%>%
   annotate("text", x = 5, y = 120, label = "Note:\nregions may not include\nall countries and confidence\nin the data varies between\ncountries",size=6)+
   guides(fill=guide_legend(nrow=3, byrow=TRUE))+ 
   labs(x = NULL,
-       y = "million tonnes")
+       y = "Million tonnes")
 
 save_graphic(flw_chart, "1.1.2b", "household food waste")
 save_csv(food_loss_waste_2, "1.1.2b", "household food waste")
@@ -93,17 +93,17 @@ food_waste_percentages <- aws.s3::s3read_using(FUN = read_csv,
 
 food_waste_percentages_chart<-food_waste_percentages%>%
   ggplot() +
-  geom_col(aes(x=measure,y=value,fill=food_type), lwd = 1)+
-  geom_text(aes(x = measure, y = value, label = value, group = food_type),size=6,color="white",position = position_stack(vjust = .5))+
+  geom_col(aes(x=measure,y=value/100,fill=food_type), lwd = 1)+
+  geom_text(aes(x = measure, y = value/100, label = value, group = food_type),size=6,color="white",position = position_stack(vjust = .5))+
   theme_ukfsr()+
-  #scale_y_continuous(limits = c(2000,3000)) +
+  scale_y_continuous(labels = scales::percent) +
   scale_color_manual(values = af_colours("duo")) +
   scale_fill_manual(values = af_colours("categorical"),n=5) +
   guides(fill=guide_legend(nrow=3, byrow=TRUE))+ 
   theme_ukfsr(base_family = "GDS Transport Website") +
   #theme(x_axis=FALSE)+
   labs(x = NULL,
-       y = "percent")
+       y = "")
 
 
 save_graphic(food_waste_percentages_chart, "1.1.2c", "food waste percentages")

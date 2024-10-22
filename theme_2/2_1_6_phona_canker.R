@@ -24,15 +24,15 @@ phoma_canker <- aws.s3::s3read_using(FUN = read_csv,
 
 phoma_canker_chart <-phoma_canker |> 
   ggplot() +
-  geom_line(aes(x=survey_year,y=value,color=measure))+
+  geom_line(aes(x=survey_year,y=value/100,color=measure))+
   theme_ukfsr()+
   scale_color_manual(values = af_colours("categorical",n=3))+
   guides(color=guide_legend(nrow=3,byrow=TRUE))+
   scale_x_continuous(breaks=seq(2003,2023,2),labels = seq(2003,2023,2))+
-  #scale_y_continuous(breaks=seq(0,3.5,0.5),limits=c(0,3.5))+
+  scale_y_continuous(labels = scales::percent)+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "percent")
+       y = "")
 
 save_graphic(phoma_canker_chart, "2.1.6", "phoma canker chart")
 save_csv(phoma_canker, "2.1.6", "phoma_canker")

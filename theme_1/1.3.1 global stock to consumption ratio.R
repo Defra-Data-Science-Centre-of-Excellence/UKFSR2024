@@ -93,6 +93,8 @@ scr_top_exporters_wheat<-stocks%>%
 scr_out<-rbind(scr_world,scr_world_minus_china,scr_top_exporters_maize,scr_top_exporters_soyabean,scr_top_exporters_sunflowerseed,scr_top_exporters_rice,scr_top_exporters_wheat)%>%
   mutate(plot_year=as.numeric(substr(year,1,4)))%>%
   mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))%>%
+  mutate(Commodity=if_else(Commodity=="Oilseed, Soybean","Soybean",Commodity))%>%
+  mutate(Commodity=if_else(Commodity=="Rice, Milled","Rice",Commodity))%>%
   rename(commodity="Commodity")%>%
   rename(scr="SCR")%>%
   rename(area="Area")%>%
@@ -109,17 +111,17 @@ year_labels<-year_labels_temp$labels
 scr_chart <- scr_out |> 
   ggplot() +
   facet_wrap(~commodity,scales="free")+
-  geom_line(aes(x=plot_year,y=scr,color=area))+
+  geom_line(aes(x=plot_year,y=scr/100,color=area))+
   scale_color_manual(values = af_colours("categorical"))+
   scale_x_continuous(breaks=seq(2004,2024,4),labels=year_labels)+
-  scale_y_continuous(breaks=seq(0,60,10),limits=c(0,60))+
+  scale_y_continuous(breaks=seq(0,0.6,0.1),limits=c(0,0.6),labels = scales::percent)+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing=unit(2,"lines"),
         axis.ticks = element_line() ,
         axis.ticks.length = unit(.1, "cm"),
         axis.line.x = element_line())+
   labs(x = NULL,
-       y = "percent")
+       y = "")
 
 scr_out<-scr_out%>%select(-plot_year)
 

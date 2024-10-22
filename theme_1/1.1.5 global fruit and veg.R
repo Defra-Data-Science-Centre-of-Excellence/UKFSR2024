@@ -19,6 +19,7 @@ fruit_veg <- aws.s3::s3read_using(FUN = read_csv,
                                   object = "theme_1/input_data/t1_1_5/fruit_and_vegetable_production.csv")%>%
   mutate(area=as.factor(Area))%>%
   mutate(item=as.factor(Item))%>%
+  mutate(item=if_else(item=="Citrus Fruit, Total","Citrus Fruit",if_else(item=="Fruit Primary","Fruit",if_else(item=="Vegetables Primary","Vegetables",item))))%>%
   rename(value=Value)%>%
   rename(year=Year)%>%
   select(year,item,value)
@@ -30,7 +31,7 @@ fruit_veg_chart <- fruit_veg|>
   scale_colour_manual(values = af_colours("categorical")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "Million Tonnes")
+       y = "Million tonnes")
 
 save_graphic(fruit_veg_chart, "1.1.5a", "global fruit and vegetable production")
 save_csv(fruit_veg, "1.1.5a", "global fruit and vegetable production")
