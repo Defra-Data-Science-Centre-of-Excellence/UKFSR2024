@@ -17,7 +17,7 @@ source(here("utils", "load-font.R"))
 # NOT USED regional land degragation -------------------------------------------
 land_degradation <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
-                                      object = "theme_1/t1_2_6/input/csv/land_degradation.csv")
+                                      object = "theme_1/input_data/t1_5_1_old/land_degradation.csv")
 
 land_degradation_chart<-ggplot()+
   geom_col(data=land_degradation,aes(x=region,y=percentage,fill=status),position="stack")+
@@ -27,13 +27,13 @@ land_degradation_chart<-ggplot()+
   labs(x = NULL,
        y = "percent") 
 
-save_graphic(land_degradation_chart, "1.2.6", "land degradation chart")
-save_csv(land_degradation, "1.2.6", "land degradation")
+#save_graphic(land_degradation_chart, "1.2.6", "land degradation chart")
+#save_csv(land_degradation, "1.2.6", "land degradation")
 
 # % of land that is degraded ---------------------------------------------------
 sdg_15_3_1 <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
-                                         object = "theme_1/t1_2_6/input/csv/sdg15_3_1.csv")%>%
+                                         object = "theme_1/input_data/t1_5_1/sdg15_3_1.csv")%>%
   pivot_longer(cols=2:3,names_to = "year",values_to ="value")%>%
   mutate(position=if_else(year==2015,value-1,value+1))
   

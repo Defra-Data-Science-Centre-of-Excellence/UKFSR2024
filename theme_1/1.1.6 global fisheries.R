@@ -19,12 +19,12 @@ source(here("utils", "load-font.R"))
 
 fish_species <- aws.s3::s3read_using(FUN = read_csv,
                                      bucket = ukfsr::s3_bucket(),
-                                     object = "theme_1/t1_1_7/input/csv/CL_FI_SPECIES_GROUPS.csv")%>%
+                                     object = "theme_1/input_data/t1_1_6/CL_FI_SPECIES_GROUPS.csv")%>%
   filter(Yearbook_Group_En=="Fish, crustaceans and molluscs, etc.")
 
 aquaculture_quantity <- aws.s3::s3read_using(FUN = read_csv,
                                     bucket = ukfsr::s3_bucket(),
-                                    object = "theme_1/t1_1_7/input/csv/Aquaculture_Quantity.csv")
+                                    object = "theme_1/input_data/t1_1_6/Aquaculture_Quantity.csv")
 
 
 aquaculture<-fish_species%>%
@@ -36,7 +36,7 @@ aquaculture<-fish_species%>%
 
 capture_quantity <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
-                                  object = "theme_1/t1_1_7/input/csv/Capture_Quantity.csv")
+                                  object = "theme_1/input_data/t1_1_6/Capture_Quantity.csv")
 
 capture<-fish_species%>%
   left_join(capture_quantity,by=c("3A_Code"="SPECIES.ALPHA_3_CODE"))%>%
@@ -71,7 +71,7 @@ save_csv(fisheries, "1.1.6a", "global fish production")
 
 sustainable_fisheries <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
-                                         object = "theme_1/t1_1_7/input/csv/sustainable_fisheries.csv")
+                                         object = "theme_1/input_data/t1_1_6/sustainable_fisheries.csv")
 
 global_sustainable_fisheries<-sustainable_fisheries%>%
   filter(Area=="World")%>%

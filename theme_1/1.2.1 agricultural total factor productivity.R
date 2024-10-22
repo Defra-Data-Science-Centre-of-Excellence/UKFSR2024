@@ -13,7 +13,7 @@ library(tidyverse)
 
 tfp_out_2013_2022 <- aws.s3::s3read_using(FUN = read_csv,
                                           bucket = ukfsr::s3_bucket(),
-                                          object = "theme_1/t1_2_1/input/csv/agricultural_productivity_2.csv")%>%
+                                          object = "theme_1/input_data/t1_2_1/agricultural_productivity_2.csv")%>%
   mutate(Region=if_else(Region=="Upper-middle income, excluding China","Upper-middle\nincome,\nexcluding China",if_else(Region=="Upper-middle income","Upper-middle\nincome",if_else(Region=="Lower-middle income","Lower-middle\nincome",Region))))
 
 
@@ -31,7 +31,7 @@ save_csv(tfp_out_2013_2022, "1.2.1b", "total factor productivity 2013 2022")
 
 sources_of_output_growth_by_region_data <- aws.s3::s3read_using(FUN = read_csv,
                                                                 bucket = ukfsr::s3_bucket(),
-                                                                object = "theme_1/t1_2_1/input/csv/TFP.csv")
+                                                                object = "theme_1/input_data/t1_2_1/TFP.csv")
 
 sources_of_output_growth_by_region_data_world<-sources_of_output_growth_by_region_data%>%
   filter(!Element=="Total agricultural output growth rate")
@@ -47,3 +47,4 @@ sources_of_output_growth_by_region_chart<-ggplot()+
 
 save_graphic(sources_of_output_growth_by_region_chart, "1.2.1a", "total factor productivity world")
 save_csv(sources_of_output_growth_by_region_data_world, "1.2.1a", "total factor productivity world")
+

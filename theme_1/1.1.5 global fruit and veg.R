@@ -16,7 +16,7 @@ source(here("utils", "load-font.R"))
 # Fruit and veg production -----------------------------------------------------
 fruit_veg <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
-                                  object = "theme_1/t1_1_5/input/csv/fruit_and_vegetable_production.csv")%>%
+                                  object = "theme_1/input_data/t1_1_5/fruit_and_vegetable_production.csv")%>%
   mutate(area=as.factor(Area))%>%
   mutate(item=as.factor(Item))%>%
   rename(value=Value)%>%

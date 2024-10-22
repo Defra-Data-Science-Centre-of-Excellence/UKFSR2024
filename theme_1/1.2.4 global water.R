@@ -19,7 +19,7 @@ world_data<-map_data("world")
 
 aquastat <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_1/t1_2_4/input/csv/aquastat.csv")
+                                 object = "theme_1/input_data/t1_2_4/aquastat.csv")
 
 
 aquastat_regions<-aquastat%>%

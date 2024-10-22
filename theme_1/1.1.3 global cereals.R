@@ -14,7 +14,7 @@ source(here("utils", "load-font.R"))
 
 cereal_production_yield <- aws.s3::s3read_using(FUN = read_csv,
                                                 bucket = ukfsr::s3_bucket(),
-                                                object = "theme_1/t1_1_3/input/csv/cereal_yield_production.csv")%>%
+                                                object = "theme_1/input_data/t1_1_3/cereal_yield_production.csv")%>%
   mutate(Area=factor(Area,levels=c("Europe","Asia","Africa","South America","Northern America","World")))
 
 # Cereal production ------------------------------------------------------------

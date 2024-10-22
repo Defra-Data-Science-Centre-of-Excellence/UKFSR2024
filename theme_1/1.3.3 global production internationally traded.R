@@ -18,7 +18,7 @@ source(here::here("utils", "load-font.R"))
 # % production globally traded -------------------------------------------------
 psd_temp <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
-                                        object = "theme_1/t1_3_3/input/csv/proportion_traded.csv")
+                                        object = "theme_1/input_data/t1_3_3/proportion_traded.csv")
 
 psd<-psd_temp%>%
   mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
@@ -66,7 +66,7 @@ neg<-function(x) -x
 
 ifpri <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_1/t1_3_3/input/csv/Food_Import_Dependence_Index.csv")%>%
+                                 object = "theme_1/input_data/t1_3_3/Food_Import_Dependence_Index.csv")%>%
   mutate(IndexCat=if_else(Index<neg(5),"exporter",if_else(Index<5,"self sufficent",if_else(Index<20,"very low",if_else(Index<30,"low",if_else(Index<40,"medium",if_else(Index>50,"high","very high")))))))%>%
   mutate(Country=if_else(Country=="United States of America","USA",Country))%>%
   mutate(Country=if_else(Country=="Viet Nam","Vietnam",Country))%>%
@@ -128,7 +128,7 @@ save_csv(ifpri, "1.3.3b", "food import dependence ratio")
 
 rice_chart_source_data_wb <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_1/t1_3_3/input/csv/Rice_chart_source_data_WB.csv")%>%
+                                 object = "theme_1/input_data/t1_3_3/Rice_chart_source_data_WB.csv")%>%
   mutate(Date=dmy(Date))
 
 date_1<-c(dmy("01-09-2007"),dmy("01-09-2008"))

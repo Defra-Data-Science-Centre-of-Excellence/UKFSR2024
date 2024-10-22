@@ -11,45 +11,14 @@ library(here)
 
 source(here("utils", "load-font.R"))
 
-average_annual_growth_in_demand_for_key_commodity_groups <- aws.s3::s3read_using(FUN = read_csv,
-                            bucket = ukfsr::s3_bucket(),
-                            object = "theme_1/t1_1_3/input/csv/Average_annual_growth_in_demand_for_key_commodity_groups_2013-22_and_2023-32.csv")
-                            
-
-
-
-average_annual_growth_in_demand_for_key_commodity_groups <- average_annual_growth_in_demand_for_key_commodity_groups |> 
-  rename(year=Year) |>
-  rename(commodity=Commodity) |>
-  mutate(commodity_year=paste0(commodity,"\n",year)) |>
-  pivot_longer(3:4,values_to = "value",names_to = "growth_type")|>
-  select(year,commodity,growth_type,value)
-
-average_annual_growth_in_demand_for_key_commodity_groups_chart <- average_annual_growth_in_demand_for_key_commodity_groups |> 
-  ggplot() +
-  geom_col(aes(x=year,y=value,fill=growth_type))+
-  facet_wrap(~commodity,scales="free")+
-  theme_ukfsr()+
-  scale_y_continuous(limits = c(0,2)) +
-  scale_fill_manual(values = af_colours("duo")) +
-  scale_color_manual(values = c("white","black"))+ 
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "percent per annum")
-
-
-save_graphic(average_annual_growth_in_demand_for_key_commodity_groups_chart, "1.1.3", "average annual growth in demand for key commodity groups")
-save_csv(average_annual_growth_in_demand_for_key_commodity_groups, "1.1.3", "average annual growth in demand for key commodity groups")
-
-
 # People facing high insecurity GRFC countries----------------------------------
 grfc2024 <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
-                                  object = "theme_1/t1_1_3/input/csv/GRFC2024_Master.csv")
+                                  object = "theme_1/input_data/t1_4_1/GRFC2024_Master.csv")
 
 grfc2024_in2 <- aws.s3::s3read_using(FUN = read_csv,
                                      bucket = ukfsr::s3_bucket(),
-                                     object = "theme_1/t1_1_3/input/csv/grfc_number_of_countries.csv") 
+                                     object = "theme_1/input_data/t1_4_1/grfc_number_of_countries.csv") 
 
 grfc2024_in<-grfc2024%>%
   mutate(`Total country population`=as.numeric(`Total country population`,na.rm=FALSE))%>%
@@ -114,7 +83,7 @@ facing high levels of acute food insecurity, 2016–2023 2")
 # Number of moderate or severely food insecure people --------------------------
 number_of_moderately_or_severely_food_insecure_people <- aws.s3::s3read_using(FUN = read_csv,
                                                                               bucket = ukfsr::s3_bucket(),
-                                                                              object = "theme_1/t1_1_3/input/csv/Number of moderately or severely food insecure people.csv")
+                                                                              object = "theme_1/input_data/t1_4_1/Number of moderately or severely food insecure people.csv")
 
 number_of_moderately_or_severely_food_insecure_people_world<-number_of_moderately_or_severely_food_insecure_people%>%
   mutate(Value=as.numeric(Value))%>%
@@ -150,7 +119,7 @@ save_csv(number_of_moderately_or_severely_food_insecure_people_world, "1.4.1b", 
 
 coahd <- aws.s3::s3read_using(FUN = read_csv,
                               bucket = ukfsr::s3_bucket(),
-                              object = "theme_1/t1_1_3/input/csv/CoAHD.csv")%>%
+                              object = "theme_1/input_data/t1_4_1/CoAHD.csv")%>%
   filter(!Area=="Europe")%>%
   rename(area="Area")%>%
   rename(year="Year")%>%
@@ -180,7 +149,7 @@ world_data<-map_data("world")
 
 food_supply_2022 <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
-                                        object = "theme_1/t1_1_3/input/csv/foodsupply2022.csv")
+                                        object = "theme_1/input_data/t1_4_1_old/foodsupply2022.csv")
 
 food_supply_2022_key<-food_supply_2022%>%
   mutate(gpcpd=(Value*1000)/365)%>%
@@ -255,7 +224,7 @@ world_map_food_supply_2022_chart<-ggplot()+
 
 food_supply_2019_2022 <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
-                                         object = "theme_1/t1_1_3/input/csv/food_supply_2019-2022.csv")
+                                         object = "theme_1/input_data/t1_4_1_old/food_supply_2019-2022.csv")
 
 food_supply_2019<-food_supply_2019_2022%>%
   filter(Year==2019)%>%
@@ -325,7 +294,7 @@ world_map_food_supply_diff_chart<-ggplot()+
 # NOT USED prevalence of undernourished people ---------------------------------
 prevalance_of_undernourised <- aws.s3::s3read_using(FUN = read_csv,
                                               bucket = ukfsr::s3_bucket(),
-                                              object = "theme_1/t1_1_3/input/csv/prevalance_of_undernourised.csv")%>%
+                                              object = "theme_1/input_data/t1_4_1_old/prevalance_of_undernourised.csv")%>%
   filter(`Year Code`<2025)%>%
   mutate(name="prevalence of undernourised")
 
@@ -345,7 +314,7 @@ prevalance_of_undernourised_chart<-prevalance_of_undernourised%>%
 # Number of undernourished people ---------------------------------------------- 
 number_of_undernourised <- aws.s3::s3read_using(FUN = read_csv,
                                               bucket = ukfsr::s3_bucket(),
-                                              object = "theme_1/t1_1_3/input/csv/number_of_people_undernourised.csv")%>%
+                                              object = "theme_1/input_data/t1_4_1/number_of_people_undernourised.csv")%>%
   filter(`Year Code`<2025)%>%
   mutate(name="number of undernourised")
 

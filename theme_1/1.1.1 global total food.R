@@ -11,7 +11,7 @@ source(here("utils", "load-font.R"))
 
 population <- aws.s3::s3read_using(FUN = read_csv,
                                    bucket = ukfsr::s3_bucket(),
-                                   object = "theme_1/t1_1_1/input/csv/global_population_2022.csv")%>%
+                                   object = "theme_1/input_data/t1_1_1/global_population_2022.csv")%>%
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(item=Item) |>
@@ -21,7 +21,7 @@ population <- aws.s3::s3read_using(FUN = read_csv,
 
 oilseed_stuff <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
-                                      object = "theme_1/t1_1_1/input/csv/Oilseeds+other_stuff.csv")%>%
+                                      object = "theme_1/input_data/t1_1_1/Oilseeds+other_stuff.csv")%>%
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(item=Item) |>
@@ -79,7 +79,7 @@ save_csv(production_per_capita_animal_products, "1.1.1b", "global animal food pr
 # Dietary energy supply --------------------------------------------------------
 food_supply <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
-                                      object = "theme_1/t1_1_1/input/csv/food_supply_output.csv")
+                                      object = "theme_1/input_data/t1_1_1/food_supply_output.csv")
 
 food_supply_chart<-ggplot(food_supply)+
   geom_line(aes(x=Year,y=Value),color=af_colours("duo")[1])+
@@ -128,7 +128,7 @@ save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
 # Alt biofuel chart ------------------------------------------------------------
 global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
                                                      bucket = ukfsr::s3_bucket(),
-                                                     object = "theme_1/t1_1_1/input/csv/OECD.TAD.ATM,DSD_AGR@DF_OUTLOOK_2024_2033,1.1+W.A.CPC_01802+CPC_216+CPC_0112....csv")%>%
+                                                     object = "theme_1/input_data/t1_1_1/OECD.TAD.ATM,DSD_AGR@DF_OUTLOOK_2024_2033,1.1+W.A.CPC_01802+CPC_216+CPC_0112....csv")%>%
   filter(Measure%in%c("Production","Biofuel use"))
 
 global_biofuel_production<-global_biofuel_production_in%>%
@@ -161,7 +161,7 @@ save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
 
 average_annual_growth_in_demand_for_key_commodity_groups <- aws.s3::s3read_using(FUN = read_csv,
                                                                                  bucket = ukfsr::s3_bucket(),
-                                                                                 object = "theme_1/t1_1_1/input/csv/Average_annual_growth_in_demand_for_key_commodity_groups_2013-22_and_2023-32.csv")
+                                                                                 object = "theme_1/input_data/t1_1_1/Average_annual_growth_in_demand_for_key_commodity_groups_2013-22_and_2023-32.csv")
 
 
 

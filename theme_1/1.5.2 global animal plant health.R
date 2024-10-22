@@ -14,7 +14,7 @@ source(here("utils", "load-font.R"))
 
 bananas <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
-                                object = "theme_1/t1_2_7/input/csv/banana_production.csv")%>%
+                                object = "theme_1/input_data/t1_5_2/banana_production.csv")%>%
   mutate(Area=as.factor(Area))%>%
   mutate(Item=as.factor(Item))
 

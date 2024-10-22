@@ -14,7 +14,7 @@ source(here("utils", "load-font.R"))
 # Food loss percentage ---------------------------------------------------------
 food_loss_percentage <- aws.s3::s3read_using(FUN = read_csv,
                                              bucket = ukfsr::s3_bucket(),
-                                             object = "theme_1/t1_1_2/input/csv/SDG12.3a.csv")%>%
+                                             object = "theme_1/input_data/t1_1_2/SDG12.3a.csv")%>%
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(element=Element) |>
@@ -52,7 +52,7 @@ conf_levels <- c(
 
 food_loss_waste <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
-                                        object = "theme_1/t1_1_2/input/csv/FLW.csv")%>%
+                                        object = "theme_1/input_data/t1_1_2/FLW.csv")%>%
   mutate(`HOUSEHOLD ESTIMATE (TONNES/YEAR)`=as.numeric(`HOUSEHOLD ESTIMATE (TONNES/YEAR)`))%>%
   group_by(REGION,`CONFIDENCE IN ESTIMATE`)%>%
   summarise(household_estimates=sum(`HOUSEHOLD ESTIMATE (TONNES/YEAR)`,na.rm=TRUE))%>%
@@ -88,7 +88,7 @@ save_csv(food_loss_waste_2, "1.1.2b", "household food waste")
 # Food waste by commodity-------------------------------------------------------
 food_waste_percentages <- aws.s3::s3read_using(FUN = read_csv,
                                                bucket = ukfsr::s3_bucket(),
-                                               object = "theme_1/t1_1_2/input/csv/food_waste_percentages.csv")%>%
+                                               object = "theme_1/input_data/t1_1_2/food_waste_percentages.csv")%>%
   pivot_longer(cols=2:3,names_to = "measure",values_to="value")
 
 food_waste_percentages_chart<-food_waste_percentages%>%
@@ -100,7 +100,8 @@ food_waste_percentages_chart<-food_waste_percentages%>%
   scale_color_manual(values = af_colours("duo")) +
   scale_fill_manual(values = af_colours("categorical"),n=5) +
   guides(fill=guide_legend(nrow=3, byrow=TRUE))+ 
-  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  #theme(x_axis=FALSE)+
   labs(x = NULL,
        y = "percent")
 

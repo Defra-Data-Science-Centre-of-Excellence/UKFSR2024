@@ -18,7 +18,7 @@ source(here("utils", "load-font.R"))
 
 meat_eggs <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
-                                  object = "theme_1/t1_1_4/input/csv/meat_eggs_milk_poultry_production.csv")%>%
+                                  object = "theme_1/input_data/t1_1_4/meat_eggs_milk_poultry_production.csv")%>%
   mutate(area=as.factor(Area))%>%
   mutate(item=as.factor(Item))%>%
   rename(year=Year)%>%
@@ -59,7 +59,7 @@ meat_type_global_poultry<-meat_eggs%>%
 
 meat_type <- aws.s3::s3read_using(FUN = read_csv,
                                   bucket = ukfsr::s3_bucket(),
-                                  object = "theme_1/t1_1_4/input/csv/meat_production.csv")%>%
+                                  object = "theme_1/input_data/t1_1_4/meat_production.csv")%>%
   filter(Unit=="t")
 
 meat_type_global_1<-meat_type%>%
