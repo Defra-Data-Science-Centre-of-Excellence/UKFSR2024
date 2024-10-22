@@ -17,7 +17,7 @@ source(here("utils", "load-font.R"))
 
 fertiliser_concertrations <- aws.s3::s3read_using(FUN = read_csv,
                                                   bucket = ukfsr::s3_bucket(),
-                                                  object = "theme_1/t1_2_3/input/csv/FertiliserConcertrations.csv")
+                                                  object = "theme_1/input_data/t1_2_3/FertiliserConcertrations.csv")
 
 fertiliser_concertrations_world<-fertiliser_concertrations%>%
   filter(Area=="World")
@@ -54,7 +54,7 @@ save_csv(fertiliser_concertrations_out, "1.2.3c", "fertiliser concentrations")
 
 fertiliser_production <- aws.s3::s3read_using(FUN = read_csv,
                                               bucket = ukfsr::s3_bucket(),
-                                              object = "theme_1/t1_2_3/input/csv/FertilserProduction.csv")%>%
+                                              object = "theme_1/input_data/t1_2_3/FertilserProduction.csv")%>%
   rename(area=Area)%>%
   rename(year=Year)%>%
   rename(value=Value)
@@ -80,7 +80,7 @@ save_csv(total_production, "1.2.3a", "global fertiliser production")
 
 fertilizers_price_index <- aws.s3::s3read_using(FUN = read_csv,
                                                 bucket = ukfsr::s3_bucket(),
-                                                object = "theme_1/t1_2_3/input/csv/FertiliserPrice.csv")%>%
+                                                object = "theme_1/input_data/t1_2_3/FertiliserPrice.csv")%>%
   mutate(date=as.Date(paste0(year,"/",month,"/",day)))%>%
   select(-day,-month,-year)
 

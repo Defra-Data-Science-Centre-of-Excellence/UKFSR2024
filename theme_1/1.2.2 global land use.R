@@ -16,7 +16,7 @@ source(here("utils", "load-font.R"))
 
 agricultral_land_use <- aws.s3::s3read_using(FUN = read_csv,
                                              bucket = ukfsr::s3_bucket(),
-                                             object = "theme_1/t1_2_2/input/csv/agricultral_land_use.csv")%>%
+                                             object = "theme_1/input_data/t1_2_2/agricultral_land_use.csv")%>%
   rename(item=Item)%>%
   rename(value=Value)%>%
   rename(year=Year)
@@ -52,7 +52,7 @@ save_csv(agricultural_land_use, "1.2.2b", "agricultural land use")
 
 cropland_per_hectare <- aws.s3::s3read_using(FUN = read_csv,
                                              bucket = ukfsr::s3_bucket(),
-                                             object = "theme_1/t1_2_2/input/csv/Croplandperhectare.csv")%>%
+                                             object = "theme_1/input_data/t1_2_2/Croplandperhectare.csv")%>%
   rename(item=Item)%>%
   rename(value=Value)%>%
   rename(year=Year)
@@ -64,7 +64,7 @@ cropland_per_hectare_chart <- cropland_per_hectare|>
   scale_color_manual(values = af_colours("categorical"))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "ha per capita")
+       y = "Hectares per capita")
 
 save_graphic(cropland_per_hectare_chart, "1.2.2d", "cropland_per_hectare")
 save_csv(cropland_per_hectare, "1.2.2d", "cropland_per_hectare")

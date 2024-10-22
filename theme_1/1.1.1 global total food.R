@@ -11,7 +11,7 @@ source(here("utils", "load-font.R"))
 
 population <- aws.s3::s3read_using(FUN = read_csv,
                                    bucket = ukfsr::s3_bucket(),
-                                   object = "theme_1/t1_1_1/input/csv/global_population_2022.csv")%>%
+                                   object = "theme_1/input_data/t1_1_1/global_population_2022.csv")%>%
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(item=Item) |>
@@ -21,7 +21,7 @@ population <- aws.s3::s3read_using(FUN = read_csv,
 
 oilseed_stuff <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
-                                      object = "theme_1/t1_1_1/input/csv/Oilseeds+other_stuff.csv")%>%
+                                      object = "theme_1/input_data/t1_1_1/Oilseeds+other_stuff.csv")%>%
   rename(year=Year) |>
   rename(value=Value) |> 
   rename(item=Item) |>
@@ -31,17 +31,23 @@ oilseed_stuff <- aws.s3::s3read_using(FUN = read_csv,
 production_per_capita_oilseed_stuff<-oilseed_stuff%>%
   left_join(population,by=c("year"="year"))%>%
   mutate(value=(((value.x)/value.y)*1000)/365)%>%
-  mutate(item=if_else(item%in%c("Citrus Fruit, Total","Fruit Primary","Vegetables Primary"),"Fruit and Vegetables, Primary + Citrus Fruit",item))%>%
-  mutate(item=if_else(item%in%c("Castor oil seeds","Coconuts, in shell","Groundnuts, excluding shelled","Hempseed","Kapok fruit","Karite nuts (sheanuts)","Linseed","Melonseed","Mustard seed","Oil palm fruit","Olives","Other oil seeds, n.e.c.","Poppy seed","Rape or colza seed","Safflower seed","Seed cotton, unginned","Sesame seed","Soya beans","Sunflower seed","Tallowtree seeds","Tung nuts","Jojoba seeds"),"Oilseeds, Primary",item))%>%
+  mutate(item=if_else(item%in%c("Eggs Primary"),"Eggs",item))%>%
+  mutate(item=if_else(item%in%c("Cereals, primary"),"Cereals",item))%>%
+  mutate(item=if_else(item%in%c("Roots and Tubers, Total"),"Roots and Tubers",item))%>%
+  mutate(item=if_else(item%in%c("Milk, Total"),"Milk",item))%>%
+  mutate(item=if_else(item%in%c("Meat, Total"),"Meat",item))%>%
+  mutate(item=if_else(item%in%c("Pulses, Total"),"Pulses",item))%>%  
+  mutate(item=if_else(item%in%c("Citrus Fruit, Total","Fruit Primary","Vegetables Primary"),"Fruit and Vegetables inc Citrus Fruit",item))%>%
+  mutate(item=if_else(item%in%c("Castor oil seeds","Coconuts, in shell","Groundnuts, excluding shelled","Hempseed","Kapok fruit","Karite nuts (sheanuts)","Linseed","Melonseed","Mustard seed","Oil palm fruit","Olives","Other oil seeds, n.e.c.","Poppy seed","Rape or colza seed","Safflower seed","Seed cotton, unginned","Sesame seed","Soya beans","Sunflower seed","Tallowtree seeds","Tung nuts","Jojoba seeds"),"Oilseeds",item))%>%
   group_by(year,item)%>%
   summarise(value=sum(value,na.rm=TRUE))
 
 production_per_capita_animal_products<-production_per_capita_oilseed_stuff%>%
-  filter(item%in%c("Eggs Primary","Meat, Total","Milk, Total"))
+  filter(item%in%c("Eggs","Meat","Milk"))
 
 
 production_per_capita_vegetal<-production_per_capita_oilseed_stuff%>%
-  filter(item%in%c("Oilseeds, Primary","Cereals, primary","Fruit and Vegetables, Primary + Citrus Fruit","Pulses, Total","Roots and Tubers, Total"))
+  filter(item%in%c("Oilseeds","Cereals","Fruit and Vegetables inc Citrus Fruit","Pulses","Roots and Tubers"))
 
 production_vegetal_chart <- production_per_capita_vegetal|>
   ggplot() +
@@ -79,7 +85,7 @@ save_csv(production_per_capita_animal_products, "1.1.1b", "global animal food pr
 # Dietary energy supply --------------------------------------------------------
 food_supply <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
-                                      object = "theme_1/t1_1_1/input/csv/food_supply_output.csv")
+                                      object = "theme_1/input_data/t1_1_1/food_supply_output.csv")
 
 food_supply_chart<-ggplot(food_supply)+
   geom_line(aes(x=Year,y=Value),color=af_colours("duo")[1])+
@@ -97,10 +103,10 @@ save_graphic(food_supply_chart, "1.1.1d", "global food supply")
 save_csv(food_supply, "1.1.1d", "global food supply")
 
 
-# Biofuel production -----------------------------------------------------------
+# NOT USED Biofuel production -----------------------------------------------------------
 global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
                                                      bucket = ukfsr::s3_bucket(),
-                                                     object = "theme_1/t1_1_1/input/csv/HIGH_AGLINK_2023_10052024183701187.csv")
+                                                     object = "theme_1/input_data/t1_1_1_old/HIGH_AGLINK_2023_10052024183701187.csv")
 
 global_biofuel_production<-global_biofuel_production_in%>%
   filter(Country=="WORLD")%>%
@@ -122,13 +128,13 @@ global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
   labs(x = NULL,
        y = "Biofuel demand share of\nglobal crop production")
 
-save_graphic(global_biofuel_production_chart, "1.1.1e", "global biofuel production")
-save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
+#save_graphic(global_biofuel_production_chart, "1.1.1e", "global biofuel production")
+#save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
 
 # Alt biofuel chart ------------------------------------------------------------
 global_biofuel_production_in <- aws.s3::s3read_using(FUN = read_csv,
                                                      bucket = ukfsr::s3_bucket(),
-                                                     object = "theme_1/t1_1_1/input/csv/OECD.TAD.ATM,DSD_AGR@DF_OUTLOOK_2024_2033,1.1+W.A.CPC_01802+CPC_216+CPC_0112....csv")%>%
+                                                     object = "theme_1/input_data/t1_1_1/OECD.TAD.ATM,DSD_AGR@DF_OUTLOOK_2024_2033,1.1+W.A.CPC_01802+CPC_216+CPC_0112....csv")%>%
   filter(Measure%in%c("Production","Biofuel use"))
 
 global_biofuel_production<-global_biofuel_production_in%>%
@@ -161,7 +167,7 @@ save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
 
 average_annual_growth_in_demand_for_key_commodity_groups <- aws.s3::s3read_using(FUN = read_csv,
                                                                                  bucket = ukfsr::s3_bucket(),
-                                                                                 object = "theme_1/t1_1_1/input/csv/Average_annual_growth_in_demand_for_key_commodity_groups_2013-22_and_2023-32.csv")
+                                                                                 object = "theme_1/input_data/t1_1_1/Average_annual_growth_in_demand_for_key_commodity_groups_2013-22_and_2023-32.csv")
 
 
 

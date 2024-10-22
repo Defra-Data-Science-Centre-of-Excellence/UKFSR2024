@@ -17,7 +17,7 @@ source(here("utils", "load-font.R"))
 # HHI export concentration -----------------------------------------------------
 export_shares <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
-                                        object = "theme_1/t1_3_4/input/csv/export_shares.csv")%>%
+                                        object = "theme_1/input_data/t1_3_4/export_shares.csv")%>%
   pivot_longer(cols=4:23,names_to="years",values_to = "value")%>%
   mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
   
@@ -66,7 +66,7 @@ save_csv(export_shares_global, "1.3.4a", "hhi export concentration")
 
 daily_chokepoint_transit_calls_and_trade_volume_estimates <- aws.s3::s3read_using(FUN = read_csv,
                                       bucket = ukfsr::s3_bucket(),
-                                      object = "theme_1/t1_3_4/input/csv/7day_moving_average_chokepoints.csv")%>%
+                                      object = "theme_1/input_data/t1_3_4/7day_moving_average_chokepoints.csv")%>%
   pivot_longer(2:4,names_to = "chokepoint",values_to="value")%>%
   mutate(date=as.Date(`Row Labels`))%>%
   filter(date>as.Date("2022-12-31"))%>%
@@ -81,7 +81,7 @@ daily_chokepoint_transit_calls_and_trade_volume_estimates_chart<-ggplot()+
   scale_colour_manual(values = af_colours("categorical",n=4)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "million tonnes") 
+       y = "Million tonnes") 
 
 save_graphic(daily_chokepoint_transit_calls_and_trade_volume_estimates_chart, "1.3.4c", "daily chokepoint transit trade volume")
 save_csv(daily_chokepoint_transit_calls_and_trade_volume_estimates, "1.3.4c", "daily chokepoint transit trade volume")

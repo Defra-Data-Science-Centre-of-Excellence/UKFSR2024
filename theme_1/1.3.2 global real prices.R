@@ -21,7 +21,7 @@ source(here("utils", "load-font.R"))
 
 exchange_rates_historical <- aws.s3::s3read_using(FUN = read_excel,
                                          bucket = ukfsr::s3_bucket(),
-                                         object = "theme_1/t1_3_2/input/csv/Exchange Rates Historical.xlsx")%>%
+                                         object = "theme_1/input_data/t1_3_2/Exchange Rates Historical.xlsx")%>%
   mutate(Date=as.Date(Date,"%d/%m/%Y"))
 
 
@@ -37,7 +37,7 @@ first_day<-exchange_rates_historical%>%
 
 com_historical_data_monthly <- aws.s3::s3read_using(FUN = read_csv,
                                                 bucket = ukfsr::s3_bucket(),
-                                                object = "theme_1/t1_3_2/input/csv/CMO-Historical-Data-Monthly.csv")%>%
+                                                object = "theme_1/input_data/t1_3_2/CMO-Historical-Data-Monthly.csv")%>%
   mutate(Year_tmp=substr(Year,1,4))%>%
   mutate(Month=substr(Year,6,7))%>%
   mutate(Date=as.Date(paste0("01-",Month,"-",Year),"%d-%m-%Y"))%>%
@@ -72,12 +72,12 @@ save_csv(egp_usd, "1.3.2c", "egp usd wheat prices")
 
 ppi <- aws.s3::s3read_using(FUN = read_excel,
                                                   bucket = ukfsr::s3_bucket(),
-                                                  object = "theme_1/t1_3_2/input/csv/PPI_2023_rebase.xlsx",skip=10)
+                                                  object = "theme_1/input_data/t1_3_2/PPI_2023_rebase.xlsx",skip=10)
 
 
 com_historical_data_monthly <- aws.s3::s3read_using(FUN = read_csv,
                                                     bucket = ukfsr::s3_bucket(),
-                                                    object = "theme_1/t1_3_2/input/csv/CMO-Historical-Data-Monthly.csv")%>%
+                                                    object = "theme_1/input_data/t1_3_2/CMO-Historical-Data-Monthly.csv")%>%
   mutate(Year_tmp=substr(Year,1,4))%>%
   mutate(Month=substr(Year,6,7))%>%
   mutate(Date=as.Date(paste0("01-",Month,"-",Year),"%d-%m-%Y"))%>%
@@ -85,7 +85,7 @@ com_historical_data_monthly <- aws.s3::s3read_using(FUN = read_csv,
 
 com_historical_data_2023 <- aws.s3::s3read_using(FUN = read_csv,
                                                     bucket = ukfsr::s3_bucket(),
-                                                    object = "theme_1/t1_3_2/input/csv/CMO-Historical-Data-Monthly.csv")%>%
+                                                    object = "theme_1/input_data/t1_3_2/CMO-Historical-Data-Monthly.csv")%>%
   mutate(Year=as.numeric(substr(Year,1,4)))%>%
   filter(Year==2023)%>%
   group_by(Year)%>%
@@ -151,3 +151,4 @@ deflated_cereals_chart <-deflated_cereals |>
 
 save_graphic(deflated_cereals_chart, "1.3.2a", "wb commodity prices for cereals")
 save_csv(deflated_cereals, "1.3.2a", "wb commodity prices for cereals")
+
