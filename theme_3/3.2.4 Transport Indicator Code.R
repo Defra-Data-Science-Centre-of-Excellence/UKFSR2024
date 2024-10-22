@@ -12,7 +12,7 @@ library(aws.s3)
 library(aws.ec2metadata)
 library(lubridate)
 
-
+source(here::here("utils", "load-font.R"))
 
 contents <- get_bucket_df("s3-ranch-054")
 
@@ -130,7 +130,7 @@ print(FSR_3_1_7a)
 
 # Create the plot
 FSR_3_1_7a_plot <- ggplot(FSR_3_1_7a, aes(x = Month, y = value, colour = variable, group = variable, label = variable)) +
-  theme_ukfsr() +
+  theme_ukfsr(base_family = "GDS Transport Website") +
   
   # Set scale_x_date with breaks every 6 months
   scale_x_date(date_breaks = "6 months", date_labels = "%b-%Y") +
