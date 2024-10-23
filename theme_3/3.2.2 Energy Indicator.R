@@ -17,6 +17,8 @@ contents <- get_bucket_df("s3-ranch-054")
 
 
 # Aggregate energy demand ------------------------------------------------------
+# DUKES table 1.1 aggregate energy balances https://www.gov.uk/government/statistics/energy-chapter-1-digest-of-united-kingdom-energy-statistics-dukes
+# the flat file csvs are more R friendly https://www.gov.uk/government/statistics/digest-of-uk-energy-statistics-dukes-2024
 
 FSR_3_1_5 <- aws.s3::s3read_using(FUN = readr::read_csv,
                           bucket = "s3-ranch-054",
@@ -48,6 +50,9 @@ save_graphic(FSR_3_1_5plot, '3.2.2a', ' Aggregate energy demand for agriculture 
 
 
 # Energy demand by type --------------------------------------------------------
+
+# DUKES table 1.1 aggregate energy balances https://www.gov.uk/government/statistics/energy-chapter-1-digest-of-united-kingdom-energy-statistics-dukes
+# the flat file csvs are more R friendly https://www.gov.uk/government/statistics/digest-of-uk-energy-statistics-dukes-2024
 
 FSR_3_1_5a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                 bucket = "s3-ranch-054",
@@ -93,9 +98,9 @@ save_graphic(dual_axis_plot_side_by_side, '3.2.2b', 'Energy demand by energy typ
   save_csv(combined_data, '3.2.2b', 'Energy demand by energy type in food/drink manufacturing and agriculture sectors')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------------
-  
-  # Support 2 - Energy demand by energy type in the food and drink manufacturing sector 
+# Price of fuels for non-domestic consumers ------------------------------------
+# Table 3.4.1 
+# https://www.gov.uk/government/statistical-data-sets/gas-and-electricity-prices-in-the-non-domestic-sector
  
 library(dplyr)
 library(tidyr)
