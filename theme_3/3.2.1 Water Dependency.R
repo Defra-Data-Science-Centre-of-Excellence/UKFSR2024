@@ -100,5 +100,16 @@ xmap <- ggplot(ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN"))) +
         legend.position = "inside", 
         legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
 
+# Alternate with region boundaries on top
+# xmap <- ggplot() +
+#   geom_sf(data = xsimple, aes(fill = camscdsq95), lwd = 0) +
+#   geom_sf(data = ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN")), aes(colour = NUTS118NM), colour = "black", alpha = 0.1, lwd = 0.5) +
+#   scale_fill_manual(values = af_colours(type = "categorical", n = 4)) +
+#   theme_void() +
+#   theme(text = element_text(family = "GDS Transport Website", size = 26),
+#         legend.title = element_blank(),
+#         legend.position = "inside", 
+#         legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
+
 
 save_graphic(xmap, "3.2.1c", "water resource availability super simplified")
