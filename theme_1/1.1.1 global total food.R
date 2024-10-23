@@ -95,9 +95,10 @@ food_supply_chart<-ggplot(food_supply)+
   scale_y_continuous(limits=c(0,4000))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing = unit(1, "cm"),
-        plot.margin=unit(c(0.2,1,0.2,0.2),"cm"))+
+        plot.margin=unit(c(0.4,1,0.4,0.4),"cm"),
+        panel.margin.x=unit(3, "lines"))+
   labs(x = NULL,
-       y = "kcals per capita per day")
+       y = "Kcals per capita per day")
 
 save_graphic(food_supply_chart, "1.1.1d", "global food supply")
 save_csv(food_supply, "1.1.1d", "global food supply")
@@ -148,6 +149,7 @@ global_biofuel_use<-global_biofuel_production_in%>%
 global_biofuel_production<-global_biofuel_production%>%
   left_join(global_biofuel_use,c("TIME_PERIOD"="TIME_PERIOD","Commodity"="Commodity"))%>%
   mutate(percentage=(OBS_VALUE.y/OBS_VALUE.x)*100)%>%
+  mutate(Commodity=if_else(Commodity=="Maize (corn)","Maize",Commodity))%>%
   filter(TIME_PERIOD<2025)
 
 global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
@@ -165,6 +167,11 @@ save_csv(global_biofuel_production, "1.1.1e", "global_biofuel_production")
 
 # Annual growth in demand for key products--------------------------------------
 
+neg<-function(x){
+  y=-1*x
+  return(y)
+}
+
 average_annual_growth_in_demand_for_key_commodity_groups <- aws.s3::s3read_using(FUN = read_csv,
                                                                                  bucket = ukfsr::s3_bucket(),
                                                                                  object = "theme_1/input_data/t1_1_1/Average_annual_growth_in_demand_for_key_commodity_groups_2013-22_and_2023-32.csv")
@@ -179,17 +186,25 @@ average_annual_growth_in_demand_for_key_commodity_groups <- average_annual_growt
   pivot_longer(3:4,values_to = "value",names_to = "growth_type")|>
   select(year,commodity,growth_type,value)
 
+average_annual_growth_in_demand_for_key_commodity_groups_total <- average_annual_growth_in_demand_for_key_commodity_groups |> 
+  group_by(year,commodity)%>%
+  summarise(value=sum(value,na.rm=TRUE))%>%
+  mutate(num="Total annual\npercentage growth rate")
+
 average_annual_growth_in_demand_for_key_commodity_groups_chart <- average_annual_growth_in_demand_for_key_commodity_groups |> 
   ggplot() +
-  geom_col(aes(x=year,y=value,fill=growth_type))+
-  facet_wrap(~commodity,scales="free")+
+  geom_col(data=average_annual_growth_in_demand_for_key_commodity_groups,aes(x=year,y=value/100,fill=growth_type))+
+  geom_point(data=average_annual_growth_in_demand_for_key_commodity_groups_total,aes(x=year,y=value/100,colour=num),size=6)+
+  facet_wrap(~commodity)+#,scales="free")+
   theme_ukfsr()+
-  scale_y_continuous(limits = c(0,2)) +
+  scale_y_continuous(labels=scales::percent,limits = c(neg(0.022),0.03)) +
   scale_fill_manual(values = af_colours("duo")) +
-  scale_color_manual(values = c("white","black"))+ 
+  scale_color_manual(values = c("#A285D1"))+
+  guides(fill=guide_legend(nrow=2, byrow=TRUE))+
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
+  theme(plot.margin=unit(c(0.4,1,0.4,1),"cm"))+
   labs(x = NULL,
-       y = "percent per annum")
+       y = "Annual growth rate")
 
 
 save_graphic(average_annual_growth_in_demand_for_key_commodity_groups_chart, "1.1.1f", "average annual growth in demand for key commodity groups")

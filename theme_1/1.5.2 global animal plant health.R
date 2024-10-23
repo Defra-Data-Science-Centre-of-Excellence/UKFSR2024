@@ -18,12 +18,11 @@ bananas <- aws.s3::s3read_using(FUN = read_csv,
   mutate(Area=as.factor(Area))%>%
   mutate(Item=as.factor(Item))
 
-date_1<-c(2010,2019)
+date_1<-tibble(date=c(2010,2019),height=150)
 
-bananas_chart <- bananas|>
-  ggplot() +
-  geom_line(aes(x = Year, y = Value/1E6, colour = Item), lwd = 1) +
-  geom_area(aes(x=c(2010,2019),y=150),fill="grey",alpha=0.6)+
+bananas_chart <- ggplot() +
+  geom_area(data=date_1,aes(x=date,y=height),fill="grey",alpha=0.6)+
+  geom_line(data=bananas,aes(x = Year, y = Value/1E6, colour = Item), lwd = 1) +
   scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
   scale_y_continuous(breaks =seq(25,150,25)) +
   scale_colour_manual(values = af_colours("duo"))+#,limits=c("South America","Africa","Asia","Northern America","Australia and New Zealand","Europe")) +

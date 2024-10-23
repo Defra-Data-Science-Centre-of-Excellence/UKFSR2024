@@ -71,18 +71,21 @@ total_production_chart<-ggplot()+
   theme_ukfsr(base_family = "GDS Transport Website") +
   # guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
   labs(x = NULL,
-       y = "Million Tonnes")
+       y = "Million tonnes")
 
 save_graphic(total_production_chart, "1.2.3a", "global fertiliser production")
 save_csv(total_production, "1.2.3a", "global fertiliser production")
 
 # Fertiliser prices ------------------------------------------------------------
 
-fertilizers_price_index <- aws.s3::s3read_using(FUN = read_csv,
+fertilizers_price_index <- aws.s3::s3read_using(FUN = read_excel,
                                                 bucket = ukfsr::s3_bucket(),
-                                                object = "theme_1/input_data/t1_2_3/FertiliserPrice.csv")%>%
-  mutate(date=as.Date(paste0(year,"/",month,"/",day)))%>%
-  select(-day,-month,-year)
+                                                object = "theme_1/input_data/t1_2_3/external-data.xls",
+                                                skip=3)%>%
+  select(Frequency,`Monthly...15`)%>%
+  mutate(month=substr(Frequency,1,4))%>%
+  mutate(year=substr(Frequency,6,7))%>%
+  mutate(date=dmy(paste0("01-",month,year)))
 
 fertilizers_price_index_chart<-ggplot()+
   geom_line(data=fertilizers_price_index,aes(x = date, y = index), colour = af_colours()[1]) +

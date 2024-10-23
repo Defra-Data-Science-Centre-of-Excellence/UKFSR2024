@@ -42,20 +42,21 @@ percentage<-psd_exports%>%
   rename(year=year2)%>%
   #rename(type=Type)%>%
   rename(commodity=Commodity)%>%
-  rename(per=Per)
+  rename(per=Per)%>%
+  mutate(commodity=case_when(commodity=="Meat, Swine"~"Pigmeat",commodity=="Meat, Beef and Veal"~"Beef and Veal",commodity=="Oilseed, Soybean"~"Soybean",commodity=="Rice, Milled"~"Rice",commodity=="Meat, Chicken"~"Chicken",TRUE~commodity))
 
 
 percentage_production_globally_traded_chart<-ggplot()+
-  geom_line(data=percentage,aes(x = year, y = per,group=commodity),color=af_colours("duo")[1]) +
+  geom_line(data=percentage,aes(x = year, y = per/100,group=commodity),color=af_colours("duo")[1]) +
   facet_wrap(~commodity,scales="free")+
-  scale_x_continuous(limits = c(2004,2024),breaks=c(seq(2004,2018,7),2024),labels=c("04/05","11/12","18/19","24/25"))+
-  scale_y_continuous(limits =c(0,50))+
+  scale_x_continuous(limits = c(2004,2024),breaks=seq(2004,2024,10),labels=c("04/05","14/15","24/25"))+
+  scale_y_continuous(limits = c(0,0.5),labels=scales::percent)+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing = unit(1, "cm"),
         plot.margin=unit(c(0.2,1,0.2,0.2),"cm"))+
   guides(color=guide_legend(nrow=3,byrow=TRUE))+
   labs(x = NULL,
-       y = "percent")
+       y = "")
 
 save_graphic(percentage_production_globally_traded_chart, "1.3.3a", "percentage production globally traded")
 save_csv(percentage, "1.3.3a", "percentage production globally traded")
