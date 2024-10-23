@@ -18,7 +18,7 @@ gms <- s3read_using(FUN = read_csv,
                     bucket = ukfsr::s3_bucket(),
                     object = "theme_3/input_data/grocery_market_share.csv")
 
-# Year comparison 2021-2023-----------------------------------------------------
+# NOT USED Year comparison 2021-2023-----------------------------------------------------
 # Poss could switch to 2024 at the last minute if we can get nearly a whole year
 # of data
 
@@ -43,10 +43,10 @@ comp_barchart <- gms |> group_by(year, company) |>
   theme(legend.position = "inside", legend.position.inside = c(0.8, 0.15))
 
 
-save_graphic(comp_barchart, "3.4.1a", "grocery market share comparison")
+# save_graphic(comp_barchart, "3.4.1a", "grocery market share comparison")
 
 
-# Alternate showing the latest data---------------------------------------------
+# NOT USED Alternate showing the latest data---------------------------------------------
 
 barchart <- gms |> 
   filter(date == max(date)) |> 
@@ -60,7 +60,7 @@ barchart <- gms |>
 
 # save_graphic(barchart, "3.1.10", "grocery market share latest")
 
-# Facet chart -------------------------------------------------------------------
+# USED Facet chart -------------------------------------------------------------------
 
 
 library(gghighlight)
@@ -94,3 +94,4 @@ facet_cht <- gms |>
   theme_ukfsr() + theme(legend.position = "none")
 
 save_graphic(facet_cht, "3.4.1a", "grocery market share time series")
+# csv not saved because Im not sure we should be disseminating Kantar data
