@@ -97,6 +97,7 @@ FSR_3_1_8b <- FSR_3_1_8b %>%
 
 FSR_3_1_8b <- FSR_3_1_8b %>%
   group_by(Year) %>%
+  filter(Food != "Food, feed & drink") |> 
   mutate(
     # Get the order of Food based on Value
     Food_order = if_else(Food == "Food, feed & drink",

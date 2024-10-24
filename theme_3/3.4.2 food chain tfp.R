@@ -17,10 +17,10 @@ tfp <- aws.s3::s3read_using(FUN = read_csv,
 
 sector_chart <- tfp |> 
   filter(!Sector %in% c("Food chain", "Wider economy")) |> 
-  mutate(Sector = factor(Sector, levels = c("Manufacturing", "Wholesale", "Retail", "Catering"))) |> 
+  mutate(Sector = factor(Sector, levels = c("Agriculture", "Manufacturing", "Wholesale", "Retail", "Catering"))) |> 
   ggplot() +
   geom_line(aes(x = Year, y = Productivity, colour = Sector)) +
-  scale_colour_manual(values = af_colours(n = 4)) +
+  scale_colour_manual(values = af_colours(n = 5)) +
   labs(x = NULL, y = "index (2000 = 100)") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
