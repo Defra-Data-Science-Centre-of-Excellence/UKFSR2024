@@ -89,6 +89,7 @@ facet_cht <- gms |>
   ggplot() +
   geom_line(aes(x = date, y = value, colour = company), colour = af_colours()[1]) +
   gghighlight(value >= 0,use_direct_label = FALSE) +
+  scale_y_continuous(labels = scales::label_number(suffix = "%")) +
   facet_wrap(vars(company)) +
   labs(x = NULL, y = NULL) +
   theme_ukfsr() + theme(legend.position = "none")

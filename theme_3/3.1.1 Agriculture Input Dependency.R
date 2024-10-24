@@ -1,13 +1,13 @@
 #devtools::install_github("FoodchainStats/ukfsr")
 
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('lubridate')
-library('zoo')
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(lubridate)
+library(zoo)
 
 source(here::here("utils", "load-font.R"))
 
@@ -34,13 +34,14 @@ FSR_3_1_1 <- FSR_3_1_1 %>%
 
 FSR_3_1_1plot <- ggplot(FSR_3_1_1, aes(x=Year, y=value, group=variable, color = 'variable')) +
   geom_line() +
-  facet_wrap( ~ variable) +
+  scale_x_date(breaks=seq(as.Date("2005-01-01"),Sys.Date()-lubridate::years(1),by = "5 year"),date_labels = "%Y") +
+  scale_y_continuous(labels = scales::label_number(prefix = "£", suffix = "bn", scale = 0.001)) +
   scale_colour_manual(values = af_colours(),
                       labels = c("variable" = NULL)) + 
+  facet_wrap( ~ variable) +
   #guides(fill = guide_legend(byrow = TRUE)) +
   labs(x = NULL,
-       y = "£ Million") +
-  scale_x_date(breaks=seq(as.Date("2005-01-01"),Sys.Date()-lubridate::years(1),by = "5 year"),date_labels = "%Y") +
+       y = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website",base_size = 12) +
   theme(plot.margin = margin(5,50,5,5,unit = "pt"),
         legend.position = "none")
@@ -68,11 +69,12 @@ FSR_3_1_1a <- FSR_3_1_1a %>%
 
 FSR_3_1_1aplot <- ggplot(FSR_3_1_1a, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
+  scale_x_date(breaks=seq(as.Date("1990-01-01"),Sys.Date()-lubridate::years(1),by = "5 year"),date_labels = "%Y") +
+  scale_y_continuous(labels = scales::label_comma()) +
   scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
   labs(x = NULL,
        y = "Thousand tonnes") +
-  scale_x_date(breaks=seq(as.Date("1990-01-01"),Sys.Date()-lubridate::years(1),by = "5 year"),date_labels = "%Y") +
   #scale_x_date(date_breaks = "12 months", date_labels = "%Y") +
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(plot.margin = margin(5,50,5,5,unit = "pt"))
@@ -97,7 +99,7 @@ soil_balance <- soil_balance |>
 nue_chart <- soil_balance |> ggplot() +
   geom_line(aes(x = year, y = nue), colour = af_colours(n=1)) +
   scale_y_continuous(limits = c(0,1), labels = scales::label_percent()) +
-  labs(x= NULL, y = "percentage") +
+  labs(x= NULL, y = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
 save_graphic(nue_chart, "3.1.1c", "nitrogen use efficiency england final")
@@ -204,8 +206,8 @@ feed <- aws.s3::s3read_using(FUN = readr::read_csv,
 feed_chart <- ggplot(feed) +
   geom_line(aes(x = year, y = value, colour = Type)) +
   scale_colour_manual(values = af_colours(type = "categorical", n = 4)) +
-  scale_y_continuous(labels = scales::label_comma()) +
-  labs(x = NULL, y = "thousand tonnes") +
+  scale_y_continuous(labels = scales::label_comma(scale = 0.001)) +
+  labs(x = NULL, y = "million tonnes") +
   guides(colour = guide_legend(nrow = 2)) + 
   theme_ukfsr(base_family = "GDS Transport Website")
 

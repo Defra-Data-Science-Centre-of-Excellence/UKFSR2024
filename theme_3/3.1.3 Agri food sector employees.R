@@ -1,12 +1,12 @@
 #devtools::install_github("FoodchainStats/ukfsr")
 
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('lubridate')
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(lubridate)
 
 source(here::here("utils", "load-font.R"))
 
@@ -22,6 +22,8 @@ FSR_3_1_4 <- FSR_3_1_4 %>%
 
 FSR_3_1_4_plot <- ggplot(FSR_3_1_4, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
+  scale_x_date(date_breaks = "4 years", date_labels = "%Y") +
+  scale_y_continuous(labels = scales::label_comma()) +
   labs(x = NULL,
        y = "Thousand people") +
   scale_colour_manual(values = af_colours()) + 
@@ -31,8 +33,7 @@ FSR_3_1_4_plot <- ggplot(FSR_3_1_4, aes(x=Year, y=value, colour=variable, group=
     legend.position = "bottom", 
     legend.justification = c(0,0)) +
   guides(colour=guide_legend(override.aes=list(size=1))) +
-  theme(legend.direction = "vertical", legend.position = "bottom", legend.box = "vertical", plot.margin = margin(0,30,0,0, unit = "pt")) +
-  scale_x_date(date_breaks = "4 years", date_labels = "%Y") 
+  theme(legend.direction = "vertical", legend.position = "bottom", legend.box = "vertical", plot.margin = margin(0,30,0,0, unit = "pt")) 
 
 FSR_3_1_4_plot
 
