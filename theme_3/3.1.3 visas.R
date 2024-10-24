@@ -1,10 +1,10 @@
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('lubridate')
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(lubridate)
 
 af_colours_1 <- c(
   "#12436D" # Dark blue
@@ -22,6 +22,7 @@ chart <-
   ggplot(data=FSR_visas) +
   geom_col(aes(x = Year, y = `Seasonal worker visas issued`), fill = af_colours_1) +
   scale_y_continuous(labels = marks_sci)+
+  labs(x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
 print(chart)

@@ -1,13 +1,13 @@
 #devtools::install_github("FoodchainStats/ukfsr")
 
 
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('lubridate')
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(lubridate)
 
 source(here::here("utils", "load-font.R"))
 
@@ -30,7 +30,7 @@ FSR_3_1_3a <- FSR_3_1_3a %>%
 # Plot the bar chart
 FSR_3_1_3a_plot <- ggplot(FSR_3_1_3a, aes(x = Region, y = Volume / 1e3, fill = Type)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = afcolours::af_colours("duo"), labels = c("spray irrigation - storage", "spray irrigation")) +
+  scale_fill_manual(values = afcolours::af_colours("duo"), labels = c("Spray irrigation - storage", "Spray irrigation")) +
   labs(y = expression(Volume~(millions~m^3)),
        x = NULL,
        fill = "Type") +
@@ -99,6 +99,17 @@ xmap <- ggplot(ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN"))) +
         legend.title = element_blank(),
         legend.position = "inside", 
         legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
+
+# Alternate with region boundaries on top
+# xmap <- ggplot() +
+#   geom_sf(data = xsimple, aes(fill = camscdsq95), lwd = 0) +
+#   geom_sf(data = ukmap |> filter(! NUTS118CD %in% c("UKL", "UKM", "UKN")), aes(colour = NUTS118NM), colour = "black", alpha = 0.1, lwd = 0.5) +
+#   scale_fill_manual(values = af_colours(type = "categorical", n = 4)) +
+#   theme_void() +
+#   theme(text = element_text(family = "GDS Transport Website", size = 26),
+#         legend.title = element_blank(),
+#         legend.position = "inside", 
+#         legend.position.inside = c(1.1, 0.75), legend.key.spacing = unit(x = 3, units = "mm"))
 
 
 save_graphic(xmap, "3.2.1c", "water resource availability super simplified")

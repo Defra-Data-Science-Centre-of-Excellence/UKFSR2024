@@ -1,15 +1,14 @@
-library('ukfsr')
-library('afcolours')
-library('ggplot2')
-library('dplyr')
-library('tidyr')
-library('aws.s3')
-library('lubridate')
+library(ukfsr)
+library(afcolours)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(aws.s3)
+library(lubridate)
 library(forcats)
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
 
 FSR_3_1_8 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
@@ -29,11 +28,12 @@ FSR_3_1_8$Port <- factor(FSR_3_1_8$Port,
 # Create the plot
 FSR_3_1_8_plot <- ggplot(FSR_3_1_8, aes(x = Port, y = Value, fill = Year)) +
   geom_bar(stat = "identity", position = "dodge") +
-  geom_text(aes(label = round(Value, 1)), 
-            position = position_dodge(width = 0.9),  # Use position_dodge here
-            size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
-  labs(y = "% of imports", x = NULL, fill = "Year") +
+  # geom_text(aes(label = round(Value, 1)), 
+  #           position = position_dodge(width = 0.9),  # Use position_dodge here
+  #           size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
+  labs(y = "percent of FFD imports", x = NULL, fill = "Year") +
   scale_fill_manual(values = af_colours('duo')) +
+  scale_y_continuous(labels = scales::label_number(suffix = "%")) +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(legend.position = "bottom", legend.title = element_blank())
@@ -65,10 +65,11 @@ FSR_3_1_8a <- FSR_3_1_8a %>%
 # Create the plot
 FSR_3_1_8a_plot <- ggplot(FSR_3_1_8a, aes(x = Food, y = Value, fill = Year)) +
   geom_bar(stat = "identity", position = "dodge") +
-  geom_text(aes(label = round(Value, 1)), 
-            position = position_dodge(width = 0.9),  # Use position_dodge here
-            size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
-  labs(y = "% of imports", x = NULL, fill = "Year") +
+  # geom_text(aes(label = round(Value, 1)), 
+  #           position = position_dodge(width = 0.9),  # Use position_dodge here
+  #           size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
+  scale_y_continuous(labels = scales::label_number(suffix = "%")) +
+  labs(y = "percent of FFD imports", x = NULL, fill = "Year") +
   scale_fill_manual(values = af_colours('duo')) +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
@@ -96,6 +97,7 @@ FSR_3_1_8b <- FSR_3_1_8b %>%
 
 FSR_3_1_8b <- FSR_3_1_8b %>%
   group_by(Year) %>%
+  filter(Food != "Food, feed & drink") |> 
   mutate(
     # Get the order of Food based on Value
     Food_order = if_else(Food == "Food, feed & drink",
@@ -109,11 +111,12 @@ FSR_3_1_8b <- FSR_3_1_8b %>%
 # Create the plot
 FSR_3_1_8b_plot <- ggplot(FSR_3_1_8b, aes(x = Food, y = Value, fill = Year)) +
   geom_bar(stat = "identity", position = "dodge") +
-  geom_text(aes(label = round(Value, 1)), 
-            position = position_dodge(width = 0.9),  # Use position_dodge here
-            size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
-  labs(y = "% of import", x = NULL, fill = "Year") +
+  # geom_text(aes(label = round(Value, 1)), 
+  #           position = position_dodge(width = 0.9),  # Use position_dodge here
+  #           size = 7, color = "black", vjust = 0.6, hjust = -0.2) +  
+  scale_y_continuous(labels = scales::label_number(suffix = "%")) +
   scale_fill_manual(values = af_colours('duo')) +
+  labs(y = "percent of FFD imports", x = NULL, fill = "Year") +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(legend.position = "bottom", legend.title = element_blank())
