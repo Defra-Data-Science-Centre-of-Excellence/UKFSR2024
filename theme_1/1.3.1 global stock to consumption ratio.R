@@ -120,7 +120,7 @@ scr_chart <- scr_out |>
         axis.ticks = element_line() ,
         axis.ticks.length = unit(.1, "cm"),
         axis.line.x = element_line(),
-        plot.margin=unit(c(0.4,0.5,0.4,1),"cm"))+
+        plot.margin=unit(c(0.4,1,0.4,0.5),"cm"))+
   labs(x = NULL,
        y = "")
 
