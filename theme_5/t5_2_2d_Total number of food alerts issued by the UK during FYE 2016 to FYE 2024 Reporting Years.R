@@ -24,39 +24,37 @@ t5_2_2d <- aws.s3::s3read_using(FUN = read_csv,
 
 t5_2_2d$Alert <- factor(t5_2_2d$Alert, levels = c("AA","PRIN","FAFA"))
 
-
 t5_2_2d_long <- t5_2_2d %>% 
   group_by(Alert) %>%
-  pivot_longer(cols=c("FYE 2016","FYE 2017","FYE 2018","FYE 2019","FYE 2020","FYE 2021","FYE 2022","FYE 2023","FYE 2024"),
+  pivot_longer(cols=c("2015/16","2016/17","2017/18","2018/19","2019/20","2020/21","2021/22","2022/23","2023/24"),
                names_to="Year",
                values_to="Value")
 
-t5_2_2d_long$Year <- factor(t5_2_2d_long$Year, levels = c("FYE 2016","FYE 2017","FYE 2018","FYE 2019","FYE 2020","FYE 2021",
-                                                          "FYE 2022","FYE 2023","FYE 2024"))
+t5_2_2d_long$Year <- factor(t5_2_2d_long$Year, levels = c("2015/16","2016/17","2017/18","2018/19","2019/20","2020/21","2021/22",
+                                                          "2022/23","2023/24"))
 
-level_order <- c("FYE 2016","FYE 2017","FYE 2018","FYE 2019","FYE 2020","FYE 2021",
-                 "FYE 2022","FYE 2023","FYE 2024")
+level_order <- c("2015/16","2016/17","2017/18","2018/19",
+                 "2019/20","2020/21","2021/22","2022/23",
+                 "2023/24")
 
 af_categorical_colours <- afcolours::af_colours("categorical", n = 3)
 names(af_categorical_colours)=levels(t5_2_2d_long$Alert)
-
+ 
   t5_2_2d_plot <- ggplot(t5_2_2d_long,aes(x=Year, y=Value, label = round(Value,0), group=Alert)) +
-  geom_bar(stat="identity", aes(fill = Alert)) +
+  geom_bar(aes(fill = Alert), stat = "identity", position = "dodge") +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   scale_fill_manual(values = af_categorical_colours) +
   labs(y = "Total number of food alerts") +
-  theme(axis.title.x = element_blank()) +
-  theme(axis.text.x = element_text(size=20)) +
+  theme(axis.text.x = element_text(size=22)) +
   theme(legend.position = "bottom", legend.title = element_blank()) +
   theme(legend.text = element_text(face = "italic")) +
   theme(axis.title.x = element_blank()) +
-  geom_text(stat = "stratum", aes(stratum = Alert), color="white", fontface = "bold", size=6, vjust = -0.8,
-            nudge_y = c(-2, 0, -1.5, -2, -2, 0, 0, 0, -1))
+  geom_text(aes(label=Value), position=position_dodge(width=0.9), fontface = "bold", size=8, vjust = -0.8) +
+  coord_cartesian(clip = "off")
   
 t5_2_2d_plot
 
+save_graphic(t5_2_2d_plot, "5.2.2d", "total number of food alerts issued by the UK during FYE 2016 to FYE 2024 reporting years")
 
-save_graphic(t5_2_2d_plot, "5.2.2d", "Total number of food alerts issued by the UK during FYE 2016 to FYE 2024 Reporting Years")
-
-save_csv(t5_2_2d, "5.2.2d", "Total number of food alerts issued by the UK during FYE 2016 to FYE 2024 Reporting Years")
+save_csv(t5_2_2d, "5.2.2d", "total number of food alerts issued by the UK during FYE 2016 to FYE 2024 reporting years")
 
