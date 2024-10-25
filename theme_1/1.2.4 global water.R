@@ -159,7 +159,8 @@ world_map_water_stress<-world_data%>%
   mutate(key=if_else(value<25,"No stress",if_else(value<50,"Low",if_else(value<75,"Medium",if_else(value<100,"High","Critical")))))%>%
   #mutate(key=if_else(is.na(value),"no data",key))%>%
   filter(!is.na(key))%>%
-  mutate(key=ordered(key,levels=c("No stress","Low","Medium","High","Critical")))
+  mutate(key=ordered(key,levels=c("No stress","Low (<50%)","Medium (50-75%)","High (75-100%)","Critical (>100%)")))
+
 
 world_map_water_stress_chart<-
   ggplot()+
