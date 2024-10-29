@@ -68,9 +68,9 @@ FSR_4_2_1b <- FSR_4_2_1b %>%
   arrange(desc(Region_Code)) %>%
   mutate(Region = factor(Region, levels = Region))
 
-FSR_4_2_1b_plot <- ggplot(FSR_4_1_6a, aes(x= Region, y=Supermarket_count)) +
+FSR_4_2_1b_plot <- ggplot(FSR_4_2_1b, aes(x= Region, y=Supermarket_count)) +
   geom_bar(stat="identity", show.legend = FALSE, fill = af_colours(n=1)) +
-  geom_text(aes(label = Supermarket_count), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE) +  
+  geom_text(aes(label = sprintf("%.2f", Supermarket_count)), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE) +  
   scale_y_continuous(limits = c(0,4), breaks=seq(0,4,1)) +
   theme_ukfsr()+
   coord_flip() +
