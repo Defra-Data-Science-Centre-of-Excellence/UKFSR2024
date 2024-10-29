@@ -9,6 +9,19 @@ library(here)
 
 source(here::here("utils", "load-font.R"))
 
+# NOT USED UK FBS farm income data ---------------------------------------------
+# data is from table 3.1b in AUK
+
+uk_fbs <- aws.s3::s3read_using(FUN = read_csv,
+                                    bucket = ukfsr::s3_bucket(),
+                                    object = "theme_3/input_data/uk_farm_income.csv")
+
+uk_fbs |> 
+  # filter(farm_type == "Dairy") |> 
+  ggplot() +
+  geom_line(aes(x = Year, group = farm_type, y = value)) +
+  facet_wrap(vars(farm_type))
+  
 # FBS net margin data ----------------------------------------------------------
   net_margins <- aws.s3::s3read_using(FUN = read_csv,
                                        bucket = ukfsr::s3_bucket(),
