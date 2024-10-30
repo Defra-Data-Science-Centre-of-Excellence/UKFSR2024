@@ -1,4 +1,5 @@
 ### Data
+library(fastmap)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -12,6 +13,7 @@ library(readxl)
 library(rworldmap)
 library(tmap)
 library(sf)
+library(ggpattern)
 
 world_data<-map_data("world")
 
@@ -94,16 +96,16 @@ agricultural_water_withdrawal_percentage<-rbind(agricultural_water_withdrawal_pe
 
 world_map_agricultural_water_withdrawal_percentage<-world_data%>%
   left_join(agricultural_water_withdrawal_percentage,by=c("region"="country"))%>%
-  mutate(key=if_else(value<10,"less than 10%",if_else(value<25,"10-25%",if_else(value<50,"25-50%",if_else(value<100,"50-100%",">100%")))))%>%
-  mutate(key=if_else(is.na(key),"no data",key))%>%
-  mutate(key=ordered(key,levels=c("no data","less than 10%","10-25%","25-50%","50-100%",">100%")))%>%
+  mutate(key=if_else(value<10,"Less than 10%",if_else(value<25,"10-25%",if_else(value<50,"25-50%",if_else(value<100,"50-100%",">100%")))))%>%
+  mutate(key=if_else(is.na(key),"No data",key))%>%
+  mutate(key=ordered(key,levels=c("No data","Less than 10%","10-25%","25-50%","50-100%",">100%")))%>%
   filter(year==2021)
 
 agricultural_water_withdrawal_percentage_chart<-
   ggplot()+
   geom_polygon(data = world_data |> filter(region == "Greenland", is.na(subregion)), aes(x = long, y = lat), fill = "grey90") +
   geom_polygon(data = world_map_agricultural_water_withdrawal_percentage,aes(x=long,y=lat,group=group,fill=key))+
-  scale_fill_manual(values = af_colours("categorical",n=5)) +
+  scale_fill_manual(values = c("#28A197","#12436D","#A285D1","#801650","#F46A25")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL, y = NULL) +
   theme(axis.text.x = element_blank(),
@@ -114,6 +116,33 @@ agricultural_water_withdrawal_percentage_chart<-
 
 save_graphic(agricultural_water_withdrawal_percentage_chart, "1.2.4b", "agricultural water withdrawal percentage")
 save_csv(agricultural_water_withdrawal_percentage, "1.2.4b", "agricultural water withdrawal percentage")
+
+
+
+
+# Area equipped for irrigation: actually irrigated-------------------------------------------------
+
+area_equipped_for_irrigation_actually_irrigated<-aquastat_regions%>%
+  filter(Variable=="Area equipped for irrigation: actually irrigated")%>%
+  rename(country=Country)%>%
+  rename(year=Year)%>%
+  rename(value=Value)%>%
+  select(year,country,value)
+
+area_equipped_for_irrigation_actually_irrigated_chart<-ggplot()+
+  geom_line(data=area_equipped_for_irrigation_actually_irrigated,aes(x = year, y = value/1e3, colour = country)) +
+  geom_point(data=area_equipped_for_irrigation_actually_irrigated,aes(x = year, y = value/1e3, colour = country,fill=country,shape=country),size=4) +
+  scale_colour_manual(values = c(af_colours("categorical",n=6),"#F46A25")) +
+  scale_fill_manual(values = c(af_colours("categorical",n=6),"#F46A25")) +
+  scale_shape_manual(values=c(25,NA,NA,NA,NA,NA,25))+
+  guides(colour=guide_legend(nrow=4,byrow=TRUE))+
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  labs(x = NULL,
+       y = "")
+
+save_graphic(area_equipped_for_irrigation_actually_irrigated_chart, "1.2.4c", "area equipped for irrigation: actually irrigated")
+save_csv(area_equipped_for_irrigation_actually_irrigated, "1.2.4c", "area equipped for irrigation: actually irrigated")
+
 
 # Water stress -----------------------------------------------------------------
 
@@ -154,14 +183,17 @@ water_stress<-water_stress%>%
 
 world_map_water_stress<-world_data%>%
   left_join(water_stress,by=c("region"="country"))%>%
-  mutate(key=if_else(value<25,"no stress",if_else(value<50,"low",if_else(value<75,"medium",if_else(value<100,"high","critical")))))%>%
-  mutate(key=if_else(is.na(value),"no data",key))%>%
-  mutate(key=ordered(key,levels=c("no data","no stress","low","medium","high","critical")))
+  mutate(key=if_else(value<25,"No stress",if_else(value<50,"Low (<50%)",if_else(value<75,"Medium (50-75%)",if_else(value<100,"High (75-100%)","Critical (>100%)")))))%>%
+  #mutate(key=if_else(is.na(value),"no data",key))%>%
+  filter(!is.na(key))%>%
+  mutate(key=ordered(key,levels=c("No stress","Low (<50%)","Medium (50-75%)","High (75-100%)","Critical (>100%)")))
+
 
 world_map_water_stress_chart<-
-  ggplot()+ 
+  ggplot()+
+  geom_polygon(data = world_data |> filter(region == "Greenland", is.na(subregion)), aes(x = long, y = lat), fill = "grey90") +
   geom_polygon(data = world_map_water_stress |> filter(region != "Antarctica"),aes(x=long,y=lat,group=group,fill=key))+
-  scale_fill_manual(values = af_colours("categorical",n=6)) +
+  scale_fill_manual(values = c("#28A197","#12436D","#A285D1","#801650","#F46A25")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL, y = NULL) +
   theme(axis.text.x = element_blank(),
@@ -170,7 +202,7 @@ world_map_water_stress_chart<-
         axis.ticks.x = element_blank(), 
         panel.grid.major.y = element_blank())
 
-save_graphic(world_map_water_stress_chart, "1.2.4c", "water stress")
-save_csv(water_stress, "1.2.4c", "water stress")
+save_graphic(world_map_water_stress_chart, "1.2.4d", "water stress")
+save_csv(water_stress, "1.2.4d", "water stress")
 
 

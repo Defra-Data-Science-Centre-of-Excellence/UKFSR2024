@@ -83,16 +83,19 @@ fertilizers_price_index <- aws.s3::s3read_using(FUN = read_excel,
                                                 object = "theme_1/input_data/t1_2_3/external-data.xls",
                                                 skip=3)%>%
   select(Frequency,`Monthly...15`)%>%
-  mutate(month=substr(Frequency,1,4))%>%
-  mutate(year=substr(Frequency,6,7))%>%
-  mutate(date=dmy(paste0("01-",month,year)))
+  mutate(year=substr(Frequency,1,4))%>%
+  mutate(month=substr(Frequency,6,7))%>%
+  mutate(date=dmy(paste0("01-",str_pad(month, width=2, pad="0"),"-",year)))%>%
+  filter(date>dmy("01-09-2004"))%>%
+  rename(fertilizers_price_index=`Monthly...15`)%>%
+  select(date,fertilizers_price_index)
 
 fertilizers_price_index_chart<-ggplot()+
-  geom_line(data=fertilizers_price_index,aes(x = date, y = index), colour = af_colours()[1]) +
+  geom_line(data=fertilizers_price_index,aes(x = date, y = fertilizers_price_index), colour = af_colours()[1]) +
   scale_colour_manual(values = af_colours()[1]) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "index")
+       y = "Index=2016")
 
 
 save_graphic(fertilizers_price_index_chart, "1.2.3b", "fertilizers price index")
