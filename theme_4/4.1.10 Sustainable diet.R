@@ -65,23 +65,23 @@ save_graphic(FSR_4_1_10a_plot, '4.1.10a', ' Area of deforestation associated wit
   
 # Predicted regional species loss associated with UK consumption of food commodities annually, 2005-2021 
   
-FSR_4_1_10b <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_4_3_3d <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
                                      object = "theme_4/input_data/Speciesloss.csv")
 
-FSR_4_1_10b_plot <-  ggplot(FSR_4_1_10b, aes(x = Year, y = `Species loss`)) +
+FSR_4_3_3d_plot <-  ggplot(FSR_4_3_3d, aes(x = Year, y = `Species loss`)) +
   geom_line(color = af_colours()[1]) +
-  scale_x_continuous(breaks = seq(min(FSR_4_1_10b$Year), max(FSR_4_1_10b$Year), by = 2)) +
+  scale_x_continuous(breaks = seq(min(FSR_4_3_3d$Year), max(FSR_4_3_3d$Year), by = 2)) +
   scale_y_continuous(breaks = seq(from = 0, to = 100, by = 20), limits = c(0, 100)) +
   labs(
     x = NULL,
-    y = "No. of species") +
+    y = "Predicted regional species loss (number)") +
   theme_ukfsr(base_family = "GDS Transport Website") 
 
-FSR_4_1_10b_plot
+FSR_4_3_3d_plot
 
-save_graphic(FSR_4_1_10b_plot, '4.1.10b', 'Predicted regional species loss associated with UK consumption of food commodities annually') + 
-  save_csv(FSR_4_1_10b, '4.1.10b', 'Predicted regional species loss associated with UK consumption of food commodities annually')
+save_graphic(FSR_4_3_3d_plot, '4.3.3d', 'Predicted regional species loss associated with UK consumption of food commodities annually') + 
+  save_csv(FSR_4_3_3d, '4.3.3d', 'Predicted regional species loss associated with UK consumption of food commodities annually')
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
   
