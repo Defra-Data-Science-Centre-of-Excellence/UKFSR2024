@@ -77,22 +77,24 @@ save_graphic(FSR_4_1_6_plot, '4.1.6','Average Distance Travelled by English Regi
   
 
  ## Support 1 : Sum of Supermarkets per 10,000 People by Region
-  
-FSR_4_1_6a <- aws.s3::s3read_using(FUN = readr::read_csv,
+
+FSR_4_2_1b <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
-                                     object = "theme_4/input_data/4.1.3 Access to supermarket ONS.csv")
+                                     object = "theme_4/input_data/4_2_1b_access_to_supermarket.csv")
 
-colnames(FSR_4_1_6a) <- c("Region", "Supermarket_count","Region_Code")
+colnames(FSR_4_2_1b) <- c("Region", "Supermarket_count","Region_Code")
 
 
-FSR_4_1_6a <- FSR_4_1_6a %>%
+FSR_4_2_1b <- FSR_4_2_1b %>%
   arrange(desc(Region_Code)) %>%
   mutate(Region = factor(Region, levels = Region))
 
-FSR_4_1_6a_plot <- ggplot(FSR_4_1_6a, aes(x= Region, y=Supermarket_count)) +
-  geom_bar(stat="identity", show.legend = FALSE , fill = af_colours_1)+
-  geom_text(aes(label = Supermarket_count), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE) +  
-  scale_y_continuous(limits = c(0,200), breaks=seq(0,200,25)) +
+
+FSR_4_2_1b_plot <- ggplot(FSR_4_2_1b, aes(x= Region, y=Supermarket_count)) +
+  geom_bar(stat="identity", show.legend = FALSE, fill =af_colours_1)) +
+  geom_text(aes(label = sprintf("%.2f", Supermarket_count)), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE) +  
+  scale_y_continuous(limits = c(0,4), breaks=seq(0,4,1)) +
+
   theme_ukfsr()+
   coord_flip() +
   theme(axis.title.x=element_text(size=20)) +
@@ -105,13 +107,13 @@ FSR_4_1_6a_plot <- ggplot(FSR_4_1_6a, aes(x= Region, y=Supermarket_count)) +
   theme( # remove the vertical grid lines
     panel.grid.major.y = element_blank() ,
     # explicitly set the horizontal lines (or they will disappear too)
-    panel.grid.major.x = element_line( size=.1, color="black" ) 
+    panel.grid.major.x = element_line( linewidth=.1, color="black" ) 
   ) 
 
 
-FSR_4_1_6a_plot
+FSR_4_2_1b_plot
 
 
-save_graphic(FSR_4_1_6a_plot, '4.1.6a','Sum of Supermarkets per 10,000 People by Region') + 
-  save_csv(FSR_4_1_6a, '4.1.6a','Sum of Supermarkets per 10,000 People by Region')
+save_graphic(FSR_4_2_1b_plot, '4.2.1b','Sum of Supermarkets per 10,000 People by Region') + 
+  save_csv(FSR_4_2_1b, '4.2.1b','Sum of Supermarkets per 10,000 People by Region')
 
