@@ -34,16 +34,16 @@ source(here::here("utils", "load-font.R"))
 
 F4_1_2 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                  bucket = "s3-ranch-054",
-                                 object = "theme_4/input_data/4_1_2a_ave_spend_food_non_alcohol_drinks_low_income_all_households_middle_income.csv")
+                                 object = "theme_4/input_data/4_1_2a_ave_spend_food_non_alcohol_drinks_by_income.csv")
 
 
 FSR_4_1_2 <- F4_1_2 %>% 
-  gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`,`percentage spend on food and non-alcoholic drinks for middle 20% by income`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`)  %>%
-  #filter(Year>2011) %>% 
+  gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`,`percentage spend on food and non-alcoholic drinks for middle 20% by income`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`,`percentage spend on food and non-alcoholic drinks for highest 20% by income`)  %>%
   mutate(key = case_when(key=="percentage spend on food and non-alcoholic drinks for all households"~"all households",
                          key=="percentage spend on food and non-alcoholic drinks for middle 20% by income"~"middle 20% by income",
-                         key=="percentage spend on food and non-alcoholic drinks for lowest 20% by income"~"lowest 20% by income")) %>% 
-  mutate(key = factor(key, levels = c("lowest 20% by income","middle 20% by income","all households"), ordered = TRUE))
+                         key=="percentage spend on food and non-alcoholic drinks for lowest 20% by income"~"lowest 20% by income",
+                         key=="percentage spend on food and non-alcoholic drinks for highest 20% by income"~"highest 20% by income")) %>% 
+  mutate(key = factor(key, levels = c("lowest 20% by income","middle 20% by income","all households","highest 20% by income"), ordered = TRUE))
 
   
 
@@ -63,8 +63,8 @@ FSR_4_1_2plot <- ggplot(FSR_4_1_2) +
 
 FSR_4_1_2plot
 
-save_graphic(FSR_4_1_2plot, '4.1.2','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK') + 
-  save_csv(FSR_4_1_2, '4.1.2','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK')
+save_graphic(FSR_4_1_2plot, '4.1.2','Average share of spend on food and non-alcoholic drinks, by household income, in the UK') + 
+  save_csv(FSR_4_1_2, '4.1.2','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
