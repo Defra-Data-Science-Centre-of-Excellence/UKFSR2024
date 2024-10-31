@@ -34,7 +34,7 @@ source(here::here("utils", "load-font.R"))
 
 F4_1_2 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                  bucket = "s3-ranch-054",
-                                 object = "theme_4/input_data/4_1_2a_ave_spend_food_non_alcohol_drinks_low_income_all_households_middle_income.csv")
+                                 object = "theme_4/input_data/4_1_2a_ave_spend_food_non_alcohol_drinks_by_income.csv")
 
 
 FSR_4_1_2 <- F4_1_2 %>% 
@@ -63,8 +63,8 @@ FSR_4_1_2plot <- ggplot(FSR_4_1_2) +
 
 FSR_4_1_2plot
 
-save_graphic(FSR_4_1_2plot, '4.1.2','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK') + 
-  save_csv(FSR_4_1_2, '4.1.2','Average share of spend on food and non-alcoholic drinks, in low-income households and all households, in the UK')
+save_graphic(FSR_4_1_2plot, '4.1.2','Average share of spend on food and non-alcoholic drinks, by household income, in the UK') + 
+  save_csv(FSR_4_1_2, '4.1.2','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
