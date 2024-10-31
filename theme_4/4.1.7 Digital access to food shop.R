@@ -42,7 +42,7 @@ FSR_4_1_7_plot <- ggplot(FSR_4_1_7, aes(x=Year, y=value, colour=variable, group=
 FSR_4_1_7_plot
 
 
-save_graphic(FSR_4_1_7_plot, '4.1.7', ' Internet Sales as a propotion of all retailing ') + 
+save_graphic(FSR_4_1_7_plot, '4.1.7', ' Internet Sales as a propotion of all retailing') + 
   save_csv(FSR_4_1_7, '4.1.7', 'Internet Sales as a propotion of all retailing')
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
