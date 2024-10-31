@@ -39,11 +39,11 @@ F4_1_2 <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 FSR_4_1_2 <- F4_1_2 %>% 
   gather(key,value, `percentage spend on food and non-alcoholic drinks for all households`,`percentage spend on food and non-alcoholic drinks for middle 20% by income`, `percentage spend on food and non-alcoholic drinks for lowest 20% by income`,`percentage spend on food and non-alcoholic drinks for highest 20% by income`)  %>%
-  mutate(key = case_when(key=="percentage spend on food and non-alcoholic drinks for all households"~"all households",
-                         key=="percentage spend on food and non-alcoholic drinks for middle 20% by income"~"middle 20% by income",
-                         key=="percentage spend on food and non-alcoholic drinks for lowest 20% by income"~"lowest 20% by income",
-                         key=="percentage spend on food and non-alcoholic drinks for highest 20% by income"~"highest 20% by income")) %>% 
-  mutate(key = factor(key, levels = c("lowest 20% by income","middle 20% by income","all households","highest 20% by income"), ordered = TRUE))
+  mutate(key = case_when(key=="percentage spend on food and non-alcoholic drinks for all households"~"All households",
+                         key=="percentage spend on food and non-alcoholic drinks for middle 20% by income"~"Middle 20% by income",
+                         key=="percentage spend on food and non-alcoholic drinks for lowest 20% by income"~"Lowest 20% by income",
+                         key=="percentage spend on food and non-alcoholic drinks for highest 20% by income"~"Highest 20% by income")) %>% 
+  mutate(key = factor(key, levels = c("Lowest 20% by income","Middle 20% by income","All households","Highest 20% by income"), ordered = TRUE))
 
   
 
