@@ -92,7 +92,7 @@ facet_cht <- gms |>
   scale_y_continuous(labels = scales::label_number(suffix = "%")) +
   facet_wrap(vars(company)) +
   labs(x = NULL, y = NULL) +
-  theme_ukfsr() + theme(legend.position = "none")
+  theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "none")
 
 save_graphic(facet_cht, "3.4.1a", "grocery market share time series")
 # csv not saved because Im not sure we should be disseminating Kantar data
