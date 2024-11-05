@@ -45,7 +45,7 @@ FSR_4_1_2 <- F4_1_2 %>%
                          key=="percentage spend on food and non-alcoholic drinks for highest 20% by income"~"Highest 20% by income")) %>% 
   mutate(key = factor(key, levels = c("Lowest 20% by income","Middle 20% by income","All households","Highest 20% by income"), ordered = TRUE))
 
-  
+
 
 FSR_4_1_2plot <- ggplot(FSR_4_1_2) + 
   geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
@@ -66,8 +66,42 @@ FSR_4_1_2plot
 save_graphic(FSR_4_1_2plot, '4.1.2','Average share of spend on food and non-alcoholic drinks, by household income, in the UK') + 
   save_csv(FSR_4_1_2, '4.1.2','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+#Household income before housing costs by quintiles
+  
+F4_1_2b <- aws.s3::s3read_using(FUN = readr::read_csv,
+                                 bucket = "s3-ranch-054",
+                                 object = "theme_4/input_data/4_1_2b_household_income_in_the_UK.csv")
+
+FSR_4_1_2b <- F4_1_2b %>% 
+  gather(key,value, `Quintile 1`,`Quintile 3 (median)`, `Quintile 5`)  %>%
+  mutate(key = factor(key, levels = c("Quintile 5","Quintile 3 (median)", "Quintile 1"), ordered = TRUE))
+
+FSR_4_1_2b_plot <- ggplot(FSR_4_1_2b) + 
+  geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
+  scale_y_continuous(limits = c(0,1250), breaks=seq(0,1250,250)) +
+  scale_x_discrete(breaks = unique(FSR_4_1_2b$Year)[c(T,F,F,F)])+
+  scale_colour_manual(values = af_colours()) +
+  labs(y = str_wrap("Household income before housing costs (£ per week equivalised)", width = 35),
+       x = NULL) +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(axis.text.x = element_text(angle = 45,vjust= 0.5)) +
+  theme(legend.direction = "vertical",
+        legend.position = "bottom",
+        legend.box = "vertical",
+        legend.justification = c(0,0)) +
+  theme(plot.margin = margin(t = 10,  # Top margin
+                             r = 40,  # Right margin
+                             b = 10,  # Bottom margin
+                             l = 5))  # Left margin
+
+FSR_4_1_2b_plot  
+
+save_graphic(FSR_4_1_2b_plot, '4.1.2b','Household income before housing costs in the UK') + 
+  save_csv(FSR_4_1_2b, '4.1.2b','Household income before housing costs in the UK')
+
+------------------------------------------------------------------------------------------------------------------------
 #Actual average weekly household expenditure (ONS Family Spending in the UK)
   
 F4_1_2c <- aws.s3::s3read_using(FUN = readr::read_csv,
