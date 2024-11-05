@@ -21,6 +21,32 @@ uk_fbs |>
   ggplot() +
   geom_line(aes(x = Year, group = farm_type, y = value)) +
   facet_wrap(vars(farm_type))
+
+# UK FBS income by country -----------------------------------------------------
+# data provided direct by the FBS team
+
+uk_fbs <- aws.s3::s3read_using(FUN = read_csv,
+                               bucket = ukfsr::s3_bucket(),
+                               object = "theme_3/input_data/uk_farm_income_by_country.csv")
+
+
+income_cht <- uk_fbs |> 
+  ggplot() +
+  geom_line(aes(x = year, y = value, group = country, colour = country)) +
+  geom_vline(xintercept = "2009/10", linetype = "dotted") +
+  geom_vline(xintercept = "2012/13", linetype = "dotted") +
+  geom_vline(xintercept = "2017/18", linetype = "dotted") +
+  annotate("text", x = "2009/10", y = 95000, label = "2007 SO", hjust = 0, size = 8, family = "GDS Transport Website") +
+  annotate("text", x = "2012/13", y = 95000, label = " 2010 SO", hjust = 0, size = 8, family = "GDS Transport Website") +
+  annotate("text", x = "2017/18", y = 95000, label = " 2013 SO", hjust = 0, size = 8, family = "GDS Transport Website") +
+  scale_y_continuous(labels = scales::label_currency(prefix = "£"), limits = c(0, 100000), expand = expansion(mult = c(0, 0.05))) +
+  scale_x_discrete(breaks = c("2009/10", "2011/12", "2013/14", "2015/16", "2017/18", "2019/20", "2021/22")) +
+  labs(x = NULL, y = NULL) +
+  scale_color_manual(values = af_colours(n = 4)) +
+  theme_ukfsr(base_family = "GDS Transport Website")
+
+save_graphic(income_cht, "3.3.3d", "uk farm income by country")
+save_csv(uk_fbs, "3.3.3d", "uk farm income by country")
   
 # FBS net margin data ----------------------------------------------------------
   net_margins <- aws.s3::s3read_using(FUN = read_csv,
@@ -70,7 +96,7 @@ uk_fbs |>
 # save_graphic(margin_cht, "3.4.2f", "fbs net margins")  
 
 
-# FBS mean incomes -------------------------------------------------------------
+# NOT USED FBS mean incomes -------------------------------------------------------------
 
 income <- aws.s3::s3read_using(FUN = read_csv,
                              bucket = ukfsr::s3_bucket(),
@@ -135,8 +161,18 @@ cht_data <- fbs_data |>
          farm_category = case_when(level %in% cropping_types ~ "crops",
                                    level %in% livestock_types ~ "livestock",
                                    TRUE ~ "all"),
-         variable_label = factor(variable_label, levels = c("Farm Business Income", "Direct Payment income", "Agricultural income", "Agri-environment income", "Diversified income"),
-                                 labels = c("Farm Business Income", "Basic Payment Scheme", "Agriculture", "Agri-environment and other payments", "Diversification out of agriculture"))) |> 
+         variable_label = factor(variable_label, levels = c("Farm Business Income", 
+                                                            "Diversified income",
+                                                            "Agri-environment income", 
+                                                            "Agricultural income",
+                                                            "Direct Payment income"
+                                                            ),
+                                 labels = c("Farm Business Income", 
+                                            "Diversification out of agriculture",
+                                            "Agri-environment and other payments", 
+                                            "Agriculture", 
+                                            "Basic Payment Scheme"
+                                            ))) |> 
   filter(survey_year %in% c("2022/23", "2020/21")) |> 
   select(survey_year, chart_type, farm_category, farm_type = level, cost_centre = variable_label, value)
 
