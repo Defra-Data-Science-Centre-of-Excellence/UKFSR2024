@@ -45,10 +45,10 @@ income_cht <- uk_fbs |>
   scale_color_manual(values = af_colours(n = 4)) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-save_graphic(income_cht, "3.3.3d", "uk farm income by country")
-save_csv(uk_fbs, "3.3.3d", "uk farm income by country")
+save_graphic(income_cht, "3.3.3e", "uk farm income by country")
+save_csv(uk_fbs, "3.3.3e", "uk farm income by country")
   
-# FBS net margin data ----------------------------------------------------------
+# NOT USED FBS net margin data ----------------------------------------------------------
   net_margins <- aws.s3::s3read_using(FUN = read_csv,
                                        bucket = ukfsr::s3_bucket(),
                                        object = "theme_3/input_data/3_4_2_fbs_net_margins.csv")
@@ -197,7 +197,7 @@ livestock_chart <-
         strip.text.y.left = element_text(size = 20, hjust = 1, angle = 0),
         strip.background = element_rect(fill = "white"), legend.location = "plot") 
 
-save_graphic(livestock_chart, "3.4.2f", "fbi livestock by cost centre")
+save_graphic(livestock_chart, "3.3.3g", "fbi livestock by cost centre")
 
 crops_chart <-  
   ggplot() +
@@ -219,8 +219,8 @@ crops_chart <-
         strip.text.y.left = element_text(size = 20, hjust = 1, angle = 0),
         strip.background = element_rect(fill = "white"), legend.location = "plot") 
 
-save_graphic(crops_chart, "3.4.2g", "fbi cereals by cost centre")
-save_csv(cht_data, "3.4.2", "farm business income by cost centre")
+save_graphic(crops_chart, "3.3.3f", "fbi cereals by cost centre")
+save_csv(cht_data, "3.3.3", "farm business income by cost centre")
 
   
 # NOT USED FBS economic performance data ---------------------------------------
