@@ -21,9 +21,9 @@ marks_sci <- function(`Seasonal worker visas issued`) format(`Seasonal worker vi
 chart <- 
   ggplot(data=FSR_visas) +
   geom_col(aes(x = Year, y = `Seasonal worker visas issued`), fill = af_colours_1) +
-  scale_y_continuous(labels = marks_sci)+
+  scale_y_continuous(labels = marks_sci, expand = expansion(mult = c(0, 0.05)))+
   labs(x = NULL) +
-  theme_ukfsr(base_family = "GDS Transport Website")
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)
 
 print(chart)
 

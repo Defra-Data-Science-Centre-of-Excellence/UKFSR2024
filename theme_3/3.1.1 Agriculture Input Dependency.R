@@ -105,7 +105,7 @@ nue_chart <- soil_balance |> ggplot() +
 save_graphic(nue_chart, "3.1.1c", "nitrogen use efficiency england final")
 save_csv(soil_balance, "3.1.1c", "nitrogen use efficiency england")
 
-# Pesticides Usage NOT USED-------------------------------------------------------------
+# NOT USED Pesticides Usage -------------------------------------------------------------
   
 # FSR_3_1_1b <- aws.s3::s3read_using(FUN = readr::read_csv,
 #                                      bucket = "s3-ranch-054",
@@ -179,6 +179,7 @@ save_csv(soil_balance, "3.1.1c", "nitrogen use efficiency england")
 # save_graphic(vol, '3.1.1d', 'Pesticides usage by weight alternate')
 
 # Pesticides FERA data ---------------------------------------------------------
+# https://pusstats.fera.co.uk/data/current
 
 pesticides_fera <- aws.s3::s3read_using(FUN = readr::read_csv,
                              bucket = "s3-ranch-054",

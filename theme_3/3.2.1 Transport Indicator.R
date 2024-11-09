@@ -14,8 +14,6 @@ library(lubridate)
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
-
 # SRN Average delay map --------------------------------------------------------
 
 uk_border <- aws.s3::s3read_using(FUN = sf::st_read,
@@ -41,7 +39,7 @@ delay_labels <- c("Less than 5 seconds", "5 - 10 seconds", "10 - 15 seconds", "1
 af_colors <- af_colours(type = "categorical", n = length(delay_breaks) - 1) # Get 5 colors
 
 # Create the map plot
-FSR_3_2_4_plot <- ggplot() +
+map_plot <- ggplot() +
               # Add UK border as the base layer
               geom_sf(data = uk_border |> filter(CTRY22NM == "England"), aes(fill = CTRY22NM), color = "black", size = 0.5) +
               scale_fill_manual(values = fill_colors) +
@@ -68,10 +66,10 @@ FSR_3_2_4_plot <- ggplot() +
                     legend.text = element_text(size = 16), legend.title = element_text(size = 16)) 
               
 
-FSR_3_2_4_plot  
+map_plot  
 
 # Output the plot
-# save_graphic(FSR_3_2_4_plot, '3.2.4a','Road Congestion and Travel Time Statistics (average speed and delay)') 
+# save_graphic(map_plot, '3.2.4a','Road Congestion and Travel Time Statistics (average speed and delay)') 
 #+ save_csv(FSR_3_1_7, '3.1.7','Road Congestion and Travel Time Statistics (average speed and delay)')
 
 # SIMPLIFIED VERSION TO REDUCE FILESIZE
@@ -82,7 +80,7 @@ shp2 <- shp |>
   summarise(geometry = st_union(geometry)) |> st_simplify(dTolerance = 1000)
 
 
-FSR_3_2_4_plot <- ggplot() +
+map_plot <- ggplot() +
   # Add UK border as the base layer
   geom_sf(data = uk_border |> filter(CTRY22NM == "England"), aes(fill = CTRY22NM), color = "black", size = 0.5) +
   scale_fill_manual(values = fill_colors) +
@@ -106,30 +104,30 @@ FSR_3_2_4_plot <- ggplot() +
         legend.text = element_text(size = 16), legend.title = element_text(size = 16)) 
 
 
-FSR_3_2_4_plot 
+map_plot 
 
 # Output the plot
-save_graphic(FSR_3_2_4_plot, '3.2.4b','Road Congestion and Travel Time Statistics (average speed and delay)') 
+save_graphic(map_plot, '3.2.1b','Road Congestion and Travel Time Statistics (average speed and delay)') 
 
 
 # SRN Average delay chart-------------------------------------------------------
   
-FSR_3_1_7a <- aws.s3::s3read_using(FUN = readr::read_csv,
+delay <- aws.s3::s3read_using(FUN = readr::read_csv,
                                      bucket = "s3-ranch-054",
                                      object = "theme_3/input_data/3_1_3c_ave_delay_Strategic_Road_Network.csv")
 
-FSR_3_1_7a <- FSR_3_1_7a %>%
+delay <- delay %>%
   gather(variable,value, `Monthly`,`Year ending`)
 
 
-FSR_3_1_7a$Month <- lubridate::dmy(paste("01", FSR_3_1_7a$Month))
+delay$Month <- lubridate::dmy(paste("01", delay$Month))
 
-print(FSR_3_1_7a)
+print(delay)
 
 
 
 # Create the plot
-FSR_3_1_7a_plot <- ggplot(FSR_3_1_7a, aes(x = Month, y = value, colour = variable, group = variable, label = variable)) +
+delay_plot <- ggplot(delay, aes(x = Month, y = value, colour = variable, group = variable, label = variable)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   
   # Set scale_x_date with breaks every 6 months
@@ -150,8 +148,20 @@ FSR_3_1_7a_plot <- ggplot(FSR_3_1_7a, aes(x = Month, y = value, colour = variabl
   theme(legend.text = element_text(size = 22)) +
   guides(colour = guide_legend(override.aes = list(size = 1)))
 
-FSR_3_1_7a_plot
+delay_plot
+
+delay |> 
+  ggplot() +
+  geom_line(aes(x = Month, y = value, colour = variable, group = variable, label = variable)) +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b-%Y") +
+  scale_y_continuous(limits = c(0,NA), expand = expansion(mult = c(0,0.05))) +
+  scale_colour_manual(values = af_colours(type = c("duo"), n = 2)) +
+  labs(x = NULL, y = "Average delay (seconds per vehicle per mile)") +
+  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme(axis.text.x = element_text(size = 18, angle = 45, vjust = 1, hjust = 1))
+  
+  
 
 # Output the plot
-save_graphic(FSR_3_1_7a_plot, '3.2.4a','Average Delay (second per vehicle)')
-save_csv(FSR_3_1_7a, '3.2.4a','Average Delay (second per vehicle)')
+save_graphic(delay_plot, '3.2.1a','Average Delay (second per vehicle)')
+save_csv(delay, '3.2.1a','Average Delay (second per vehicle)')
