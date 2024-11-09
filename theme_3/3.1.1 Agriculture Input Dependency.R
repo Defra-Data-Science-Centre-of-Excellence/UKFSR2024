@@ -70,7 +70,7 @@ FSR_3_1_1a <- FSR_3_1_1a %>%
 FSR_3_1_1aplot <- ggplot(FSR_3_1_1a, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
   scale_x_date(breaks=seq(as.Date("1990-01-01"),Sys.Date()-lubridate::years(1),by = "5 year"),date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_comma()) +
+  scale_y_continuous(labels = scales::label_comma(), limits = c(0, NA), expand = expansion(mult = c(0,0.05))) +
   scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
   labs(x = NULL,
@@ -98,7 +98,7 @@ soil_balance <- soil_balance |>
 
 nue_chart <- soil_balance |> ggplot() +
   geom_line(aes(x = year, y = nue), colour = af_colours(n=1)) +
-  scale_y_continuous(limits = c(0,1), labels = scales::label_percent()) +
+  scale_y_continuous(limits = c(0,1), labels = scales::label_percent(), expand = expansion(mult = c(0,0.05))) +
   labs(x= NULL, y = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
