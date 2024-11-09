@@ -89,18 +89,22 @@ save_csv(food_loss_waste_2, "1.1.2b", "household food waste")
 food_waste_percentages <- aws.s3::s3read_using(FUN = read_csv,
                                                bucket = ukfsr::s3_bucket(),
                                                object = "theme_1/input_data/t1_1_2/food_waste_percentages.csv")%>%
-  pivot_longer(cols=2:3,names_to = "measure",values_to="value")
+  pivot_longer(cols=2:3,names_to = "measure",values_to="value") |> 
+  mutate(food_type = factor(food_type, 
+                            levels = c("Other", "Dairy", "Meat", "Fruit+Vegetables", "Cereals"),
+                            labels = c("Other", "Dairy", "Meat", "Fruit & Vegetables", "Cereals")),
+         measure = factor(measure, levels = c("calories", "quantity"), labels = c("Calories", "Quantity")))
 
 food_waste_percentages_chart<-food_waste_percentages%>%
   ggplot() +
   geom_col(aes(x=measure,y=value/100,fill=food_type), lwd = 1)+
-  geom_text(aes(x = measure, y = value/100, label = value, group = food_type),size=6,color="white",position = position_stack(vjust = .5))+
+  # geom_text(aes(x = measure, y = value/100, label = value, group = food_type),size=6,color="white",position = position_stack(vjust = .5))+
   theme_ukfsr()+
-  scale_y_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent, expand = expansion(mult = c(0,0.05))) +
   scale_color_manual(values = af_colours("duo")) +
-  scale_fill_manual(values = af_colours("categorical"),n=5) +
+  scale_fill_manual(values = rev(af_colours("categorical",n=5))) +
   guides(fill=guide_legend(nrow=3, byrow=TRUE))+ 
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   #theme(x_axis=FALSE)+
   labs(x = NULL,
        y = "")

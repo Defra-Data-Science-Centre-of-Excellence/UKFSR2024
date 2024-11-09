@@ -173,7 +173,7 @@ global_biofuel_production<-global_biofuel_production%>%
 global_biofuel_production_chart <- ggplot(data=global_biofuel_production) +
   geom_line(aes(x=TIME_PERIOD ,y=percentage,color=Commodity))+
   scale_color_manual(values = af_colours("categorical")) +
-  scale_y_continuous(limits=c(0,30))+
+  scale_y_continuous(limits=c(0,30), expand = expansion(mult = c(0,0.05)))+
   scale_x_continuous(breaks = seq(2000,2024,2))+
   guides(color=guide_legend(nrow=3, byrow=TRUE))+
   theme_ukfsr(base_family = "GDS Transport Website") +

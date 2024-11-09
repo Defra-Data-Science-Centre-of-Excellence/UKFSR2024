@@ -8,10 +8,10 @@ library(ukfsr)
 library(afcolours)
 library(here)
 
-#GOHI-Index
 
 source(here("utils", "load-font.R"))
 
+# NOT USED GOHI-Index ----------------------------------------------------------
 gohi <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
                                 object = "theme_1/input_data/t1_5_2/GOHI2.csv")%>%
@@ -44,10 +44,10 @@ gohi_chart <- ggplot()+
         panel.grid.major.y = element_blank())
 
 
-save_graphic(gohi_chart, "1.5.2a", "global one health index")
-save_csv(gohi, "1.5.2a", "global one health index")
+# save_graphic(gohi_chart, "1.5.2a", "global one health index")
+# save_csv(gohi, "1.5.2a", "global one health index")
 
-#### bananas
+# bananas ----------------------------------------------------------------------
 
 bananas <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
@@ -61,12 +61,12 @@ bananas_chart <- ggplot() +
   geom_area(data=date_1,aes(x=date,y=height),fill="grey",alpha=0.6)+
   geom_line(data=bananas,aes(x = Year, y = Value/1E6, colour = Item), lwd = 1) +
   scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
-  scale_y_continuous(breaks =seq(25,150,25)) +
+  scale_y_continuous(breaks =seq(25,150,25), limits = c(0, NA), expand = expansion(mult = c(0, 0.05))) +
   scale_colour_manual(values = af_colours("duo"))+#,limits=c("South America","Africa","Asia","Northern America","Australia and New Zealand","Europe")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(legend.position = "none")+
   labs(x = NULL,
        y = "Million tonnes")
 
-save_graphic(bananas_chart, "1.5.2c", "global banana production")
-save_csv(bananas, "1.5.2c", "global banana production")
+save_graphic(bananas_chart, "1.5.2a", "global banana production")
+save_csv(bananas, "1.5.2a", "global banana production")

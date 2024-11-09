@@ -11,6 +11,9 @@ library(here)
 library(readxl)
 library(tidyverse)
 
+
+# TFP growth by income group ---------------------------------------------------
+
 tfp_out_2013_2022 <- aws.s3::s3read_using(FUN = read_csv,
                                           bucket = ukfsr::s3_bucket(),
                                           object = "theme_1/input_data/t1_2_1/agricultural_productivity_2.csv")%>%
@@ -29,6 +32,9 @@ tfp_out_2013_2022_chart<-ggplot()+
 save_graphic(tfp_out_2013_2022_chart, "1.2.1a", "total factor productivity 2013 2022")
 save_csv(tfp_out_2013_2022, "1.2.1a", "total factor productivity 2013 2022")
 
+
+# Causes of growth in output ---------------------------------------------------
+
 sources_of_output_growth_by_region_data <- aws.s3::s3read_using(FUN = read_csv,
                                                                 bucket = ukfsr::s3_bucket(),
                                                                 object = "theme_1/input_data/t1_2_1/TFP.csv")
@@ -38,9 +44,9 @@ sources_of_output_growth_by_region_data_world<-sources_of_output_growth_by_regio
 
 sources_of_output_growth_by_region_chart<-ggplot()+
   geom_col(data=sources_of_output_growth_by_region_data_world,aes(x = Date, y = Percentage/100,fill=Element)) +
-  scale_y_continuous(breaks=seq(0,0.06,0.005),labels = scales::percent)+
+  scale_y_continuous(breaks=seq(0,0.06,0.005),labels = scales::percent, expand = expansion(mult = c(0,0.05)))+
   scale_fill_manual(values = af_colours("categorical"),n=4) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   guides(fill=guide_legend(nrow=4, byrow=TRUE))+
   labs(x = NULL,
        y = "Average annual growth")
