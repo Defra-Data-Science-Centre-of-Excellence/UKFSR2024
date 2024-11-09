@@ -148,8 +148,7 @@ delay_plot <- ggplot(delay, aes(x = Month, y = value, colour = variable, group =
   theme(legend.text = element_text(size = 22)) +
   guides(colour = guide_legend(override.aes = list(size = 1)))
 
-delay_plot
-
+delay_plot <- 
 delay |> 
   ggplot() +
   geom_line(aes(x = Month, y = value, colour = variable, group = variable, label = variable)) +

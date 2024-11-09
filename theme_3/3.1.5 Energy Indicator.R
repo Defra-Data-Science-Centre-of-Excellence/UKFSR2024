@@ -39,7 +39,7 @@ demand_plot <- ggplot(demand, aes(x=Year, y=value, colour=key, group=key)) +
 
 demand_plot
 
-save_graphic(demand_plot, '3.1;5a', ' Aggregate energy demand for agriculture and food and drink manufacturing') + 
+save_graphic(demand_plot, '3.1.5a', ' Aggregate energy demand for agriculture and food and drink manufacturing') 
 save_csv(demand, '3.1.5a', ' Aggregate energy demand for agriculture and food and drink manufacturing')
 
 

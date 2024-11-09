@@ -34,7 +34,7 @@ irrigation_plot <- ggplot(irrigation, aes(x = Region, y = Volume / 1e3, fill = T
 
 irrigation_plot
 
-save_graphic(irrigation_plot, '3.1.4b', 'spray irrigation and storage') + 
+save_graphic(irrigation_plot, '3.1.4b', 'spray irrigation and storage') 
 save_csv(irrigation, '3.1.4b', 'spray irrigation and storage')
 
 

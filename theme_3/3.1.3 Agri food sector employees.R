@@ -23,7 +23,7 @@ FSR_3_1_4 <- FSR_3_1_4 %>%
 FSR_3_1_4_plot <- ggplot(FSR_3_1_4, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
   scale_x_date(date_breaks = "4 years", date_labels = "%Y") +
-  scale_y_continuous(labels = scales::label_comma()) +
+  scale_y_continuous(labels = scales::label_comma(), limits = c(0,NA), expand = expansion(mult = c(0,0.05))) +
   labs(x = NULL,
        y = "Thousand people") +
   scale_colour_manual(values = af_colours()) + 

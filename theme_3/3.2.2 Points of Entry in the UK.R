@@ -42,8 +42,8 @@ ports_plot <- ggplot(ports, aes(x = Port, y = Value, fill = Year)) +
 # Print the plot
 print(ports_plot)
 
-save_graphic(ports_plot, '3.2.2a', ' UK pct of import by port') + 
-  save_csv(ports, '3.2.2a', ' UK pct of import by port')
+save_graphic(ports_plot, '3.2.2a', ' UK pct of import by port') 
+save_csv(ports, '3.2.2a', ' UK pct of import by port')
 
   
 # NOT USED Import % by Short Straits from EU -----------------------------------
