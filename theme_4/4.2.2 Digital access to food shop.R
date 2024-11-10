@@ -14,7 +14,7 @@ source(here::here("utils", "load-font.R"))
 
 contents <- get_bucket_df("s3-ranch-054")
 
-
+# % internet sales -------------------------------------------------------------
 
 FSR_4_1_7 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
@@ -42,10 +42,10 @@ FSR_4_1_7_plot <- ggplot(FSR_4_1_7, aes(x=Year, y=value, colour=variable, group=
 FSR_4_1_7_plot
 
 
-save_graphic(FSR_4_1_7_plot, '4.1.7', ' Internet Sales as a propotion of all retailing') + 
-  save_csv(FSR_4_1_7, '4.1.7', 'Internet Sales as a propotion of all retailing')
+save_graphic(FSR_4_1_7_plot, '4.2.2a', ' Internet Sales as a propotion of all retailing') 
+  save_csv(FSR_4_1_7, '4.2.2a', 'Internet Sales as a propotion of all retailing')
 
----------------------------------------------------------------------------------------------------------------------------------------------------------
+# Urban rural % spend ----------------------------------------------------------
 
 # Kantar data on proportion of usage of the retail channels in %
 
@@ -69,15 +69,15 @@ FSR_4_1_7a_plot <- ggplot(FSR_4_1_7a, aes(x = Demography, y = proportion, fill =
   geom_bar(stat = "identity", position = "stack") + 
   geom_text(aes(label = round(proportion, 1)),  # Add text labels
             position = position_stack(vjust = 0.5),  # Position labels in the middle of each bar segment
-            size = 7, color = "white") +  
+            size = 7, color = "white", family = "GDS Transport Website") +  
   coord_flip() +
   scale_fill_manual(values = rev(af_colours()[1:5])) +
   labs(y = "% of sales by type of food shop",
        x = NULL,
        fill = "Retail Channel") +
-  theme_ukfsr()
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE)
 
 FSR_4_1_7a_plot
 
-save_graphic(FSR_4_1_7a_plot, '4.1.7a','Usage proportion of retail channels in %') + 
-  save_csv(FSR_4_1_7a, '4.1.7a','Usage proportion of retail channels in %')
+save_graphic(FSR_4_1_7a_plot, '4.2.2b','Usage proportion of retail channels in %') + 
+  save_csv(FSR_4_1_7a, '4.2.2b','Usage proportion of retail channels in %')

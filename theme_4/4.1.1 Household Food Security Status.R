@@ -32,6 +32,7 @@ library(janitor)
 
 contents <- get_bucket_df("s3-ranch-054")
 
+# All hh food security ---------------------------------------------------------
 
 FSR_4_1_1 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
@@ -80,9 +81,11 @@ FSR_4_1_1_plot <- ggplot(FSR_4_1_1, aes(x = Year, y = value, fill = variable, la
 FSR_4_1_1_plot
 
 
-save_graphic(FSR_4_1_1_plot, '4.1.1','Household food security status of all households in the UK') + 
-  save_csv(FSR_4_1_1, '4.1.1','Household food security status of all households in the UK')
------------------------------------------------------------------------------------------------------------------------------------------------------
+save_graphic(FSR_4_1_1_plot, '4.1.1a','Household food security status of all households in the UK') + 
+  save_csv(FSR_4_1_1, '4.1.1a','Household food security status of all households in the UK')
+
+
+# NOT USED % insecurity map ----------------------------------------------------
 # Support 1 - % of households food (Insecure) Map Code:
   
 FSR_4_1_1a <- aws.s3::s3read_using(FUN = readr::read_csv,
@@ -124,13 +127,13 @@ FSR_4_1_1a_plot
 
 #mapdata
 
-save_graphic(FSR_4_1_1a_plot, '4.1.1a','% of households food (Insecure)')
+# save_graphic(FSR_4_1_1a_plot, '4.1.1a','% of households food (Insecure)')
 
 #ggsave(here("data", "FSR_4_1_1a_pct_hh_insecure_map.svg"), width = 960, height = 640, units = "px", dpi = 72)
 #ggsave(here("data", "FSR_4_1_1a_pct_hh_insecure_map.png"), width = 960, height = 640, units = "px", dpi = 72)
 
 
------------------------------------------------------------------------------------------------------------------------------------------------------
+# hh food security by disability -----------------------------------------------
   # Support 2 - Households food security by disability.
 
 FSR_4_1_1b <- aws.s3::s3read_using(FUN = readr::read_csv,
@@ -179,10 +182,10 @@ FSR_4_1_1b_plot <- ggplot(FSR_4_1_1b, aes(x = Disability, y = value, fill = vari
 
 FSR_4_1_1b_plot
 
-save_graphic(FSR_4_1_1b_plot, '4.1.1b','Household food security status by disability') + 
-  save_csv(FSR_4_1_1b, '4.1.1b','Household food security status by disability')
+save_graphic(FSR_4_1_1b_plot, '4.1.1c','Household food security status by disability') 
+save_csv(FSR_4_1_1b, '4.1.1c','Household food security status by disability')
 
------------------------------------------------------------------------------------------------------------------------------------------------------
+# hh food security x age -------------------------------------------------------
   
   # Support 3 - Households food security by age.
   
@@ -235,11 +238,11 @@ FSR_4_1_1c_plot <- ggplot(FSR_4_1_1c, aes(x = Age, y = value, fill = variable, l
 
 FSR_4_1_1c_plot
 
-save_graphic(FSR_4_1_1c_plot, '4.1.1c','Household food security status by age') + 
-  save_csv(FSR_4_1_1c, '4.1.1c','Household food security status by age')
+save_graphic(FSR_4_1_1c_plot, '4.1.1d','Household food security status by age')
+  save_csv(FSR_4_1_1c, '4.1.1d','Household food security status by age')
 
 
------------------------------------------------------------------------------------------------------------------------------------------------------
+# hh food security x ethnicity -----------------------------------------------
   
   # Support 4 - Households food security by ethnicity.
   
@@ -289,5 +292,5 @@ FSR_4_1_1d_plot <- ggplot(FSR_4_1_1d, aes(x = `Ethnic group`, y = value, fill = 
 
 FSR_4_1_1d_plot
 
-save_graphic(FSR_4_1_1d_plot, '4.1.1c','Household food security status by ethnicity') + 
-  save_csv(FSR_4_1_1d, '4.1.1c','Household food security status by ethnicity')
+save_graphic(FSR_4_1_1d_plot, '4.1.1e','Household food security status by ethnicity')
+save_csv(FSR_4_1_1d, '4.1.1e','Household food security status by ethnicity')

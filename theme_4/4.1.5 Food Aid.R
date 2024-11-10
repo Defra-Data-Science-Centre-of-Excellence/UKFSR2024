@@ -13,7 +13,7 @@ source(here::here("utils", "load-font.R"))
 
 contents <- get_bucket_df("s3-ranch-054")
 
-# Food bank usage graph
+# Food bank usage graph --------------------------------------------------------
 
 FSR_4_1_5 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
@@ -35,13 +35,13 @@ FSR_4_1_5_plot <- ggplot(FSR_4_1_5, aes(x = `Household food security status`, y 
   geom_text (aes(label = round(`Usage_Value`, 1)),
                  position = position_dodge(width = 0.9), 
                  vjust = -0.5, hjust = 0.5, 
-                 size = 6, color = 'black') +
+                 size = 6, color = 'black', family = "GDS Transport Website") +
   scale_fill_manual(values = afcolours::af_colours("duo")) +
   labs(y = NULL,
        x = NULL,
        fill = "Type") +
   scale_y_continuous(labels = function(x) paste0(x, "%")) +
-  theme_ukfsr() +
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   theme(plot.margin = margin(t = 10,  # Top margin
                              r = 40,  # Right margin
                              b = 10,  # Bottom margin
@@ -50,11 +50,11 @@ FSR_4_1_5_plot <- ggplot(FSR_4_1_5, aes(x = `Household food security status`, y 
 
 FSR_4_1_5_plot
 
-save_graphic(FSR_4_1_5_plot, '4.1.5','% of households who have used a food bank') + 
-  save_csv(FSR_4_1_5, '4.1.5','% of households who have used a food bank')
+save_graphic(FSR_4_1_5_plot, '4.1.5a','% of households who have used a food bank')
+save_csv(FSR_4_1_5, '4.1.5a','% of households who have used a food bank')
 
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
+# Social supermarket use -------------------------------------------------------
   
   # Support 1 - Percentage of households using supermarket
   
@@ -89,5 +89,5 @@ FSR_4_1_5a_plot <- ggplot(FSR_4_1_5a, aes(x = `Frequency of social supermarket u
 
 FSR_4_1_5a_plot
 
-save_graphic(FSR_4_1_5a_plot, '4.1.5a','Percentage of households using supermarket') + 
-  save_csv(FSR_4_1_5a, '4.1.5a','Percentage of households using supermarket')
+save_graphic(FSR_4_1_5a_plot, '4.1.5d','Percentage of households using supermarket') + 
+  save_csv(FSR_4_1_5a, '4.1.5d','Percentage of households using supermarket')
