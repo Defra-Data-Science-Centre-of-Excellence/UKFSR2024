@@ -11,7 +11,6 @@ library('lubridate')
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
 
 # GHG emissions ----------------------------------------------------------------
 
@@ -39,7 +38,7 @@ FSR_4_1_10_plot <-  ggplot(FSR_4_1_10, aes(x = Year, y = value, fill = variable)
 FSR_4_1_10_plot
 
 save_graphic(FSR_4_1_10_plot, '4.3.3a', 'UK Food system GHG Emission') 
-  save_csv(FSR_4_1_10, '4.3.3a', ' UK Food system GHG Emission')
+save_csv(FSR_4_1_10, '4.3.3a', ' UK Food system GHG Emission')
 
 #  Area of deforestation associated with UK consumption ------------------------
   
@@ -58,7 +57,7 @@ FSR_4_1_10a_plot <-  ggplot(FSR_4_1_10a, aes(x = Year, y = `Deforestation (ha)`)
 
 FSR_4_1_10a_plot
 
-save_graphic(FSR_4_1_10a_plot, '4.3.3b', ' Area of deforestation associated with UK consumption of food commodities annually') + 
+save_graphic(FSR_4_1_10a_plot, '4.3.3b', ' Area of deforestation associated with UK consumption of food commodities annually')
   save_csv(FSR_4_1_10a, '4.3.3b', '  Area of deforestation associated with UK consumption of food commodities annually')
 
 
@@ -79,7 +78,7 @@ FSR_4_3_3d_plot <-  ggplot(FSR_4_3_3d, aes(x = Year, y = `Species loss`)) +
 
 FSR_4_3_3d_plot
 
-save_graphic(FSR_4_3_3d_plot, '4.3.3d', 'Predicted regional species loss associated with UK consumption of food commodities annually') + 
+save_graphic(FSR_4_3_3d_plot, '4.3.3d', 'Predicted regional species loss associated with UK consumption of food commodities annually')
   save_csv(FSR_4_3_3d, '4.3.3d', 'Predicted regional species loss associated with UK consumption of food commodities annually')
 
 
@@ -100,5 +99,5 @@ FSR_4_1_10c_plot <-  ggplot(FSR_4_1_10c, aes(x = Year, y = `Scarcity-weighted bl
 
 FSR_4_1_10c_plot
 
-save_graphic(FSR_4_1_10c_plot, '4.3.3c', 'Scarcity-weighted blue water use associated with UK consumption of food commodities annually') + 
+save_graphic(FSR_4_1_10c_plot, '4.3.3c', 'Scarcity-weighted blue water use associated with UK consumption of food commodities annually') 
   save_csv(FSR_4_1_10c, '4.3.3c', 'Scarcity-weighted blue water use associated with UK consumption of food commodities annually')

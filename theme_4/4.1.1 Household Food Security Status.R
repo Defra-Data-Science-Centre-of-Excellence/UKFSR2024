@@ -30,8 +30,6 @@ library(sf)
 library(janitor)
 
 
-contents <- get_bucket_df("s3-ranch-054")
-
 # All hh food security ---------------------------------------------------------
 
 FSR_4_1_1 <- aws.s3::s3read_using(FUN = readr::read_csv,
@@ -81,7 +79,7 @@ FSR_4_1_1_plot <- ggplot(FSR_4_1_1, aes(x = Year, y = value, fill = variable, la
 FSR_4_1_1_plot
 
 
-save_graphic(FSR_4_1_1_plot, '4.1.1a','Household food security status of all households in the UK') + 
+save_graphic(FSR_4_1_1_plot, '4.1.1a','Household food security status of all households in the UK') 
   save_csv(FSR_4_1_1, '4.1.1a','Household food security status of all households in the UK')
 
 

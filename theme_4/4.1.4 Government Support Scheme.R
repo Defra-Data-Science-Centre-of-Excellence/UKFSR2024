@@ -11,8 +11,6 @@ library('scales')
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
-
 # Free School Meal Graph -------------------------------------------------------
 
 
@@ -32,8 +30,8 @@ FSR_4_1_4_plot <- ggplot(FSR_4_1_4, aes(x = Year, y = `% of pupil`)) +
 
 FSR_4_1_4_plot
 
-save_graphic(FSR_4_1_4_plot, '4.1.4a','Free school meal') + 
-  save_csv(FSR_4_1_4, '4.1.4a','Free school meal')
+save_graphic(FSR_4_1_4_plot, '4.1.4a','Free school meal') 
+save_csv(FSR_4_1_4, '4.1.4a','Free school meal')
 
 # NOT USED Healthy Start vouchers -------------------------------------------------------
 # Food bank usage graph

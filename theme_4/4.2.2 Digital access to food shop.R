@@ -12,8 +12,6 @@ library('zoo')
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
-
 # % internet sales -------------------------------------------------------------
 
 FSR_4_1_7 <- aws.s3::s3read_using(FUN = readr::read_csv,
@@ -43,7 +41,7 @@ FSR_4_1_7_plot
 
 
 save_graphic(FSR_4_1_7_plot, '4.2.2a', ' Internet Sales as a propotion of all retailing') 
-  save_csv(FSR_4_1_7, '4.2.2a', 'Internet Sales as a propotion of all retailing')
+save_csv(FSR_4_1_7, '4.2.2a', 'Internet Sales as a propotion of all retailing')
 
 # Urban rural % spend ----------------------------------------------------------
 
@@ -79,5 +77,5 @@ FSR_4_1_7a_plot <- ggplot(FSR_4_1_7a, aes(x = Demography, y = proportion, fill =
 
 FSR_4_1_7a_plot
 
-save_graphic(FSR_4_1_7a_plot, '4.2.2b','Usage proportion of retail channels in %') + 
-  save_csv(FSR_4_1_7a, '4.2.2b','Usage proportion of retail channels in %')
+save_graphic(FSR_4_1_7a_plot, '4.2.2b','Usage proportion of retail channels in %')
+save_csv(FSR_4_1_7a, '4.2.2b','Usage proportion of retail channels in %')

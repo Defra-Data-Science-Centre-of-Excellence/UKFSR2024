@@ -11,7 +11,6 @@ library('scales')
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
 
 # Food bank usage graph --------------------------------------------------------
 

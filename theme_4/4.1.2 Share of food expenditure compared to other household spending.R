@@ -28,8 +28,6 @@ library(sf)
 library(janitor)
 
 
-contents <- get_bucket_df("s3-ranch-054")
-
 source(here::here("utils", "load-font.R"))
 
 # % share of spend on food -----------------------------------------------------
@@ -65,7 +63,7 @@ FSR_4_1_2plot <- ggplot(FSR_4_1_2) +
 
 FSR_4_1_2plot
 
-save_graphic(FSR_4_1_2plot, '4.1.2a','Average share of spend on food and non-alcoholic drinks, by household income, in the UK') + 
+save_graphic(FSR_4_1_2plot, '4.1.2a','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
   save_csv(FSR_4_1_2, '4.1.2a','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
 
 
@@ -103,8 +101,8 @@ FSR_4_1_2b_plot <- ggplot(FSR_4_1_2b) +
 
 FSR_4_1_2b_plot  
 
-save_graphic(FSR_4_1_2b_plot, '4.1.2c','Household income before housing costs in the UK') + 
-  save_csv(FSR_4_1_2b, '4.1.2c','Household income before housing costs in the UK')
+save_graphic(FSR_4_1_2b_plot, '4.1.2c','Household income before housing costs in the UK') 
+save_csv(FSR_4_1_2b, '4.1.2c','Household income before housing costs in the UK')
 
 # Actual avg weekly hh expenditure ---------------------------------------------
 #Actual average weekly household expenditure (ONS Family Spending in the UK)
@@ -140,8 +138,8 @@ F4_1_2c_plot <- ggplot(F4_1_2c, aes(x = Year, y = value, fill = variable)) +
 
 F4_1_2c_plot
 
-save_graphic(F4_1_2c_plot, '4.1.2b', 'Actual average weekly household expenditure') + 
-  save_csv(F4_1_2c, '4.1.2b', 'Actual average weekly household expenditure')
+save_graphic(F4_1_2c_plot, '4.1.2b', 'Actual average weekly household expenditure') 
+save_csv(F4_1_2c, '4.1.2b', 'Actual average weekly household expenditure')
 
 
 
@@ -152,7 +150,6 @@ save_graphic(F4_1_2c_plot, '4.1.2b', 'Actual average weekly household expenditur
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
 
 F4_1_2d <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
@@ -186,7 +183,7 @@ F4_1_2d_plot <- ggplot(F4_1_2d, aes(x=Year, y=value, colour=variable, group=vari
 
 F4_1_2d_plot
 
-save_graphic(F4_1_2d_plot, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages') + 
-  save_csv(F4_1_2d, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages')
+save_graphic(F4_1_2d_plot, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages') 
+save_csv(F4_1_2d, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages')
 
 

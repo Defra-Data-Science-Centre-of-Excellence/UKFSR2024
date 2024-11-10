@@ -41,4 +41,4 @@ FSR_4_1_8_plot <- ggplot(FSR_4_1_8, aes(x = `Food group`, y = `% change since FY
 FSR_4_1_8_plot
 
 save_graphic(FSR_4_1_8_plot, '4.3.1a','Change in UK consumption of different food groups eaten in the home') 
-  save_csv(FSR_4_1_8, '4.3.1a','Change in UK consumption of different food groups eaten in the home')
+save_csv(FSR_4_1_8, '4.3.1a','Change in UK consumption of different food groups eaten in the home')

@@ -11,8 +11,6 @@ library('scales')
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
-
 
 #af_colours()[1]
 
@@ -70,7 +68,7 @@ FSR_4_1_6_plot
 
 
 save_graphic(FSR_4_1_6_plot, '4.2.1a','Average Distance Travelled by English Region, 2022') 
-  save_csv(FSR_4_1_6, '4.2.1a','Average Distance Travelled by English Region, 2022')
+save_csv(FSR_4_1_6, '4.2.1a','Average Distance Travelled by English Region, 2022')
 
 
 # Supermarkets per 10,000 People by Region -------------------------------------
@@ -111,6 +109,6 @@ FSR_4_2_1b_plot <- ggplot(FSR_4_2_1b, aes(x= Region, y=Supermarket_count)) +
 FSR_4_2_1b_plot
 
 
-save_graphic(FSR_4_2_1b_plot, '4.2.1b','Sum of Supermarkets per 10,000 People by Region') + 
-  save_csv(FSR_4_2_1b, '4.2.1b','Sum of Supermarkets per 10,000 People by Region')
+save_graphic(FSR_4_2_1b_plot, '4.2.1b','Sum of Supermarkets per 10,000 People by Region') 
+save_csv(FSR_4_2_1b, '4.2.1b','Sum of Supermarkets per 10,000 People by Region')
 
