@@ -9,39 +9,33 @@ library(zoo)
 
 source(here::here("utils", "load-font.R"))
 
+# Import volumes----------------------------------------------------------------
+
 import_vol <- aws.s3::s3read_using(FUN = readr::read_csv,
-<<<<<<< HEAD:theme_3/3.2.3 FFD imports.R
                                    bucket = "s3-ranch-054",
                                    object = "theme_3/input_data/ffd_imports_volume.csv") |> 
   mutate(area = factor(area, levels = c("eu", "non eu"), labels = c("EU", "Non EU")))
 
-chart <- 
-  import_vol |> 
-=======
-                                    bucket = "s3-ranch-054",
-                                    object = "theme_3/input_data/ffd_imports_volume.csv") |> 
-  mutate(area = factor(area, levels = c("eu", "non eu"), labels = c("EU", "Non EU")))
 
 chart <- 
 import_vol |> 
->>>>>>> main:theme_3/3.3.2 FFD imports.R
   ggplot() +
   geom_line(aes(x = year, y = value, colour = area)) +
   geom_vline(xintercept = 2020.5, linetype = "dashed") +
   annotate("text", x = 2020.3, y = 3e+10, label = "End of \n transition period", hjust = "right", size = 8, family = "GDS Transport Website") +
   scale_x_continuous(breaks = seq(2010, 2023, by = 2)) +
-  scale_y_continuous(labels = scales::label_number(scale = 0.000000001), breaks = seq(0,3e+10, by = 0.6e+10), limits = c(0, 3e+10)) +
+  scale_y_continuous(labels = scales::label_number(scale = 0.000000001),
+                     breaks = seq(0,3e+10, by = 0.6e+10),
+                     limits = c(0, 3e+10), 
+                     expand = expansion(mult = c(0, 0.05))) +
   scale_colour_manual(values = af_colours("duo")) +
   labs(x = NULL, y = "Million tonnes") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
-<<<<<<< HEAD:theme_3/3.2.3 FFD imports.R
+
 save_graphic(chart, "3.2.3a", "annual import volumes of ffd")
 save_csv(import_vol, "3.2.3a", "annual import volumes of ffd")
-=======
-save_graphic(chart, "3.3.2a", "annual import volumes of ffd")
-save_csv(import_vol, "3.3.2a", "annual import volumes of ffd")
->>>>>>> main:theme_3/3.3.2 FFD imports.R
+
 
 # NOT USED import values -------------------------------------------------------
 import_data <- aws.s3::s3read_using(FUN = readr::read_csv,
