@@ -122,7 +122,7 @@ F4_1_2c <- F4_1_2c %>%
 
 F4_1_2c_plot <- ggplot(F4_1_2c, aes(x = Year, y = value, fill = variable)) +
   geom_bar(stat = "identity") +
-  geom_text(aes(label = sprintf("%.1f",value)), 
+  geom_text(aes(label = sprintf("%.2f",value)), 
             position = position_stack(vjust = 0.5), 
             vjust = 0.5, 
             hjust = 0.5, 
