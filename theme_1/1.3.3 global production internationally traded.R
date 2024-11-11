@@ -133,7 +133,7 @@ rice_chart_source_data_wb <- aws.s3::s3read_using(FUN = read_csv,
   mutate(Date=dmy(Date))
 
 date_1<-c(dmy("01-09-2007"),dmy("01-09-2008"))
-date_2<-c(dmy("01-09-2022"),dmy("01-05-2024"))
+date_2<-c(dmy("01-09-2022"),dmy("01-09-2024"))
 
 rice_chart_source_data_wb_chart <-
   ggplot()+
