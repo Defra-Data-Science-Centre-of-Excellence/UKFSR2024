@@ -109,23 +109,23 @@ save_graphic(FSR_4_1_2b_plot, '4.1.2b','Household income before housing costs in
   
 F4_1_2c <- aws.s3::s3read_using(FUN = readr::read_csv,
                                 bucket = "s3-ranch-054",
-                                object = "theme_4/input_data/Actual average weekly household expenditure.csv")
+                                object = "theme_4/input_data/updated_average_household_weekly_expenditure.csv")
 
 F4_1_2c <- F4_1_2c %>%
-  gather(variable, value, `Food & non-alcoholic drinks`, `Restaurants & hotels`, `Other`) %>%
+  gather(variable, value, `Food & non-alcoholic drinks`, `Catering services`, `Other`) %>%
   filter(Year %in% c("2017/18", "2018/19", "2019/20", "2020/21", "2021/22", "2022/23"))
 
 F4_1_2c <- F4_1_2c %>%
-  mutate(variable = factor(variable, levels = rev(c("Food & non-alcoholic drinks", "Restaurants & hotels", "Other"))))
+  mutate(variable = factor(variable, levels = rev(c("Food & non-alcoholic drinks", "Catering services", "Other"))))
 
 
 
 F4_1_2c_plot <- ggplot(F4_1_2c, aes(x = Year, y = value, fill = variable)) +
   geom_bar(stat = "identity") +
-  geom_text(aes(label = value), 
+  geom_text(aes(label = sprintf("%.1f",value)), 
             position = position_stack(vjust = 0.5), 
             vjust = 0.5, 
-            hjust = 0.3, 
+            hjust = 0.5, 
             colour = "white", 
             family = "GDS Transport Website", 
             size = 7) +
