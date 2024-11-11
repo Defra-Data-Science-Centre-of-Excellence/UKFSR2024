@@ -24,13 +24,11 @@ t5_1_2a <- aws.s3::s3read_using(FUN = read_csv,
 
 t5_1_2a$`Types of concern` <- factor(t5_1_2a$`Types of concern`, levels = c("Food prices","Food waste","The amount of food packaging","The quality of food",
                                                                             "The amount of sugar in food","Food hygiene when ordering takeaways","Animal welfare",
-                                                                            "Being able to eat healthily","Food hygiene when eating out","The amount of fat in food",
-                                                                            "The amount of calories in food","The use of additives","Hormones, steroids or antibiotics in food"))
+                                                                            "Being able to eat healthily","Food hygiene when eating out","The amount of fat in food"))
 
 level_order <- c("Food prices","Food waste","The amount of food packaging","The quality of food",
                  "The amount of sugar in food","Food hygiene when ordering takeaways","Animal welfare",
-                 "Being able to eat healthily","Food hygiene when eating out","The amount of fat in food",
-                 "The amount of calories in food","The use of additives","Hormones, steroids or antibiotics in food")
+                 "Being able to eat healthily","Food hygiene when eating out","The amount of fat in food")
 
 af_colours_1 <- c(
   "#12436D" # Dark blue
@@ -50,6 +48,7 @@ t5_1_2a_plot <- ggplot(t5_1_2a, aes(x= reorder(`Types of concern`, `Percentage o
   coord_flip() 
 
 t5_1_2a_plot
+
 
 save_graphic(t5_1_2a_plot, "5.1.2a", "fsa respond ten most common prompted concerns")
 

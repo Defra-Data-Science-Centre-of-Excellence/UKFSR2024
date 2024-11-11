@@ -18,9 +18,9 @@ library(ggalluvial)
 
 source(here("utils", "load-font.R"))
 
-t4_1_5c <- aws.s3::s3read_using(FUN = read_csv,
+t4_3_2c <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
-                                object = "theme_4/t4_1_5/output/csv/4_3_2c_perc_income_eatwell.csv")
+                                object = "theme_4/t4_3_2/output/csv/4_3_2c_perc_income_eatwell.csv")
 
 # t4_3_2c$`Income Quintile (most to least deprived)` <- factor(t4_3_2c$`Income Quintile (most to least deprived)`, levels = c("1","2","3","4","5"))
 

@@ -143,6 +143,7 @@ rice_chart_source_data_wb_chart <-
   geom_vline(xintercept = dmy("24-02-2022"), col = "red", linewidth = 2)+
   geom_line(data=rice_chart_source_data_wb,aes(x = Date, y = `Thai 5% rice ($/mt)`), colour = af_colours()[1]) +
   scale_x_continuous(breaks=seq(dmy("01-01-2004"),dmy("01-01-2024"),"4 years"),labels=scales::label_date(format = "%Y"))+
+  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
   # scale_color_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,

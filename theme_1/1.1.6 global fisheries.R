@@ -57,6 +57,7 @@ fisheries_chart <- fisheries|>
   ggplot() +
   geom_area(aes(x = period, y = value, fill = type), lwd = 1) +
   scale_x_continuous(limits = c(1950,2022),breaks =seq(1950,2022,10)) +
+  scale_y_continuous(limits = c(0,NA), expand = expansion(mult = c(0,0.05))) +
   scale_fill_manual(values = af_colours("categorical"))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   guides(fill=guide_legend(nrow=3,byrow=TRUE))+
@@ -83,7 +84,7 @@ global_sustainable_fisheries<-sustainable_fisheries%>%
 global_sustainable_fisheries_chart <- global_sustainable_fisheries|>
   ggplot() +
   geom_line(aes(x = year, y = value/100,), colour = af_colours(n=1)) +
-  scale_y_continuous(limits = c(0,1), breaks = seq(0,1, by = 0.1),labels = scales::percent) +
+  scale_y_continuous(limits = c(0,1), breaks = seq(0,1, by = 0.1),labels = scales::percent, expand = expansion(mult = c(0, 0.05))) +
   # scale_color_manual(values = af_colours("categorical", n = 1))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,

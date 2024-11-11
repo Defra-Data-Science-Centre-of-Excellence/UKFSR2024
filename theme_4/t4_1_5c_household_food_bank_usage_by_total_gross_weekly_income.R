@@ -13,7 +13,7 @@ source(here("utils", "load-font.R"))
 
 t4_1_5c <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_4/t4_1_5/output/csv/4_1_5c_household_food_bank_usage_by_total_gross_weekly_income.csv")
+                                 object = "theme_4/input_data/4_1_5c_household_food_bank_usage_by_total_gross_weekly_income.csv")
 
 # https://stackoverflow.com/questions/76540961/special-characters-when-reading-in-csv-file-in-r
 # t4_1_5c <- fread("4_1_5c_household_food_bank_usage_by_total_gross_weekly_income.csv", encoding = 'Latin-1')

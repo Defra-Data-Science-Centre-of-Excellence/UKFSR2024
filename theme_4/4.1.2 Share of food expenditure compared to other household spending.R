@@ -28,9 +28,9 @@ library(sf)
 library(janitor)
 
 
-contents <- get_bucket_df("s3-ranch-054")
-
 source(here::here("utils", "load-font.R"))
+
+# % share of spend on food -----------------------------------------------------
 
 F4_1_2 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                  bucket = "s3-ranch-054",
@@ -63,11 +63,11 @@ FSR_4_1_2plot <- ggplot(FSR_4_1_2) +
 
 FSR_4_1_2plot
 
-save_graphic(FSR_4_1_2plot, '4.1.2','Average share of spend on food and non-alcoholic drinks, by household income, in the UK') + 
-  save_csv(FSR_4_1_2, '4.1.2','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
+save_graphic(FSR_4_1_2plot, '4.1.2a','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
+  save_csv(FSR_4_1_2, '4.1.2a','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
 
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
+# hh income before housing -----------------------------------------------------
 #Household income before housing costs by quintiles
   
 F4_1_2b <- aws.s3::s3read_using(FUN = readr::read_csv,
@@ -76,17 +76,20 @@ F4_1_2b <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 FSR_4_1_2b <- F4_1_2b %>% 
   gather(key,value, `Quintile 1`,`Quintile 3 (median)`, `Quintile 5`)  %>%
-  mutate(key = factor(key, levels = c("Quintile 5","Quintile 3 (median)", "Quintile 1"), ordered = TRUE))
+  mutate(key = factor(key, levels = c("Quintile 5","Quintile 3 (median)", "Quintile 1"), ordered = TRUE)) %>% 
+  mutate(key = case_when(key=="Quintile 3 (median)"~"Middle 20% by income",
+                         key=="Quintile 1"~"Lowest 20% by income",
+                         key=="Quintile 5"~"Highest 20% by income")) %>% 
+  mutate(key = factor(key, levels = c("Lowest 20% by income","Middle 20% by income","All households","Highest 20% by income"), ordered = TRUE))
 
 FSR_4_1_2b_plot <- ggplot(FSR_4_1_2b) + 
   geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
   scale_y_continuous(limits = c(0,1250), breaks=seq(0,1250,250)) +
-  scale_x_discrete(breaks = unique(FSR_4_1_2b$Year)[c(T,F,F,F)])+
+  scale_x_discrete(breaks = unique(FSR_4_1_2b$Year)[c(T,F,F,F,F)])+
   scale_colour_manual(values = af_colours()) +
   labs(y = str_wrap("Household income before housing costs (£ per week equivalised)", width = 35),
        x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website") +
-  theme(axis.text.x = element_text(angle = 45,vjust= 0.5)) +
   theme(legend.direction = "vertical",
         legend.position = "bottom",
         legend.box = "vertical",
@@ -98,10 +101,10 @@ FSR_4_1_2b_plot <- ggplot(FSR_4_1_2b) +
 
 FSR_4_1_2b_plot  
 
-save_graphic(FSR_4_1_2b_plot, '4.1.2b','Household income before housing costs in the UK') + 
-  save_csv(FSR_4_1_2b, '4.1.2b','Household income before housing costs in the UK')
+save_graphic(FSR_4_1_2b_plot, '4.1.2c','Household income before housing costs in the UK') 
+save_csv(FSR_4_1_2b, '4.1.2c','Household income before housing costs in the UK')
 
-------------------------------------------------------------------------------------------------------------------------
+# Actual avg weekly hh expenditure ---------------------------------------------
 #Actual average weekly household expenditure (ONS Family Spending in the UK)
   
 F4_1_2c <- aws.s3::s3read_using(FUN = readr::read_csv,
@@ -135,19 +138,18 @@ F4_1_2c_plot <- ggplot(F4_1_2c, aes(x = Year, y = value, fill = variable)) +
 
 F4_1_2c_plot
 
-save_graphic(F4_1_2c_plot, '4.1.2c', 'Actual average weekly household expenditure') + 
-  save_csv(F4_1_2c, '4.1.2c', 'Actual average weekly household expenditure')
+save_graphic(F4_1_2c_plot, '4.1.2b', 'Actual average weekly household expenditure') 
+save_csv(F4_1_2c, '4.1.2b', 'Actual average weekly household expenditure')
 
 
 
 
--------------------------------------------------------------------------------------------------------------------------------------------------
+# % of hh expenditure G7 -------------------------------------------------------
   
 # Support Graph 4: Share of final consumption expenditure of households G7 countries with OECD Data: Still need to apply AFColor as it got 7 variables.
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
 
 F4_1_2d <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
@@ -181,7 +183,7 @@ F4_1_2d_plot <- ggplot(F4_1_2d, aes(x=Year, y=value, colour=variable, group=vari
 
 F4_1_2d_plot
 
-save_graphic(F4_1_2d_plot, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages') + 
-  save_csv(F4_1_2d, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages')
+save_graphic(F4_1_2d_plot, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages') 
+save_csv(F4_1_2d, '4.1.2d', ' Proportion of total household consumption expenditure spent on food and non-alcoholic beverages')
 
 

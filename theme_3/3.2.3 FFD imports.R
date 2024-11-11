@@ -10,12 +10,21 @@ library(zoo)
 source(here::here("utils", "load-font.R"))
 
 import_vol <- aws.s3::s3read_using(FUN = readr::read_csv,
+<<<<<<< HEAD:theme_3/3.2.3 FFD imports.R
                                    bucket = "s3-ranch-054",
                                    object = "theme_3/input_data/ffd_imports_volume.csv") |> 
   mutate(area = factor(area, levels = c("eu", "non eu"), labels = c("EU", "Non EU")))
 
 chart <- 
   import_vol |> 
+=======
+                                    bucket = "s3-ranch-054",
+                                    object = "theme_3/input_data/ffd_imports_volume.csv") |> 
+  mutate(area = factor(area, levels = c("eu", "non eu"), labels = c("EU", "Non EU")))
+
+chart <- 
+import_vol |> 
+>>>>>>> main:theme_3/3.3.2 FFD imports.R
   ggplot() +
   geom_line(aes(x = year, y = value, colour = area)) +
   geom_vline(xintercept = 2020.5, linetype = "dashed") +
@@ -26,8 +35,13 @@ chart <-
   labs(x = NULL, y = "Million tonnes") +
   theme_ukfsr(base_family = "GDS Transport Website")
 
+<<<<<<< HEAD:theme_3/3.2.3 FFD imports.R
 save_graphic(chart, "3.2.3a", "annual import volumes of ffd")
 save_csv(import_vol, "3.2.3a", "annual import volumes of ffd")
+=======
+save_graphic(chart, "3.3.2a", "annual import volumes of ffd")
+save_csv(import_vol, "3.3.2a", "annual import volumes of ffd")
+>>>>>>> main:theme_3/3.3.2 FFD imports.R
 
 # NOT USED import values -------------------------------------------------------
 import_data <- aws.s3::s3read_using(FUN = readr::read_csv,

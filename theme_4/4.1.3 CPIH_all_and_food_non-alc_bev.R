@@ -34,6 +34,8 @@ cdids <- c(cpih_all_yy, cpih_food_yy)
 
 af_duo_colours <- afcolours::af_colours("duo")
 
+# CPIH -------------------------------------------------------------------------
+
 cht <- line_chart(mm23_month, cdids)
 t4_1_3_plot <- cht +
   #theme_ukfsr(base_family = "GDS Transport Website") +
@@ -49,7 +51,7 @@ t4_1_3_plot <- cht +
     legend.text = element_text(margin = margin(r = 2, unit = 'cm')),
     plot.margin = margin(5,50,5,5,unit = "pt"))
 
-save_graphic(t4_1_3_plot,"4.1.3","cpih all and food non-alc bev")
+save_graphic(t4_1_3_plot,"4.1.3a","cpih all and food non-alc bev")
 
 # filter for relevant entries
 t4_1_3 <- mm23_month |> 
@@ -63,9 +65,9 @@ t4_1_3$cdid[t4_1_3$cdid == "L55P"] <- "Food inflation"
 t4_1_3 <- t4_1_3[ -c(4) ]
 
 # write out data to .CSV (and store in the bucket)
-save_csv(t4_1_3,"4.1.3","cpih all and food non-alc bev") 
+save_csv(t4_1_3,"4.1.3a","cpih all and food non-alc bev") 
 
-------------------------------------------------------------------------------------------------------------------------------------------
+# NOT USED Real terms prices ------------------------------------------------------------
 
 #NEW SUPPORT 1: Changes in the food price index (real terms prices), 2010 to present, index (Chart)"
 #Monthly data for Figure_14_6 on AUK

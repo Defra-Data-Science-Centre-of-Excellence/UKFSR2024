@@ -67,6 +67,7 @@ total_production<-fertiliser_production%>%
 
 total_production_chart<-ggplot()+
   geom_line(data=total_production,aes(x = year, y = value/1E6, colour = item)) +
+  scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.05))) +
   scale_colour_manual(values = af_colours("categorical",n=6)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   # guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
