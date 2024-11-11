@@ -15,6 +15,7 @@ library(afcolours)
 
 source(here("utils", "load-font.R"))
 
+
 # download data ----------------------------------------------------------------
 mm23 <- mm23::acquire_mm23()
 
@@ -34,7 +35,7 @@ t_4_1_3a_long <- mm23_month %>%
   transform(cdid=gsub(pattern="L55O", replacement="CPIH - Overall inflation", cdid)) %>%
   transform(cdid=gsub(pattern="L55P", replacement="CPIH - Food inflation", cdid)) 
 
-t_4_1_3a_long$date <- zoo::as.yearmon(t_4_1_3a_long$date, "%m %Y")
+t_4_1_3a_long$date <- as.Date(t_4_1_3a_long$date,"%b %Y")
 
 af_categorical_colours_2 <- afcolours::af_colours("duo")
 names(af_categorical_colours_2)=levels(t_4_1_3a_long$cdid)
@@ -42,6 +43,8 @@ names(af_categorical_colours_2)=levels(t_4_1_3a_long$cdid)
 t_4_1_3a_plot <- ggplot(t_4_1_3a_long, aes(x=date, y=value, colour=cdid)) +
   geom_line(linewidth=1) +
   scale_colour_manual(values = af_categorical_colours_2) +
+  scale_y_continuous(limits = c(-5,20), breaks = seq(-5,20,2.5)) +
+  scale_x_date(breaks = unique(t_4_1_3a_long$date)[c(T,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F)],date_labels = "%b %Y")+
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   labs(y = "Year on year % change in CPIH") +
   theme(

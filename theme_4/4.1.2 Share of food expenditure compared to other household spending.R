@@ -77,10 +77,10 @@ F4_1_2b <- aws.s3::s3read_using(FUN = readr::read_csv,
 FSR_4_1_2b <- F4_1_2b %>% 
   gather(key,value, `Quintile 1`,`Quintile 3 (median)`, `Quintile 5`)  %>%
   mutate(key = factor(key, levels = c("Quintile 5","Quintile 3 (median)", "Quintile 1"), ordered = TRUE)) %>% 
-  mutate(key = case_when(key=="Quintile 3 (median)"~"Middle 20% by income",
-                         key=="Quintile 1"~"Lowest 20% by income",
-                         key=="Quintile 5"~"Highest 20% by income")) %>% 
-  mutate(key = factor(key, levels = c("Lowest 20% by income","Middle 20% by income","All households","Highest 20% by income"), ordered = TRUE))
+  mutate(key = case_when(key=="Quintile 3 (median)"~"Middle 20% by income (Quintile 3)",
+                         key=="Quintile 1"~"Lowest 20% by income (Quintile 1)",
+                         key=="Quintile 5"~"Highest 20% by income (Quintile 5)")) %>% 
+  mutate(key = factor(key, levels = c("Lowest 20% by income (Quintile 1)","Middle 20% by income (Quintile 3)","Highest 20% by income (Quintile 5)"), ordered = TRUE))
 
 FSR_4_1_2b_plot <- ggplot(FSR_4_1_2b) + 
   geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
