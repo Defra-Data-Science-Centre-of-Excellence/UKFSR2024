@@ -142,7 +142,7 @@ area_equipped_for_irrigation_actually_irrigated_chart<-ggplot()+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(plot.margin=unit(c(0.4,1,0.4,1),"cm"))+
   labs(x = NULL,
-       y = "")
+       y = "Million hectares")
 
 save_graphic(area_equipped_for_irrigation_actually_irrigated_chart, "1.2.4c", "area equipped for irrigation: actually irrigated")
 save_csv(area_equipped_for_irrigation_actually_irrigated, "1.2.4c", "area equipped for irrigation: actually irrigated")
