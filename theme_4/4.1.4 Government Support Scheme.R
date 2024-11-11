@@ -11,9 +11,7 @@ library('scales')
 
 source(here::here("utils", "load-font.R"))
 
-contents <- get_bucket_df("s3-ranch-054")
-
-# Free School Meal Graph
+# Free School Meal Graph -------------------------------------------------------
 
 
 FSR_4_1_4 <- aws.s3::s3read_using(FUN = readr::read_csv,
@@ -22,20 +20,20 @@ FSR_4_1_4 <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 FSR_4_1_4_plot <- ggplot(FSR_4_1_4, aes(x = Year, y = `% of pupil`)) +
   geom_bar(stat = "identity", fill = af_colours()[1]) +
-  geom_text(aes(label = round(`% of pupil`,1) ),
+  geom_text(aes(label = round(`% of pupil`,1), family = "GDS Transport Website" ),
             position = position_dodge(width = 0.9), 
             vjust = -0.5, hjust = 0.5, 
             size = 6, color = 'black') + 
   labs(y = "Percentage of pupils eligible for free school meals (%) ",
        x = NULL) +
-  theme_ukfsr() 
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) 
 
 FSR_4_1_4_plot
 
-save_graphic(FSR_4_1_4_plot, '4.1.4','Free school meal') + 
-  save_csv(FSR_4_1_4, '4.1.4','Free school meal')
+save_graphic(FSR_4_1_4_plot, '4.1.4a','Free school meal') 
+save_csv(FSR_4_1_4, '4.1.4a','Free school meal')
 
----------------------------------------------------------------------------------------------------------------------------------------------------------
+# NOT USED Healthy Start vouchers -------------------------------------------------------
 # Food bank usage graph
 
 FSR_4_1_4a <- aws.s3::s3read_using(FUN = readr::read_csv,
