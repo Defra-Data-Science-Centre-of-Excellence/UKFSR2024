@@ -9,24 +9,25 @@ library(forcats)
 
 source(here::here("utils", "load-font.R"))
 
+# Import % by port -------------------------------------------------------------
 
-FSR_3_1_8 <- aws.s3::s3read_using(FUN = readr::read_csv,
+ports <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
                                    object = "theme_3/input_data/UK Import data.csv")
 
 # Convert data to long format
-FSR_3_1_8 <- FSR_3_1_8 %>%
+ports <- ports %>%
   gather(Year, Value, -Port)
 
 # Convert 'Port' to a factor with the specified order
-FSR_3_1_8$Port <- factor(FSR_3_1_8$Port,
+ports$Port <- factor(ports$Port,
                          levels = rev(c("Dover/Folkestone/Eurotunnel", "Liverpool", "London Gateway",
                                     "London (inc Tilbury)", "Immingham", "Felixstowe",
                                     "Middlesbrough", "Belfast", "Hull", "Southampton",
                                     "Harwich International", "Other recorded ports", "No port recorded")))
 
 # Create the plot
-FSR_3_1_8_plot <- ggplot(FSR_3_1_8, aes(x = Port, y = Value, fill = Year)) +
+ports_plot <- ggplot(ports, aes(x = Port, y = Value, fill = Year)) +
   geom_bar(stat = "identity", position = "dodge") +
   # geom_text(aes(label = round(Value, 1)), 
   #           position = position_dodge(width = 0.9),  # Use position_dodge here
@@ -39,14 +40,13 @@ FSR_3_1_8_plot <- ggplot(FSR_3_1_8, aes(x = Port, y = Value, fill = Year)) +
   theme(legend.position = "bottom", legend.title = element_blank())
 
 # Print the plot
-print(FSR_3_1_8_plot)
+print(ports_plot)
 
-save_graphic(FSR_3_1_8_plot, '3.3.1a', ' UK pct of import by port') + 
-  save_csv(FSR_3_1_8, '3.3.1a', ' UK pct of import by port')
+save_graphic(ports_plot, '3.2.2a', ' UK pct of import by port') 
+save_csv(ports, '3.2.2a', ' UK pct of import by port')
 
-# ------------------------------------------------------------------------------
   
-# Import % by Short Straits from EU
+# NOT USED Import % by Short Straits from EU -----------------------------------
   
 FSR_3_1_8a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                     bucket = "s3-ranch-054",
@@ -78,24 +78,22 @@ FSR_3_1_8a_plot <- ggplot(FSR_3_1_8a, aes(x = Food, y = Value, fill = Year)) +
 # Print the plot
 print(FSR_3_1_8a_plot)
 
-save_graphic(FSR_3_1_8a_plot, '3.3.1d', 'Import pct by product from short straits from EU') + 
-  save_csv(FSR_3_1_8a, '3.3.1d', ' Import pct by product from short straits from EU')
+# save_graphic(FSR_3_1_8a_plot, '3.3.1d', 'Import pct by product from short straits from EU') 
+# save_csv(FSR_3_1_8a, '3.3.1d', ' Import pct by product from short straits from EU')
 
   
   
-# --------------------------------------------------------------------------------------------------------------------------------------------------------
-  
-# Import % by Short Straits from EU + Non EU
+# Import % by Short Straits from EU + Non EU -----------------------------------
 
-FSR_3_1_8b <- aws.s3::s3read_using(FUN = readr::read_csv,
+ss_products <- aws.s3::s3read_using(FUN = readr::read_csv,
                                     bucket = "s3-ranch-054",
                                     object = "theme_3/input_data/Short_strait_improt_EU_&_NON-EU.csv")
 
 # Convert data to long format
-FSR_3_1_8b <- FSR_3_1_8b %>%
+ss_products <- ss_products %>%
   gather(Year, Value, -Food)
 
-FSR_3_1_8b <- FSR_3_1_8b %>%
+ss_products <- ss_products %>%
   group_by(Year) %>%
   filter(Food != "Food, feed & drink") |> 
   mutate(
@@ -109,7 +107,7 @@ FSR_3_1_8b <- FSR_3_1_8b %>%
 
 
 # Create the plot
-FSR_3_1_8b_plot <- ggplot(FSR_3_1_8b, aes(x = Food, y = Value, fill = Year)) +
+ss_products_plot <- ggplot(ss_products, aes(x = Food, y = Value, fill = Year)) +
   geom_bar(stat = "identity", position = "dodge") +
   # geom_text(aes(label = round(Value, 1)), 
   #           position = position_dodge(width = 0.9),  # Use position_dodge here
@@ -122,7 +120,7 @@ FSR_3_1_8b_plot <- ggplot(FSR_3_1_8b, aes(x = Food, y = Value, fill = Year)) +
   theme(legend.position = "bottom", legend.title = element_blank())
 
 # Print the plot
-print(FSR_3_1_8b_plot)
+print(ss_products_plot)
 
-save_graphic(FSR_3_1_8b_plot, '3.3.1e', ' Import pct by prodcut from short straits from EU + Non EU') + 
-  save_csv(FSR_3_1_8b, '3.3.1e', ' Import pct by product from short straits from EU + Non EU')
+save_graphic(ss_products_plot, '3.2.2b', 'Import pct by product from short straits from EU + Non EU') 
+save_csv(ss_products, '3.2.2b', 'Import pct by product from short straits from EU + Non EU')

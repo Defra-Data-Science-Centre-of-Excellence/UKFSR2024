@@ -24,5 +24,5 @@ cht <- data |>
   labs(x = NULL, y = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)
 
-save_graphic(cht, "3.4.2b", "fdm business demography")
-save_csv(data, "3.4.2b", "fdm business demography")
+save_graphic(cht, "3.3.3b", "fdm business demography")
+save_csv(data, "3.3.3b", "fdm business demography")

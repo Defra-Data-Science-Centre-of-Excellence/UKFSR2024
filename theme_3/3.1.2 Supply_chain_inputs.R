@@ -28,7 +28,7 @@ net_trade <- function(file, product) {
     pivot_wider(names_from = flow) |> 
     rename(imports = Imports,
            exports = Exports) |> 
-    mutate(net = imports - exports,
+    mutate(net = exports - imports,
            product = product) |> 
     pivot_longer(cols = c(exports, imports, net),names_to = "flow")
   

@@ -47,7 +47,9 @@ cereal_chart <- cp |>
   # coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) 
 
-save_graphic(cereal_chart, "3.3.1b", "chokepoints share of trade cereals")
+save_graphic(cereal_chart, "3.2.2c", "chokepoints share of trade cereals")
+
+# Fertiliser -------------------------------------------------------------------
 
 fert_chart <- cp |> 
   filter(category1 == "Fertilizers") |> 
@@ -72,4 +74,4 @@ fert_chart <- cp |>
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) 
 
 
-save_graphic(fert_chart, "3.3.1c", "chokepoints share of trade fertiliser")
+save_graphic(fert_chart, "3.2.2d", "chokepoints share of trade fertiliser")
