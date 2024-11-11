@@ -46,7 +46,8 @@ grfc2024_chart<-grfc2024_out%>%
   scale_fill_manual(values = af_colours("categorical",n=3),labels=c("rest of population","1+2 No/Minimal+Stressed","3+ Crisis")) +
   #scale_color_manual(values = c("white","black"))+ 
   scale_x_continuous(breaks=seq(2016,2023,1))+
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   labs(x = NULL,
        y = "Million people")
 
@@ -97,7 +98,8 @@ number_of_moderately_or_severely_food_insecure_people_world<-number_of_moderatel
 number_of_moderately_or_severely_food_insecure_people_world_chart<-number_of_moderately_or_severely_food_insecure_people_world%>%
   ggplot()+
   geom_col(aes(x=year,y=value),fill=af_colours("duo")[1])+
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   #scale_x_continuous(breaks=seq(2016,2023,1))+
   labs(x = NULL,
        y = "Million people")
@@ -323,6 +325,7 @@ number_of_undernourised_chart<-ggplot()+
   geom_col(data=number_of_undernourised,aes(x=`Year Code`,y=Value,group=Area,fill=Area))+
   scale_fill_manual(values = af_colours("duo")) +
   scale_color_manual(values = af_colours("duo")[2]) +
+  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
   #scale_x_continuous(breaks=seq(2016,2023,1))+
   labs(x = NULL,
        y = "Million people") +

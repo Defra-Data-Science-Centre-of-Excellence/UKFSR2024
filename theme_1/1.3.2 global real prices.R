@@ -60,7 +60,7 @@ egp_usd_chart <- egp_usd |>
   theme_ukfsr()+
   scale_color_manual(values = af_colours("duo"))+
   #scale_x_continuous(breaks=seq(2019,2024,1),labels=seq(2019,2024,1))+
-  scale_y_continuous(breaks=seq(0,3.5,0.5),limits=c(0,3.5))+
+  scale_y_continuous(breaks=seq(0,3.5,0.5),limits=c(0,3.5), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "index 2019=100")
@@ -126,7 +126,7 @@ deflated_meat_sugar_chart <- deflated_meat_sugar |>
   theme_ukfsr()+
   scale_color_manual(values = af_colours("categorical",n=3))+
   #scale_x_continuous(breaks=seq(2019,2024,1),labels=seq(2019,2024,1))+
-  #scale_y_continuous(breaks=seq(0,3.5,0.5),limits=c(0,3.5))+
+  scale_y_continuous(limits=c(0, NA), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "US$/kg index real 100=2023")
@@ -144,7 +144,7 @@ deflated_cereals_chart <-deflated_cereals |>
   scale_color_manual(values = af_colours("categorical",n=4))+
   guides(color=guide_legend(nrow=2,byrow=TRUE))+
   scale_x_continuous(breaks=date_list_x,labels = seq(1960,2020,10))+
-  #scale_y_continuous(breaks=seq(0,3.5,0.5),limits=c(0,3.5))+
+  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "US$/mt index,real 100=2023")
