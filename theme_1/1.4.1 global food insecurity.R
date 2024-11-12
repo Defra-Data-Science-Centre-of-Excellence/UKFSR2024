@@ -43,7 +43,7 @@ grfc2024_chart<-grfc2024_out%>%
   ggplot()+
   geom_col(aes(x=year,y=value/1e6,fill=category))+
   theme_ukfsr()+
-  scale_fill_manual(values = af_colours("categorical",n=3),labels=c("rest of population","1+2 No/Minimal+Stressed","3+ Crisis")) +
+  scale_fill_manual(values = af_colours("categorical",n=3),labels=c("Rest of population\nin GRFC countries","1+2 No/Minimal+Stressed","3+ Crisis")) +
   #scale_color_manual(values = c("white","black"))+ 
   scale_x_continuous(breaks=seq(2016,2023,1))+
   scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
