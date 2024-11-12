@@ -114,10 +114,10 @@ scr_chart <- scr_out |>
   geom_line(aes(x=plot_year,y=scr/100,color=area))+
   scale_color_manual(values = af_colours("categorical"))+
   scale_x_continuous(breaks=seq(2004,2024,5),labels=year_labels)+
-  scale_y_continuous(breaks=seq(0,0.6,0.1),limits=c(0,0.6),labels = scales::percent)+
+  scale_y_continuous(breaks=seq(0,0.6,0.1),limits=c(0,0.6),labels = scales::percent, expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing=unit(2,"lines"),
-        axis.ticks = element_line() ,
+        # axis.ticks = element_line() ,
         axis.ticks.length = unit(.1, "cm"),
         axis.line.x = element_line(),
         plot.margin=unit(c(0.4,1,0.4,0.5),"cm"))+

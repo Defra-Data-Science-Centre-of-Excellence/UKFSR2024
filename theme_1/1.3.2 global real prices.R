@@ -58,11 +58,11 @@ egp_usd<-com_historical_data_monthly%>%
 
 egp_usd_chart <- egp_usd |> 
   ggplot() +
-  geom_line(aes(x=date,y=index,color=currency))+
+  geom_line(aes(x=date,y=index*100,color=currency))+
   theme_ukfsr()+
   scale_color_manual(values = af_colours("duo"))+
   #scale_x_continuous(breaks=seq(2019,2024,1),labels=seq(2019,2024,1))+
-  scale_y_continuous(breaks=seq(0,4.0,0.5),limits=c(0,4.0), expand = expansion(mult = c(0, 0.05)))+
+  scale_y_continuous(breaks=seq(0,400,50),limits=c(0,400), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "index 2019=100")

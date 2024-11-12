@@ -47,7 +47,7 @@ export_shares_global_a<-export_shares_not_world%>%
 herfindhal_indices_chart<-ggplot()+
   geom_line(data=export_shares_global,aes(x = year, y = signif(hi,digits=3),group=commodity, colour = commodity)) +
   geom_point(data=export_shares_global,aes(x = year, y = signif(hi,digits=3),group=commodity, colour = commodity, shape = commodity),size=3) +
-  scale_y_continuous(limits = c(0,0.5),breaks=c(0.1,0.2,0.3,0.4,0.5),labels=c(0.1,0.2,0.3,0.4,0.5)) +
+  scale_y_continuous(limits = c(0,0.5),breaks=c(0, 0.1,0.2,0.3,0.4,0.5),labels=c(0, 0.1,0.2,0.3,0.4,0.5), expand = expansion(mult = c(0, 0.05))) +
   scale_x_continuous(limits = c(2004,2024),breaks=c(seq(2004,2020,4),2023),labels=c("04/05","08/09","12/14","16/17","20/21","23/24"))+
   scale_colour_manual(values = af_colours("categorical",n=6)) +
   theme_ukfsr(base_family = "GDS Transport Website") +

@@ -11,6 +11,7 @@ library(here)
 library(readxl)
 library(tidyverse)
 
+source(here("utils", "load-font.R"))
 
 # TFP growth by income group ---------------------------------------------------
 
@@ -25,7 +26,7 @@ tfp_out_2013_2022_chart<-ggplot()+
   facet_wrap(~Region)+
   scale_y_continuous(limits=c(0,0.025),breaks=c(0,0.005,0.01,0.015,0.02),labels = scales::percent)+
   scale_fill_manual(values = af_colours("duo")) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   labs(x = NULL,
        y = "Average annual growth")
 

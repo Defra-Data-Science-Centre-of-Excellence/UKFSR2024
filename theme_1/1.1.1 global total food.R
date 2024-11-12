@@ -110,7 +110,7 @@ food_supply_chart<-ggplot(food_supply)+
   geom_vline(aes(xintercept = 2010),linetype="dashed")+
   facet_wrap(~Area)+#,scales="free")+
   #annotate("text",x=2000,y=1500,size=6,label="change in\nmethodology")+
-  scale_y_continuous(limits=c(0,4000))+
+  scale_y_continuous(limits=c(0,4000), labels = scales::label_comma())+
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(panel.spacing = unit(1, "cm"),
         plot.margin=unit(c(0.4,1,0.4,0.4),"cm"),
