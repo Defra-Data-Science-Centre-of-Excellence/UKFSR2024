@@ -21,7 +21,7 @@ source(here::here("utils", "load-font.R"))
 
 t_5_2_4b <- aws.s3::s3read_using(FUN = read_csv,
                                  bucket = ukfsr::s3_bucket(),
-                                 object = "theme_5/t5_1_5/output/csv/5_2_4b_tot_number_human_cases_perc_hosp.csv")
+                                 object = "theme_5/t5_2_4/output/csv/5_2_4b_rate_reported_infections_per_pop_per_year.csv")
 
 ############################################################################################################################################
 # https://stackoverflow.com/questions/42588238/setting-individual-y-axis-limits-with-facet-wrap-not-with-scales-free-y

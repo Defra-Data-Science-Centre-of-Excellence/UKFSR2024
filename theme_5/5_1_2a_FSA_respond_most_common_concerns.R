@@ -19,8 +19,9 @@ source(here("utils", "load-font.R"))
 
 t5_1_2a <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
-                                object = "theme_5/t_5_1_2/output/csv/5_1_2a_FSA_respond_ten_most_common_prompted_concerns.csv",
+                                object = "theme_5/t_5_1_2/output/csv/5_1_2a_fsa_respond_ten_most_common_prompted_concerns.csv",
                                 col_types = colspec)
+
 
 t5_1_2a$`Types of concern` <- factor(t5_1_2a$`Types of concern`, levels = c("Food prices","Food waste","The amount of food packaging","The quality of food",
                                                                             "The amount of sugar in food","Food hygiene when ordering takeaways","Animal welfare",
@@ -43,7 +44,7 @@ t5_1_2a_plot <- ggplot(t5_1_2a, aes(x= reorder(`Types of concern`, `Percentage o
     legend.position = "bottom", 
     legend.justification = c(0,0)) +
   labs(y = "Percentage of respondents (%)") +
-  labs(x = "Types of concern\n") +
+  labs(x = "Most common concerns\n") +
   geom_text(aes(label = round(`Percentage of respondents`,0)), vjust = 0.5, hjust = 2, size = 8, fontface = "bold", colour = "white") +
   coord_flip() 
 
