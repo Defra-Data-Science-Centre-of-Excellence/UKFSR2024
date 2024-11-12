@@ -207,7 +207,7 @@ feed <- aws.s3::s3read_using(FUN = readr::read_csv,
 feed_chart <- ggplot(feed) +
   geom_line(aes(x = year, y = value, colour = Type)) +
   scale_colour_manual(values = af_colours(type = "categorical", n = 4)) +
-  scale_y_continuous(labels = scales::label_comma(scale = 0.001)) +
+  scale_y_continuous(labels = scales::label_comma(scale = 0.001), limits = c(0,NA), expand = expansion(mult = c(0, 0.05))) +
   labs(x = NULL, y = "million tonnes") +
   guides(colour = guide_legend(nrow = 2)) + 
   theme_ukfsr(base_family = "GDS Transport Website")

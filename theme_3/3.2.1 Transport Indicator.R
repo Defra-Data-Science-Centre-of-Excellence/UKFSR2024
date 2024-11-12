@@ -63,7 +63,7 @@ map_plot <- ggplot() +
                     panel.grid = element_blank(),
                     legend.direction = "vertical",
                     legend.position = "inside", legend.position.inside = c(0.1, 0.5),
-                    legend.text = element_text(size = 16), legend.title = element_text(size = 16)) 
+                    legend.text = element_text(size = 22), legend.title = element_text(size = 22)) 
               
 
 map_plot  
@@ -101,7 +101,7 @@ map_plot <- ggplot() +
         panel.grid = element_blank(),
         legend.direction = "vertical",
         legend.position = "inside", legend.position.inside = c(0.1, 0.5),
-        legend.text = element_text(size = 16), legend.title = element_text(size = 16)) 
+        legend.text = element_text(size = 24), legend.title = element_text(size = 24)) 
 
 
 map_plot 

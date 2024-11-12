@@ -217,7 +217,7 @@ crops_chart <-
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(strip.placement = "outside",
         strip.text.y.left = element_text(size = 20, hjust = 1, angle = 0),
-        strip.background = element_rect(fill = "white"), legend.location = "plot") 
+        strip.background = element_rect(fill = "white"), legend.location = "plot", plot.margin = margin(r = 1, unit = "cm")) 
 
 save_graphic(crops_chart, "3.3.3f", "fbi cereals by cost centre")
 save_csv(cht_data, "3.3.3", "farm business income by cost centre")
