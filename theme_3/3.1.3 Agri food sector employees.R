@@ -18,7 +18,8 @@ FSR_3_1_4 <- aws.s3::s3read_using(FUN = readr::read_csv,
 
 FSR_3_1_4 <- FSR_3_1_4 %>%
   gather(variable,value, `Agriculture (including fishing)`,`Food and drink manufacturing`,`Food and drink wholesaling`,`Food and drink retailing`,`Food and drink non-residential catering`) %>%
-  mutate("Year" = as.Date(paste0(Year, "-01-01"))) 
+  mutate("Year" = as.Date(paste0(Year, "-01-01"))) |> 
+  filter(Year >= "2002-01-01")
 
 FSR_3_1_4_plot <- ggplot(FSR_3_1_4, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
@@ -37,5 +38,5 @@ FSR_3_1_4_plot <- ggplot(FSR_3_1_4, aes(x=Year, y=value, colour=variable, group=
 
 FSR_3_1_4_plot
 
-save_graphic(FSR_3_1_4_plot, '3.1.3a', ' Agri food sector employees self employed farmers') + 
+save_graphic(FSR_3_1_4_plot, '3.1.3a', ' Agri food sector employees self employed farmers') 
   save_csv(FSR_3_1_4, '3.1.3a', ' Agri food sector employees self employed farmers')
