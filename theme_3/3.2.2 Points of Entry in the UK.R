@@ -37,7 +37,9 @@ ports_plot <- ggplot(ports, aes(x = Port, y = Value, fill = Year)) +
   scale_y_continuous(labels = scales::label_number(suffix = "%")) +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
-  theme(legend.position = "bottom", legend.title = element_blank())
+  theme(legend.position = "bottom", 
+        legend.title = element_blank(),
+        plot.margin = margin(r = 0.5, unit = "cm"))
 
 # Print the plot
 print(ports_plot)

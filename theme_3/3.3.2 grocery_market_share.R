@@ -90,9 +90,10 @@ facet_cht <- gms |>
   geom_line(aes(x = date, y = value, colour = company), colour = af_colours()[1]) +
   gghighlight(value >= 0,use_direct_label = FALSE) +
   scale_y_continuous(labels = scales::label_number(suffix = "%")) +
+  scale_x_date(date_labels = "%Y",) +
   facet_wrap(vars(company)) +
   labs(x = NULL, y = NULL) +
-  theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "none")
+  theme_ukfsr(base_family = "GDS Transport Website") + theme(legend.position = "none", plot.margin = margin(r = 1, unit = "cm"))
 
 save_graphic(facet_cht, "3.3.2a", "grocery market share time series")
 # csv not saved because Im not sure we should be disseminating Kantar data
