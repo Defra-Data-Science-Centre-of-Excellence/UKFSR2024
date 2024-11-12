@@ -20,7 +20,7 @@ source(here("utils", "load-font.R"))
 
 t5_3_1a <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
-                                object = "theme_5/t_5_3_1/output/csv/5_3_1a_perc_distr_FHRS_Eng_Wales_NI.csv")
+                                object = "theme_5/t_5_3_1/output/csv/5_3_1a_perc_distr_fhrs_Eng_Wales_NI.csv")
 
 t5_3_1a$quarter <- factor(t5_3_1a$quarter, levels = c("Q1 2019/20","Q2 2019/20","Q3 2019/20","Q4 2019/20","Q1 2020/21","Q2 2020/21",
                                                       "Q3 2020/21","Q4 2020/21","Q1 2021/22","Q2 2021/22","Q3 2021/22","Q4 2021/22",
@@ -61,7 +61,7 @@ everyother <- function(x) x[seq_along(x) %% 2 == 0]
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   scale_fill_manual(values = af_categorical_colours) +
   scale_y_continuous(expand = c(0,-1), limits = c(0,101),breaks = seq(0,101,10)) +
-  labs(y = "Percentage of distribution of FHRS ratings (%)") +
+  labs(y = "Percentage of FHRS ratings (%)") +
   theme(axis.text.x = element_text(size=18)) +
   theme(legend.position = "bottom", legend.title = element_blank(), 
         legend.text = element_text(size=20, face = "italic", 
@@ -78,7 +78,7 @@ everyother <- function(x) x[seq_along(x) %% 2 == 0]
 
 t5_3_1a_plot
 
-save_graphic(t5_3_1a_plot, "5.3.1a", "perc distr FHRS Eng Wales NI")
+save_graphic(t5_3_1a_plot, "5.3.1a", "perc distr fhrs Eng Wales NI")
 
-save_csv(t5_3_1a, "5.3.1a", "perc distr FHRS Eng Wales NI")
+save_csv(t5_3_1a, "5.3.1a", "perc distr fhrs Eng Wales NI")
 

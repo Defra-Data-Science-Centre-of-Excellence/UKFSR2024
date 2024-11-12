@@ -74,7 +74,7 @@ t5_1_1g_plot <- ggplot(t5_1_1g_long, aes(x=factor(Wave_label), y=Value)) +
   facet_wrap(~ Actor, ncol = 3, scales = "free_x", drop=FALSE) +
   theme(
     legend.position="none",
-    strip.text = element_text(size = 23, face = "bold"),
+    strip.text = element_text(size = 32, face = "bold"),
     strip.background =element_rect(fill="white"))
 
 # create text box
@@ -108,7 +108,8 @@ grid.draw(textbox)
 # RStudio ('Zoom'), maximising the window and inspecting the elements ('right click', e.g. 1920 X 982). Then 'Export', 
 # 'Save as image' in the 'Plots' tab (image format: SVG), and setting the width as e.g. 1920 and just leave the aspect ratio 
 # checked.
-# ALSO whilst checking box to get the correct aspect ratio, then uncheck the box and adjust the height to produce a squarer design
-# which can be further checked after pasting into e.g. MS Word
+# FURTHER OPTION whilst checking the box to ensure the correct aspect ratio before the numbers are entered, there is also the 
+# option of then unchecking the box and adjust the height to produce a squarer design which can be further checked after 
+# pasting into e.g. MS Word
 
 save_csv(t5_1_1g, "5.1.1g", "fsa respond confidence food supply chain actors ensure food safe eat in")

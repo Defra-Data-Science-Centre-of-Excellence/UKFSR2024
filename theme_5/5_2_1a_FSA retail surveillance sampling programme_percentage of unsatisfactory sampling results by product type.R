@@ -14,7 +14,7 @@ source(here("utils", "load-font.R"))
 
 t5_2_1a <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
-                                object = "theme_5/t5_2_1/output/csv/5_2_1a_FSA_retail_surveillance_sampling_programme_percentage_of_unsatisfactory_sampling_results_by_product_type.csv")
+                                object = "theme_5/t5_2_1/output/csv/5_2_1a_fsa_retail_surveillance_sampling_programme_percentage_of_unsatisfactory_sampling_results_by_product_type.csv")
 
 t5_2_1a$Product <- factor(t5_2_1a$Product, levels = c("Bread","Sausages*","Butter*","Yoghurts*","Chicken Ready Meals*",
                                                   "Olive oil","Orange Juice","Pasta*","Oregano","Free From","Cheese",
@@ -53,4 +53,4 @@ t5_2_1a_plot
 
 save_graphic(t5_2_1a_plot, "5.2.1a", "fsa retail surveillance sampling programme_percentage of unsatisfactory sampling results by product type")
 
-save_csv(t5_2_1a, "5.2.1a", "fsa retail surveillance sampling programme_percentage of unsatisfactory sampling results by product type")
+save_csv(t5_2_1a, "5.2.1a", "fsa retail surveillance sampling programme percentage of unsatisfactory sampling results by product type")
