@@ -19,7 +19,7 @@ source(here("utils", "load-font.R"))
 
 phoma_canker <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
-                            object = "theme_2/t2_1_6/input/phoma_canker.csv")%>%
+                            object = "theme_2/input_data/t2_2_1/input/phoma_canker.csv")%>%
   pivot_longer(cols=3:5,names_to="measure",values_to="value")
 
 phoma_canker_chart <-phoma_canker |> 
@@ -34,12 +34,12 @@ phoma_canker_chart <-phoma_canker |>
   labs(x = NULL,
        y = "")
 
-save_graphic(phoma_canker_chart, "2.1.6", "phoma canker chart")
-save_csv(phoma_canker, "2.1.6", "phoma_canker")
+save_graphic(phoma_canker_chart, "2.2.1", "phoma canker chart")
+save_csv(phoma_canker, "2.2.1", "phoma_canker")
 
 sea_lice <- aws.s3::s3read_using(FUN = read_csv,
                                      bucket = ukfsr::s3_bucket(),
-                                     object = "theme_2/t2_1_6/input/nat_mort.csv")%>%
+                                     object = "theme_2/input_data/t2_2_1/input/nat_mort.csv")%>%
   mutate(month=month(date))%>%
   select(year,month,mortality)%>%
   filter(year!=2018)%>%
@@ -55,12 +55,12 @@ sea_lice_chart <-sea_lice |>
   labs(x = NULL,
        y = "percent")
 
-save_graphic(sea_lice_chart, "2.1.6", "sea lice chart")
-save_csv(sea_lice, "2.1.6", "sea_lice")
+save_graphic(sea_lice_chart, "2.2.1", "sea lice chart")
+save_csv(sea_lice, "2.2.1", "sea_lice")
 
 septoria_tritici <- aws.s3::s3read_using(FUN = read_csv,
                                      bucket = ukfsr::s3_bucket(),
-                                     object = "theme_2/t2_1_6/input/Septoria_tritici.csv")%>%
+                                     object = "theme_2/input_data/t2_2_1/Septoria_tritici.csv")%>%
   pivot_longer(cols=3:8,names_to="measure",values_to="value")
 
 septoria_tritici_chart <-septoria_tritici |> 
@@ -76,5 +76,5 @@ septoria_tritici_chart <-septoria_tritici |>
   labs(x = NULL,
        y = "")
 
-save_graphic(septoria_tritici_chart, "2.1.6", "septoria tritici chart")
-save_csv(septoria_tritici, "2.1.6", "septoria tritici")
+save_graphic(septoria_tritici_chart, "2.2.1", "septoria tritici chart")
+save_csv(septoria_tritici, "2.2.1", "septoria tritici")
