@@ -33,7 +33,8 @@ FSR_4_1_10_plot <-  ggplot(FSR_4_1_10, aes(x = Year, y = value, fill = variable)
     y = "GHG Emissions (MtCO2e)",
     fill = "Category"
   ) +
-  theme_ukfsr(base_family = "GDS Transport Website") 
+  theme_ukfsr(base_family = "GDS Transport Website")  +
+  guides(fill = guide_legend(nrow = 2))
 
 FSR_4_1_10_plot
 
