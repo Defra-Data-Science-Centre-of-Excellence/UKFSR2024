@@ -16,14 +16,16 @@ source(here::here("utils", "load-font.R"))
 
 FSR_4_1_4 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
-                                   object = "theme_4/input_data/FreeSchoolMeal.csv")
+                                   object = "theme_4/input_data/FreeSchoolMeal.csv") |> 
+  mutate(Year = stringr::str_replace(Year, "/", " /"))
 
 FSR_4_1_4_plot <- ggplot(FSR_4_1_4, aes(x = Year, y = `% of pupil`)) +
   geom_bar(stat = "identity", fill = af_colours()[1]) +
   geom_text(aes(label = round(`% of pupil`,1), family = "GDS Transport Website" ),
             position = position_dodge(width = 0.9), 
             vjust = -0.5, hjust = 0.5, 
-            size = 6, color = 'black') + 
+            size = 7, color = 'black') + 
+  scale_x_discrete(labels = label_wrap(width = 4)) +
   labs(y = "Percentage of pupils eligible for free school meals (%) ",
        x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) 
