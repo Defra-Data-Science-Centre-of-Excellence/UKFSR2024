@@ -34,8 +34,8 @@ phoma_canker_chart <-phoma_canker |>
   labs(x = NULL,
        y = "")
 
-save_graphic(phoma_canker_chart, "2.2.1", "phoma canker chart")
-save_csv(phoma_canker, "2.2.1", "phoma_canker")
+save_graphic(phoma_canker_chart, "2.2.1c", "phoma canker")
+save_csv(phoma_canker, "2.2.1c", "phoma_canker")
 
 sea_lice <- aws.s3::s3read_using(FUN = read_csv,
                                      bucket = ukfsr::s3_bucket(),
@@ -70,11 +70,11 @@ septoria_tritici_chart <-septoria_tritici |>
   scale_color_manual(values = c(af_colours("categorical",n=3),af_colours("categorical",n=3)))+
   guides(color=guide_legend(nrow=6,byrow=TRUE))+
   scale_x_continuous(breaks=seq(2003,2023,2),labels = seq(2003,2023,2))+
-  scale_linetype_manual(values=c("solid","solid","solid","dashed","dashed","dashed"))+
+  scale_linetype_manual(values=c("solid","solid","solid","dotted","dotted","dotted"))+
   scale_y_continuous(labels = scales::percent)+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "")
 
-save_graphic(septoria_tritici_chart, "2.2.1", "septoria tritici chart")
-save_csv(septoria_tritici, "2.2.1", "septoria tritici")
+save_graphic(septoria_tritici_chart, "2.2.1b", "septoria tritici")
+save_csv(septoria_tritici, "2.2.1b", "septoria tritici")
