@@ -173,7 +173,7 @@ F4_1_2d_plot <- ggplot(F4_1_2d, aes(x=Year, y=value, colour=variable, group=vari
   guides(fill = guide_legend(byrow = TRUE)) +
   theme(legend.position = "none") +
   #theme(legend.direction = "vertical", legend.position = "bottom", legend.box = "vertical") +
-  scale_x_date(date_breaks = "4 years", date_labels = "%Y") 
+  scale_x_date(date_breaks = "5 years", date_labels = "%Y") 
 
 F4_1_2d_plot
 
