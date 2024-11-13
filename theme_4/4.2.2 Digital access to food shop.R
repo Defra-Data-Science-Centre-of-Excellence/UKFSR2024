@@ -73,7 +73,8 @@ FSR_4_1_7a_plot <- ggplot(FSR_4_1_7a, aes(x = Demography, y = proportion, fill =
   labs(y = "% of sales by type of food shop",
        x = NULL,
        fill = "Retail Channel") +
-  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE)
+  theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
+  theme(plot.margin = margin(r = 1.5, unit = "cm"))
 
 FSR_4_1_7a_plot
 
