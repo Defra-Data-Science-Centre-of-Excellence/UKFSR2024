@@ -90,7 +90,7 @@ library(readr)
 # needed with final data. Plus there is a 31 char limit for sheet names.
 csvs <- bucket_manifest(file_ext = "csv") |> 
   dplyr::filter(stringr::str_starts(folder, "theme_3") & stringr::str_ends(folder, "output/csv")) |> 
-  mutate(sheet_name = str_replace_all(paste0(row_number(), "_", indicator_id,"_", str_sub(title, 1, 19)), " ", "_"))
+  mutate(sheet_name = str_replace_all(paste0(indicator_id,"_", str_sub(title, 1, 19)), " ", "_"))
 
 path <- csvs$path
 title <- csvs$title
