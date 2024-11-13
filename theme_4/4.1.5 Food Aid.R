@@ -80,6 +80,7 @@ FSR_4_1_5a_plot <- ggplot(FSR_4_1_5a, aes(x = `Frequency of social supermarket u
             colour= "black",
             family = "GDS Transport Website",
             size = 7) +
+  scale_x_discrete(labels = label_wrap_gen()) +
   labs(y = "% of respondents", x = "Frequency of social supermarket use") +
   coord_flip() +
   theme_ukfsr(base_family = "GDS Transport Website",
@@ -88,5 +89,5 @@ FSR_4_1_5a_plot <- ggplot(FSR_4_1_5a, aes(x = `Frequency of social supermarket u
 
 FSR_4_1_5a_plot
 
-save_graphic(FSR_4_1_5a_plot, '4.1.5d','Percentage of households using supermarket') + 
+save_graphic(FSR_4_1_5a_plot, '4.1.5d','Percentage of households using supermarket')  
   save_csv(FSR_4_1_5a, '4.1.5d','Percentage of households using supermarket')

@@ -16,7 +16,7 @@ library(scales)
 library(knitr)
 library(data.table)
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 # download data ----------------------------------------------------------------
 mm23 <- mm23::acquire_mm23()
@@ -71,10 +71,11 @@ t_4_1_3c_long <-mm23_month %>%
 t_4_1_3c_plot <- ggplot(t_4_1_3c_long, aes(x=reorder(`Food group`, `Percentage change (%)`), y=`Percentage change (%)`,
                                            fill=factor(ifelse(`Food group` == "Food and non-alcoholic beverages","Highlighted","Normal")))) +
   geom_bar(stat="identity", show.legend = FALSE, width=0.5) +
-  geom_text(aes(label = ifelse(`Food group` == "Food and non-alcoholic beverages", sprintf('%.3f',`Percentage change (%)`), 
+  geom_text(aes(label = ifelse(`Food group` == "Food and non-alcoholic beverages", sprintf('%.1f',`Percentage change (%)`), 
                                sprintf('%.1f',`Percentage change (%)`)), hjust=ifelse(`Percentage change (%)` < 0, 1.3, -0.4), vjust = 0.5), 
-            size=8, parse = FALSE) +
+            size=8, parse = FALSE, family = "GDS Transport Website") +
   scale_y_continuous(limits = c(-5,20), breaks=seq(-5,20,5)) +
+  scale_x_discrete(labels = label_wrap_gen(width = 25)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14, horizontal = TRUE) +
   scale_fill_manual(name = "`Food group`", values=c("#F46A25","#12436D")) +
   theme(axis.title.y = element_blank())  +

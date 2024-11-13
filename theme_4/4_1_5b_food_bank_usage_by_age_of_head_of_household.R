@@ -9,11 +9,11 @@ library(here)
 library(stringr)
 library(data.table)
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 t4_1_5b <- aws.s3::s3read_using(FUN = read_csv,
                                 bucket = ukfsr::s3_bucket(),
-                                object = "theme_4/t4_1_5/output/csv/4_1_5b_food_bank_usage_by_age_of_head_of_household.csv")
+                                object = "theme_4/input_data/4_1_5b_food_bank_usage_by_age_of_head_of_household.csv")
 
 t4_1_5b$`Age group` <- factor(t4_1_5b$`Age group`, levels = c("16 to 24","25 to 34","35 to 44","45 to 54","55 to 59","60 to 64","65 to 74",
                                                                     "75 to 84","85 and over"))
@@ -38,11 +38,11 @@ t4_1_5b_plot <- ggplot(t4_1_5b_long, aes(x=factor(`Age group`), y=Value, fill=Us
   geom_bar(stat="identity", position=position_dodge()) +
   scale_y_continuous(limits = c(0,8), breaks=seq(0,8,1)) +
   geom_text(data = subset(t4_1_5b_long, Usage == "30 day food bank usage"),
-            aes(label=Value, vjust = -0.5, hjust = 2.3), size=8) +
+            aes(label=Value, vjust = -0.5, hjust = 2.3), size=8, family = "GDS Transport Website") +
   geom_text(data = subset(t4_1_5b_long, Usage == "12 month food bank usage"),
-            aes(label=Value, vjust = -0.5, hjust = -1.4), size=8) +
+            aes(label=Value, vjust = -0.5, hjust = -1.4), size=8, family = "GDS Transport Website") +
   guides(fill = guide_legend(byrow = TRUE)) +
-  theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   scale_fill_manual(values = af_categorical_colours) +
   theme(
     legend.position = "bottom", 
@@ -53,7 +53,7 @@ t4_1_5b_plot <- ggplot(t4_1_5b_long, aes(x=factor(`Age group`), y=Value, fill=Us
   theme(legend.text=element_text(size=24)) +
   labs(y = "Percentage of households (%)") +
   guides(colour=guide_legend(override.aes=list(size=1))) +
-  theme(legend.direction = "vertical", legend.position = "bottom", legend.box = "vertical") 
+  theme(legend.direction = "horizontal", legend.position = "bottom", legend.box = "vertical") 
 
 t4_1_5b_plot
 

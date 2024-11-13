@@ -49,8 +49,8 @@ FSR_4_1_2a <- F4_1_2a %>%
 
 FSR_4_1_2a_plot <- ggplot(FSR_4_1_2a) + 
   geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
-  scale_y_continuous(limits = c(0,20), breaks=seq(0,20,2)) +
-  scale_x_discrete(breaks = unique(FSR_4_1_2$Year)[c(T,F,F)])+
+  scale_y_continuous(limits = c(0,20), breaks=seq(0,20,2), expand = expansion(mult = c(0,0.05))) +
+  scale_x_discrete(breaks = unique(FSR_4_1_2a$Year)[c(T,F,F)])+
   scale_colour_manual(values = af_colours()) +
   labs(y = "% spend on food and non-alcoholic drinks",
        x = NULL) +
@@ -64,7 +64,7 @@ FSR_4_1_2a_plot <- ggplot(FSR_4_1_2a) +
 FSR_4_1_2a_plot
 
 save_graphic(FSR_4_1_2a_plot, '4.1.2a','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
-  save_csv(FSR_4_1_2a, '4.1.2a','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
+save_csv(FSR_4_1_2a, '4.1.2a','Average share of spend on food and non-alcoholic drinks, by household income, in the UK')
 
 # Actual avg weekly hh expenditure ---------------------------------------------
 #Actual average weekly household expenditure (ONS Family Spending in the UK)
@@ -82,7 +82,7 @@ save_graphic(FSR_4_1_2a_plot, '4.1.2a','Average share of spend on food and non-a
   
   F4_1_2b_plot <- ggplot(F4_1_2b, aes(x = Year, y = value, fill = variable)) +
     geom_bar(stat = "identity") +
-    geom_text(aes(label = sprintf("%.2f",value)), 
+    geom_text(aes(label = sprintf("%.1f",value)), 
               position = position_stack(vjust = 0.5), 
               vjust = 0.5, 
               hjust = 0.5, 
@@ -93,7 +93,7 @@ save_graphic(FSR_4_1_2a_plot, '4.1.2a','Average share of spend on food and non-a
     # Only label these years
     labs(x = NULL,
          y = "Average weekly household expenditure (£)") +
-    theme_ukfsr(base_family = "GDS Transport Website") +
+    theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
     guides(fill = guide_legend(byrow = TRUE, reverse = TRUE)) 
   
   F4_1_2b_plot
@@ -118,8 +118,8 @@ FSR_4_1_2c <- F4_1_2c %>%
 
 FSR_4_1_2c_plot <- ggplot(FSR_4_1_2c) + 
   geom_line(aes(x=factor(Year), y=value, colour=key, group=key)) +
-  scale_y_continuous(limits = c(0,1250), breaks=seq(0,1250,250)) +
-  scale_x_discrete(breaks = unique(FSR_4_1_2b$Year)[c(T,F,F,F,F)])+
+  scale_y_continuous(limits = c(0,1250), breaks=seq(0,1250,250), expand = expansion(mult = c(0,0.05))) +
+  scale_x_discrete(breaks = unique(FSR_4_1_2c$Year)[c(T,F,F,F,F)])+
   scale_colour_manual(values = af_colours()) +
   labs(y = str_wrap("Household income before housing costs (£ per week equivalised)", width = 35),
        x = NULL) +
@@ -173,7 +173,7 @@ F4_1_2d_plot <- ggplot(F4_1_2d, aes(x=Year, y=value, colour=variable, group=vari
   guides(fill = guide_legend(byrow = TRUE)) +
   theme(legend.position = "none") +
   #theme(legend.direction = "vertical", legend.position = "bottom", legend.box = "vertical") +
-  scale_x_date(date_breaks = "4 years", date_labels = "%Y") 
+  scale_x_date(date_breaks = "5 years", date_labels = "%Y") 
 
 F4_1_2d_plot
 

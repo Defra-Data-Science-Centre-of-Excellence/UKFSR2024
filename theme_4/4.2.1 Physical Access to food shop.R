@@ -46,9 +46,9 @@ FSR_4_1_6 <- FSR_4_1_6 %>%
 
 FSR_4_1_6_plot <- ggplot(FSR_4_1_6, aes(x= Region, y=Average_Distance)) +
   geom_bar(stat="identity", show.legend = FALSE, fill = af_colours_1) +
-  geom_text(aes(label = round(Average_Distance,1)), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE) +  
+  geom_text(aes(label = round(Average_Distance,1)), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE, family = "GDS Transport Website") +  
   scale_y_continuous(limits = c(0,5), breaks=seq(0,5,1)) +
-  theme_ukfsr()+
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)+
   coord_flip() +
   theme(axis.title.x=element_text(size=20)) +
   theme(axis.title.y=element_text(size=20)) +
@@ -87,16 +87,16 @@ FSR_4_2_1b <- FSR_4_2_1b %>%
 
 FSR_4_2_1b_plot <- ggplot(FSR_4_2_1b, aes(x= Region, y=Supermarket_count)) +
   geom_bar(stat="identity", show.legend = FALSE, fill =af_colours_1) +
-  geom_text(aes(label = sprintf("%.2f", Supermarket_count)), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE) +  
+  geom_text(aes(label = sprintf("%.2f", Supermarket_count)), vjust= 0.3, hjust = -0.3, size=7, color='black', parse = FALSE, family = "GDS Transport Website") +  
   scale_y_continuous(limits = c(0,4), breaks=seq(0,4,1)) +
 
-  theme_ukfsr()+
+  theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)+
   coord_flip() +
   theme(axis.title.x=element_text(size=20)) +
   theme(axis.title.y=element_text(size=20)) +
   theme(axis.text.x = element_text(size=18)) +
   theme(axis.text.y = element_text(size=16)) +
-  labs(x = "Region", 
+  labs(x = NULL, 
        y = "Number of supermarkets per 10,000 people") + 
   scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
   theme( # remove the vertical grid lines

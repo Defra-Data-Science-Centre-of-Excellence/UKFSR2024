@@ -169,6 +169,7 @@ FSR_4_1_1b_plot <- ggplot(FSR_4_1_1b, aes(x = Disability, y = value, fill = vari
             colour= "white",
             family = "GDS Transport Website",
             size = 7) +
+  scale_x_discrete(labels = label_wrap_gen()) +
   scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
@@ -279,6 +280,7 @@ FSR_4_1_1d_plot <- ggplot(FSR_4_1_1d, aes(x = `Ethnic group`, y = value, fill = 
             colour= "white",
             family = "GDS Transport Website",
             size = 7) +
+  scale_x_discrete(labels = label_wrap_gen()) +
   scale_fill_manual(values=reversed_palette, guide = guide_legend(reverse = TRUE)) +
   labs(y = "Percentage household food security", x = NULL)+
   coord_flip() +
