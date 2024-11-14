@@ -50,7 +50,10 @@ FSR_4_1_10a <- aws.s3::s3read_using(FUN = readr::read_csv,
 FSR_4_1_10a_plot <-  ggplot(FSR_4_1_10a, aes(x = Year, y = `Deforestation (ha)`)) +
   geom_line(color = af_colours()[1]) +
   scale_x_continuous(breaks = seq(min(FSR_4_1_10a$Year), max(FSR_4_1_10a$Year), by = 2)) +
-  scale_y_continuous(breaks = seq(from = 0, to = 60000, by = 10000), limits = c(0, 60000), expand = expansion(mult = c(0, 0.05))) + 
+  scale_y_continuous(breaks = seq(from = 0, to = 70000, by = 10000), 
+                     limits = c(0, 70000),
+                     expand = expansion(mult = c(0, 0.05)),
+                     labels = scales::label_comma()) + 
   labs(
     x = NULL,
     y = "Deforestation (Ha)") +
@@ -92,7 +95,7 @@ FSR_4_1_10c <- aws.s3::s3read_using(FUN = readr::read_csv,
 FSR_4_1_10c_plot <-  ggplot(FSR_4_1_10c, aes(x = Year, y = `Scarcity-weighted blue water use`)) +
   geom_line(color = af_colours()[1]) +
   scale_x_continuous(breaks = seq(min(FSR_4_1_10c$Year), max(FSR_4_1_10c$Year), by = 2)) +
-  scale_y_continuous(breaks = seq(from = 0, to = 750, by = 100), limits = c(0, 750), expand = expansion(mult = c(0, 0.05))) +  
+  scale_y_continuous(breaks = seq(from = 0, to = 800, by = 100), limits = c(0, 800), expand = expansion(mult = c(0, 0.05))) +  
   labs(
     x = NULL,
     y = "Scarcity-weighted blue water use (billion cubic metres)") +
