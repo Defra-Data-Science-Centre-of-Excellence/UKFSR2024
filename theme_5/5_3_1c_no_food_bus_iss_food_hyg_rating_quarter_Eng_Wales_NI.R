@@ -50,7 +50,7 @@ t5_3_1c_plot <- ggplot(t5_3_1c, aes(x=factor(quarter_wrap), y= FHR, group =1)) +
   theme_classic() +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   geom_line(linewidth=1, colour = af_colours_1) +
-  labs(y = "Number of food businesses issued a food hygiene rating") +
+  labs(y = "Number of FHRS assessments conducted") +
   scale_x_discrete(breaks = everyother, limits = level_order) +
   scale_y_continuous(limits = c(0,70000), breaks = seq(0,70000,10000), labels = comma) +
   geom_text_repel(aes(label = comma(FHR)), min.segment.length = 0, seed = 42, box.padding = 0.7, size = 7, vjust = -1, show.legend  = F) +
