@@ -15,7 +15,7 @@ library(lubridate)
 
 #FAOSTAT
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 # Wheat prices in USD and EGP --------------------------------------------------
 
@@ -132,7 +132,8 @@ deflated_meat_sugar<-deflated%>%
 deflated_cereals<-deflated%>%
   filter(commodity%in%c("Wheat (US HRW)","Maize","Rice (Thai 5%)","Soybeans"))
 
-date_list<-seq(as.POSIXct("1960-01-01"), as.POSIXct("2023-01-01"), "years")
+# date_list<-seq(as.POSIXct("1960-01-01"), as.POSIXct("2023-01-01"), "years")
+date_list<-seq(as.Date("1960-01-01"), as.Date("2023-01-01"), "years")
 idx<-c(1,11,21,31,41,51,61)
 date_list_x<-date_list[idx]
 
@@ -147,6 +148,7 @@ deflated_meat_sugar_chart <- deflated_meat_sugar |>
   theme_ukfsr()+
   scale_color_manual(values = af_colours("categorical",n=3))+
   #scale_x_continuous(breaks=seq(2019,2024,1),labels=seq(2019,2024,1))+
+  scale_x_date(breaks = as.Date(date_list_x), date_labels = "%Y") +
   scale_y_continuous(limits=c(0, NA), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
@@ -157,14 +159,20 @@ save_csv(deflated_meat_sugar, "1.3.2b", "wb commodity prices for chicken and bee
 
 # WB prices for cereals --------------------------------------------------------
 
-deflated_cereals_chart <-deflated_cereals |> 
+deflated_cereals <-deflated_cereals |> 
+  mutate(commodity = factor(commodity,
+                            levels = c("Maize","Rice (Thai 5%)","Soybeans", "Wheat (US HRW)"),
+                            labels = c("Maize","Rice (Thai 5%)","Soybeans", "Wheat (US Hard Red Winter)")))
+
+deflated_cereals_chart <- deflated_cereals |> 
   ggplot() +
   geom_line(data=deflated_cereals,aes(x=Date,y=value,color=commodity),linewidth=0.8)+
   #geom_point(data=deflated_cereals_5yr,aes(x=Date,y=value,color=commodity,shape=commodity),size=2)+
   theme_ukfsr()+
   scale_color_manual(values = af_colours("categorical",n=4))+
   guides(color=guide_legend(nrow=2,byrow=TRUE))+
-  scale_x_continuous(breaks=date_list_x,labels = seq(1960,2020,10))+
+  # scale_x_continuous(breaks=date_list_x,labels = seq(1960,2020,10))+
+  scale_x_date(breaks = as.Date(date_list_x), date_labels = "%Y") +
   scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
