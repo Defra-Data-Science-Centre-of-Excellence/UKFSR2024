@@ -36,10 +36,10 @@ meat <- aws.s3::s3read_using(FUN = read_csv,
 meat1 <- meat |> 
   #pivot_longer(cols = "2013":"2023", names_to = "year", values_to = "percentage") |> 
   pivot_longer(cols = !`Production_to_supply_ratio`, names_to = "year", values_to = "percentage") |> 
-  filter(year>"2012") |>
+  filter(year>"2002") |>
   mutate(year = factor(year, 
-                       levels = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"),
-                       labels = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023")))# |>
+                       levels = c("2003":"2023"),
+                       labels = c("2003":"2023")))# |>
   
 meat1$`Production_to_supply_ratio` <- as.factor(meat1$`Production_to_supply_ratio`)
 
@@ -52,6 +52,7 @@ meat_chart_P2S <- meat1 |>
   geom_line(aes(x = year, y = percentage/100, group = `Production_to_supply_ratio`, colour = `Production_to_supply_ratio`), lwd = 1) +
   #scale_y_continuous(limits = c(0,100)) +
   scale_y_continuous(limits = c(0,1.2), labels = scales::percent) +
+  scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 6)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   labs(x = NULL,
