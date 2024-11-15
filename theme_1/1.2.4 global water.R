@@ -15,6 +15,8 @@ library(tmap)
 library(sf)
 library(ggpattern)
 
+source(here::here("utils", "load-font.R"))
+
 world_data<-map_data("world")
 
 # Agricultural water withdrawal-------------------------------------------------
@@ -187,10 +189,10 @@ water_stress<-water_stress%>%
 
 world_map_water_stress<-world_data%>%
   left_join(water_stress,by=c("region"="country"))%>%
-  mutate(key=if_else(value<25,"No stress",if_else(value<50,"Low (<50%)",if_else(value<75,"Medium (50-75%)",if_else(value<100,"High (75-100%)","Critical (>100%)")))))%>%
+  mutate(key=if_else(value<25,"No stress",if_else(value<50,"Low (less than 50%)",if_else(value<75,"Medium (50-75%)",if_else(value<100,"High (75-100%)","Critical (over 100%)")))))%>%
   #mutate(key=if_else(is.na(value),"no data",key))%>%
   filter(!is.na(key))%>%
-  mutate(key=ordered(key,levels=c("No stress","Low (<50%)","Medium (50-75%)","High (75-100%)","Critical (>100%)")))
+  mutate(key=ordered(key,levels=c("No stress","Low (less than 50%)","Medium (50-75%)","High (75-100%)","Critical (over 100%)")))
 
 
 world_map_water_stress_chart<-
@@ -198,6 +200,7 @@ world_map_water_stress_chart<-
   geom_polygon(data = world_data |> filter(region == "Greenland", is.na(subregion)), aes(x = long, y = lat), fill = "grey90") +
   geom_polygon(data = world_map_water_stress |> filter(region != "Antarctica"),aes(x=long,y=lat,group=group,fill=key))+
   scale_fill_manual(values = c("#28A197","#12436D","#A285D1","#801650","#F46A25")) +
+  guides(fill=guide_legend(nrow=2,byrow=TRUE))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL, y = NULL) +
   theme(axis.text.x = element_blank(),
