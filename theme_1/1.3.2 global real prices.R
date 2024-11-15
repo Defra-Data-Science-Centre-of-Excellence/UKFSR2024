@@ -65,7 +65,7 @@ egp_usd_chart <- egp_usd |>
   scale_y_continuous(breaks=seq(0,400,50),limits=c(0,400), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "index 2019=100")
+       y = "index (2019 = 100)")
 
 save_graphic(egp_usd_chart, "1.3.2c", "egp usd wheat prices")
 save_csv(egp_usd, "1.3.2c", "egp usd wheat prices")
@@ -152,7 +152,7 @@ deflated_meat_sugar_chart <- deflated_meat_sugar |>
   scale_y_continuous(limits=c(0, NA), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "US$/kg index real 100=2023")
+       y = "index (2023 = 100)")
 
 save_graphic(deflated_meat_sugar_chart, "1.3.2b", "wb commodity prices for chicken and beef")
 save_csv(deflated_meat_sugar, "1.3.2b", "wb commodity prices for chicken and beef")
@@ -176,7 +176,7 @@ deflated_cereals_chart <- deflated_cereals |>
   scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
-       y = "US$/mt index,real 100=2023")
+       y = "index (2023 = 100)")
 
 save_graphic(deflated_cereals_chart, "1.3.2a", "wb commodity prices for cereals")
 save_csv(deflated_cereals, "1.3.2a", "wb commodity prices for cereals")
