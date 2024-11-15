@@ -14,34 +14,35 @@ source(here::here("utils", "load-font.R"))
 
 # % internet sales -------------------------------------------------------------
 
-FSR_4_1_7 <- aws.s3::s3read_using(FUN = readr::read_csv,
+FSR_4_2_2a <- aws.s3::s3read_using(FUN = readr::read_csv,
                                   bucket = "s3-ranch-054",
                                   object = "theme_4/input_data/Digital access to food shop dataset.csv",
                                   col_names = TRUE, 
                                   skip = 5)
 
-colnames(FSR_4_1_7) <- c("Year", "All retailing", "Food stores")
-FSR_4_1_7 <- FSR_4_1_7[, c(1:3)]
+colnames(FSR_4_2_2a) <- c("Year", "All retailing", "Food stores")
+FSR_4_2_2a <- FSR_4_2_2a[, c(1:3)]
 
-FSR_4_1_7 <- FSR_4_1_7 %>%
+FSR_4_2_2a <- FSR_4_2_2a %>%
   gather(variable,value, `All retailing`,`Food stores`) %>%
   mutate(Year = as.Date(as.yearmon(Year, "%Y %b")))
 
 
-FSR_4_1_7_plot <- ggplot(FSR_4_1_7, aes(x=Year, y=value, colour=variable, group=variable)) +
+FSR_4_2_2a_plot <- ggplot(FSR_4_2_2a, aes(x=Year, y=value, colour=variable, group=variable)) +
   geom_line() +
   scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
-  scale_x_date(breaks=seq(as.Date("2003-01-01"),Sys.Date()-lubridate::years(1),by = "2 year"),date_labels = "%Y") +  # Corrected `date_labels`
+  scale_y_continuous(limits = c(0,40) ,labels = function(x) paste0(x, "%"))+
+  scale_x_date(breaks = seq(min(FSR_4_2_2a$Year), max(FSR_4_2_2a$Year), by = "2 years"),date_labels = "%Y") + 
   labs(x = NULL,
-       y = "Percent (%)") +
+       y = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website") 
 
-FSR_4_1_7_plot
+FSR_4_2_2a_plot
 
 
-save_graphic(FSR_4_1_7_plot, '4.2.2a', ' Internet Sales as a propotion of all retailing') 
-save_csv(FSR_4_1_7, '4.2.2a', 'Internet Sales as a propotion of all retailing')
+save_graphic(FSR_4_2_2a_plot, '4.2.2a', ' Internet Sales as a propotion of all retailing') 
+save_csv(FSR_4_2_2a, '4.2.2a', 'Internet Sales as a propotion of all retailing')
 
 # Urban rural % spend ----------------------------------------------------------
 
