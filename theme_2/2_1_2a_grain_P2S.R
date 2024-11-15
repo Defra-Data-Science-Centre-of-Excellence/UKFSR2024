@@ -55,7 +55,7 @@ grain_chart_P2S <- grain2 |>
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 1)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
-  theme(plot.margin = margin(5,50,5,5,unit = "pt")) +
+  theme(plot.margin = margin(20,20,5,5,unit = "pt")) +
   labs(x = NULL,
        y = NULL)
   
