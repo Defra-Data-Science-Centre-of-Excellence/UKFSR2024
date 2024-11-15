@@ -17,7 +17,7 @@ source(here("utils", "load-font.R"))
 # HHI export concentration -----------------------------------------------------
 export_shares <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
-                                        object = "theme_1/input_data/t1_3_4/export_shares.csv")%>%
+                                        object = "theme_1/input_data/t1_3_4/hi141120241526.csv")%>%
   pivot_longer(cols=4:23,names_to="years",values_to = "value")%>%
   mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
   

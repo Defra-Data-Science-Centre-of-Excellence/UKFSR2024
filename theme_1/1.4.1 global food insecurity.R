@@ -12,9 +12,10 @@ library(here)
 source(here("utils", "load-font.R"))
 
 # People facing high insecurity GRFC countries----------------------------------
-grfc2024 <- aws.s3::s3read_using(FUN = read_csv,
+grfc2024 <- aws.s3::s3read_using(FUN = read_excel,
                                   bucket = ukfsr::s3_bucket(),
-                                  object = "theme_1/input_data/t1_4_1/GRFC2024_Master.csv")
+                                  object = "theme_1/input_data/t1_4_1/grfc_database_2016-2024-myu.xlsx",
+                                  sheet = "GFRC MYU 2024_Master")
 
 grfc2024_in2 <- aws.s3::s3read_using(FUN = read_csv,
                                      bucket = ukfsr::s3_bucket(),
