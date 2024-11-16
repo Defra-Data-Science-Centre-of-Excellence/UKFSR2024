@@ -34,6 +34,7 @@ chain_chart <- tfp |>
   # mutate(Sector = factor(Sector, levels = c("Manufacturing", "Wholesale", "Retail", "Catering"))) |> 
   ggplot() +
   geom_line(aes(x = Year, y = Productivity, colour = Sector)) +
+  scale_y_continuous(limits = c(95, 115)) +
   scale_colour_manual(values = af_colours(n = 2)) +
   labs(x = NULL, y = "index (2000 = 100)") +
   theme_ukfsr(base_family = "GDS Transport Website")
