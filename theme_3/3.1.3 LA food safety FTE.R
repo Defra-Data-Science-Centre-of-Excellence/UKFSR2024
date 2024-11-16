@@ -39,7 +39,7 @@ la_fte_scot |>
   ggplot() +
   geom_col(aes(x = Year, y = `Food Law Officers FTE`), fill = af_colours()[1]) +
   scale_x_continuous(breaks = seq(2016,2024, by =1)) +
-  scale_y_continuous(breaks = seq(0,275, by = 50), expand = expansion(mult = c(0, 0.05))) +
+  scale_y_continuous(breaks = seq(0,300, by = 50), limits = c(0, 300),  expand = expansion(mult = c(0, 0.05))) +
   labs(x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)
 
