@@ -98,7 +98,7 @@ fertilizers_price_index <- aws.s3::s3read_using(FUN = read_excel,
 
 fertilizers_price_index_chart<-ggplot()+
   geom_line(data=fertilizers_price_index,aes(x = date, y = fertilizers_price_index), colour = af_colours()[1]) +
-  scale_y_continuous(limits = c(0,NA), expand = expansion(mult = c(0, 0.05))) +
+  scale_y_continuous(limits = c(0,400), expand = expansion(mult = c(0, 0.05))) +
   scale_colour_manual(values = af_colours()[1]) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
