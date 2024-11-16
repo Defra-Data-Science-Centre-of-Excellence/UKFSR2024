@@ -57,7 +57,7 @@ fisheries_chart <- fisheries|>
   ggplot() +
   geom_area(aes(x = period, y = value, fill = type), lwd = 1) +
   scale_x_continuous(limits = c(1950,2022),breaks =seq(1950,2022,10)) +
-  scale_y_continuous(limits = c(0,NA), expand = expansion(mult = c(0,0.05))) +
+  scale_y_continuous(limits = c(0,200), expand = expansion(mult = c(0,0.05))) +
   scale_fill_manual(values = af_colours("categorical"))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   guides(fill=guide_legend(nrow=3,byrow=TRUE))+
