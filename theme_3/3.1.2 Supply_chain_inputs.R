@@ -65,7 +65,7 @@ wheat_net_cht <- wheat_net |>
   ggplot() +
   geom_col(aes(x = year, y = value), fill = af_colours(n =1)) +
   scale_x_continuous(breaks = c(2000, 2010, 2020)) +
-  scale_y_continuous(labels = scales::label_comma()) +
+  scale_y_continuous(limits =  c(-3000, 3000), breaks = seq(-3000, 3000, 1000), labels = scales::label_comma()) +
   labs(y = "kilotonnes", x = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website")
 
