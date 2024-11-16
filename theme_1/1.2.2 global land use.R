@@ -75,6 +75,7 @@ agricultural_land_use_chart <- agricultural_land_use|>
   geom_line(aes(x = year.x, y = index,color=new_item,linetype=new_item), lwd = 1) +
   scale_color_manual(values = c( "#A285D1","#801650","#F46A25","#28A197","#28A197","#28A197"))+
   scale_linetype_manual(values=c("solid","solid","solid","solid","dotdash","dashed"))+
+  scale_y_continuous(limits = c(85, 110)) +
   guides(color=guide_legend(nrow=6, byrow=TRUE))+ 
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
