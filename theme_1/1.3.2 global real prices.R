@@ -149,7 +149,7 @@ deflated_meat_sugar_chart <- deflated_meat_sugar |>
   scale_color_manual(values = af_colours("categorical",n=3))+
   #scale_x_continuous(breaks=seq(2019,2024,1),labels=seq(2019,2024,1))+
   scale_x_date(breaks = as.Date(date_list_x), date_labels = "%Y") +
-  scale_y_continuous(limits=c(0, NA), expand = expansion(mult = c(0, 0.05)))+
+  scale_y_continuous(limits=c(0, 300), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "index (2023 = 100)")
@@ -173,7 +173,7 @@ deflated_cereals_chart <- deflated_cereals |>
   guides(color=guide_legend(nrow=2,byrow=TRUE))+
   # scale_x_continuous(breaks=date_list_x,labels = seq(1960,2020,10))+
   scale_x_date(breaks = as.Date(date_list_x), date_labels = "%Y") +
-  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
+  scale_y_continuous(limits=c(0,600), breaks = seq(0, 600, 100), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "index (2023 = 100)")
