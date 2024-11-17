@@ -31,6 +31,7 @@ APHA_cases_chart <- cases |>
   ggplot() +
   geom_col(aes(x = year, y = value, fill = status)) +
   scale_x_discrete(breaks = c(2013, 2015, 2017, 2019, 2021, 2023)) +
+  scale_y_continuous(limits = c(0, 600), expand = expansion(mult = c(0, 0.05))) +
   scale_fill_manual(values = af_colours(type = "duo")) +
   labs(x = NULL, y = NULL) +
   theme_ukfsr()
