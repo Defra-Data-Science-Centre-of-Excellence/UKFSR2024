@@ -9,7 +9,7 @@ library(here)
 library(data.table)
 library(janitor)
 
-#source(here::here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 #setwd("~/UKFSR/theme 2/files")
 
@@ -59,7 +59,7 @@ milk_usage_chart <- milk_usage2 |>
   ggplot() +
   geom_line(aes(x = Date, y = b.litres, group = usage, colour = usage), lwd = 1) +
   #scale_y_continuous(limits = c(0,600)) +
-  scale_y_continuous(breaks = seq(0, 7.0, 1),limits = c(0, 7.0)) +
+  scale_y_continuous(breaks = seq(0, 7.0, 1),limits = c(0, 7.0), expand = expansion(mult = c(0, 0.05))) +
   #scale_y_continuous(labels = scales::label_number(scale = 0.001)) +
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 4)) +
