@@ -57,6 +57,7 @@ overall_GHG_chart <-
 ggplot(overall_GHG2, aes(fill = `category (MtCO2e)`, x = year, y = `(MtCO2e)`)) +
   geom_col(ggplot2::aes(fill = `category (MtCO2e)`, x = year, y = `(MtCO2e)`)) +
   scale_x_continuous(breaks = c(2002, 2007, 2012, 2017, 2022)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
   labs(x = NULL, y = "(MtCO2e)", title = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   scale_fill_manual(values = af_colours("categorical", n = 6))
