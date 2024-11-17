@@ -10,7 +10,7 @@ library(data.table)
 library(janitor)
 library(stringr)
 
-#source(here::here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 setwd("~/UKFSR/theme 2/files")
 
@@ -48,7 +48,7 @@ names(af_categorical_colours)=levels(grain_prod_type2$Production)
 grain_chart_prod_type <- grain_prod_type2 |> 
   ggplot() +
   geom_line(aes(x = year, y = `million tonnes`, group = Production, colour = Production), lwd = 1) +
-  scale_y_continuous(breaks = seq(0, 30, 5),limits = c(0, 30)) +
+  scale_y_continuous(breaks = seq(0, 30, 5),limits = c(0, 30), expand = expansion(mult = c(0, 0.05))) +
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 4)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
