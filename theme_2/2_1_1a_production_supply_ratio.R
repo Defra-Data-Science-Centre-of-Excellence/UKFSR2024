@@ -8,11 +8,9 @@ library(afcolours)
 library(here)
 library(data.table)
 
-#source(here::here("utils", "load-font.R"))
-
 setwd("~/UKFSR/theme 2/files")
 
-source("load-font.R")
+source(here::here("utils", "load-font.R"))
 
 psp <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
@@ -24,11 +22,11 @@ psp_chart <- psp |>
   pivot_longer(cols = all_food:indigenous_food, names_to = "type") |> 
   mutate(type = factor(type, 
                        levels = c("all_food", "indigenous_food"),
-                       labels = c("all food", "Indigenous food"))) |> 
+                       labels = c("All food", "Indigenous food"))) |> 
   filter(year>2002) |>
   ggplot() +
-  geom_line(aes(x = year, y = value/100, colour = type), lwd = 1) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) +
+  geom_line(aes(x = year, y = value/100, colour = type)) +
+  scale_y_continuous(limits = c(0,1), labels = scales::percent, expand = expansion(mult = c(0, 0.05))) +
   scale_x_continuous(breaks = seq(2003, 2023, 5),limits = c(2003, 2023)) +
   scale_colour_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
