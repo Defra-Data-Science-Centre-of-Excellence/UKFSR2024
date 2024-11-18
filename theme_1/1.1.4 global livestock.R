@@ -85,7 +85,7 @@ world_meat_production_chart <- meat_type_global |>
   ggplot() +
   geom_line(aes(x = year, y = value/1E6, colour = item), lwd = 1) +
   scale_x_continuous(limits = c(1961,2022),breaks =seq(1965,2022,5)) +
-  scale_y_continuous(limits = c(0,NA), expand = expansion(mult = c(0,0.05))) +
+  scale_y_continuous(limits = c(0,150),breaks = seq(0,150, 50),  expand = expansion(mult = c(0,0.05))) +
   scale_colour_manual(values = af_colours(type = "categorical",n = 4)) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,

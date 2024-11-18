@@ -57,9 +57,9 @@ agri_scheme_chart <-
 ggplot(agri_scheme_area1, aes(fill = `Scheme (Thousand hectares)`, x = year, y = `Thousand hectares`)) +
   geom_col(ggplot2::aes(fill = `Scheme (Thousand hectares)`, x = year, y = `Thousand hectares`)) +
   scale_x_continuous(breaks = c(2023, 2022, 2021)) +
-  scale_y_continuous(labels = scales::label_number(scale = 0.001)) +
+  scale_y_continuous(labels = scales::label_number(scale = 0.001), expand = expansion(mult = c(0, 0.05))) +
   labs(x = NULL, y = "Million hectares", title = NULL) +
-  theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
+  theme_ukfsr(base_family = "GDS Transport Website", base_size = 14, x_axis = FALSE) +
   scale_fill_manual(values = af_colours("categorical", n = 4))
   #coord_flip()
 

@@ -138,7 +138,7 @@ area_equipped_for_irrigation_actually_irrigated_chart<-ggplot()+
   scale_colour_manual(values = c(af_colours("categorical",n=6),"#F46A25")) +
   scale_fill_manual(values = c(af_colours("categorical",n=6),"#F46A25")) +
   scale_x_continuous(limits=c(2000,2020))+
-  scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.05))) +
+  scale_y_continuous(limits = c(0, 300), expand = expansion(mult = c(0, 0.05))) +
   scale_shape_manual(values=c(25,NA,NA,NA,NA,NA,25))+
   guides(colour=guide_legend(nrow=4,byrow=TRUE))+
   theme_ukfsr(base_family = "GDS Transport Website") +

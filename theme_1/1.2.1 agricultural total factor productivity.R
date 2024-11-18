@@ -43,9 +43,9 @@ sources_of_output_growth_by_region_data <- aws.s3::s3read_using(FUN = read_csv,
 sources_of_output_growth_by_region_data_world<-sources_of_output_growth_by_region_data%>%
   filter(!Element=="Total agricultural output growth rate")
 
-sources_of_output_growth_by_region_chart<-ggplot()+
+sources_of_output_growth_by_region_chart <- ggplot()+
   geom_col(data=sources_of_output_growth_by_region_data_world,aes(x = Date, y = Percentage/100,fill=Element)) +
-  scale_y_continuous(breaks=seq(0,0.06,0.005),labels = scales::percent, expand = expansion(mult = c(0,0.05)))+
+  scale_y_continuous(limits = c(0, 0.03),breaks = seq(0,0.3, 0.005), labels = scales::percent, expand = expansion(mult = c(0,0.05)))+
   scale_fill_manual(values = af_colours("categorical"),n=4) +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   guides(fill=guide_legend(nrow=4, byrow=TRUE))+

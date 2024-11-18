@@ -9,7 +9,7 @@ library(here)
 library(data.table)
 library(janitor)
 
-#source(here::here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 setwd("~/UKFSR/theme 2/files")
 
@@ -51,7 +51,7 @@ grain_chart_P2S <- grain2 |>
   ggplot() +
   geom_line(aes(x = year, y = percentage/100, group = Production, colour = Production), lwd = 1) +
   #scale_y_continuous(limits = c(0,110)) +
-  scale_y_continuous(limits = c(0,1.2), labels = scales::percent) +
+  scale_y_continuous(limits = c(0,1.2), labels = scales::percent, expand = expansion(mult = c(0, 0.05))) +
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 1)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +

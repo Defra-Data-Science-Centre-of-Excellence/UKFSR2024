@@ -11,7 +11,7 @@ library(janitor)
 
 #setwd("~/UKFSR/theme 2/files")
 
-#source(here::here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 source("load-font.R")
 
@@ -52,7 +52,7 @@ egg_chart_prod <- eggs2 |>
   ggplot() +
   geom_line(aes(x = year, y = `m. dozen`, group = Population, colour = Population), lwd = 1) +
   #scale_y_continuous(limits = c(0,1000)) +
-  scale_y_continuous(breaks = seq(0, 1100, 100),limits = c(0, 1100)) +
+  scale_y_continuous(breaks = seq(0, 1100, 100),limits = c(0, 1100), expand = expansion(mult = c(0, 0.05))) +
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 3)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +

@@ -51,7 +51,7 @@ organic_chart <- organic2 |>
   ggplot() +
   geom_line(aes(x = year, y = th.hectares, group = type_region, colour = type_region), lwd = 1) +
   #scale_y_continuous(limits = c(0,600)) +
-  scale_y_continuous(breaks = seq(0, 800, 100),limits = c(0, 800)) +
+  scale_y_continuous(breaks = seq(0, 800, 100),limits = c(0, 800), expand = expansion(mult = c(0, 0.05))) +
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 3)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
