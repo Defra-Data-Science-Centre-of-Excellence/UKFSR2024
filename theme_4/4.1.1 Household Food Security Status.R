@@ -73,7 +73,9 @@ FSR_4_1_1_plot <- ggplot(FSR_4_1_1, aes(x = Year, y = value, fill = variable, la
   # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
   theme_ukfsr(base_family = "GDS Transport Website",
               horizontal = TRUE) +
-  theme(legend.position = "bottom", legend.title = element_blank())
+  theme(legend.position = "bottom", legend.title = element_blank())+
+  theme(axis.title.x=element_text(vjust=-0.5))
+
 
 
 FSR_4_1_1_plot
@@ -176,7 +178,8 @@ FSR_4_1_1b_plot <- ggplot(FSR_4_1_1b, aes(x = Disability, y = value, fill = vari
   # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
   theme_ukfsr(base_family = "GDS Transport Website",
               horizontal = TRUE) +
-  theme(legend.position = "bottom", legend.title = element_blank())
+  theme(legend.position = "bottom", legend.title = element_blank())+
+  theme(axis.title.x=element_text(vjust=-0.5))
 
 
 FSR_4_1_1b_plot
@@ -232,7 +235,8 @@ FSR_4_1_1c_plot <- ggplot(FSR_4_1_1c, aes(x = Age, y = value, fill = variable, l
   # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
   theme_ukfsr(base_family = "GDS Transport Website",
               horizontal = TRUE) +
-  theme(legend.position = "bottom", legend.title = element_blank())
+  theme(legend.position = "bottom", legend.title = element_blank())+
+  theme(axis.title.x=element_text(vjust=-0.5))
 
 
 FSR_4_1_1c_plot
@@ -287,7 +291,8 @@ FSR_4_1_1d_plot <- ggplot(FSR_4_1_1d, aes(x = `Ethnic group`, y = value, fill = 
   # guides(colour=guide_legend(override.aes=list(size=1),reverse = TRUE)) +
   theme_ukfsr(base_family = "GDS Transport Website",
               horizontal = TRUE) +
-  theme(legend.position = "bottom", legend.title = element_blank())
+  theme(legend.position = "bottom", legend.title = element_blank())+
+  theme(axis.title.x=element_text(vjust=-0.5))
 
 
 FSR_4_1_1d_plot
