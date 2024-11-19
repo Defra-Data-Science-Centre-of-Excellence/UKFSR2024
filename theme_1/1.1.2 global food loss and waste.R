@@ -36,7 +36,7 @@ food_loss_percentage_chart <- food_loss_percentage |>
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(legend.position="none")+
   labs(x = NULL,
-       y = "")
+       y = "Food loss")
 
 
 save_graphic(food_loss_percentage_chart, "1.1.2a", "global food loss")
