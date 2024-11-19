@@ -52,7 +52,7 @@ agricultural_water_withdrawal_chart<-ggplot()+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "Billion litres per year") +
-  theme(plot.margin = margin(r = 0.5, unit = "cm"))
+  theme(plot.margin = margin(t = 0.5, r = 0.5, unit = "cm"))
 
 save_graphic(agricultural_water_withdrawal_chart, "1.2.4a", "agricultural water withdrawal")
 save_csv(agricultural_water_withdrawal, "1.2.4a", "agricultural water withdrawal")
