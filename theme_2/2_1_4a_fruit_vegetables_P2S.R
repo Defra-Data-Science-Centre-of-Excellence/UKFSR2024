@@ -14,7 +14,7 @@ source(here::here("utils", "load-font.R"))
 
 #setwd("~/UKFSR/theme 2/files")
 
-source("load-font.R")
+source(here::here("utils", "load-font.R"))
 
 hort <- aws.s3::s3read_using(FUN = read_csv,
                             bucket = ukfsr::s3_bucket(),
@@ -26,7 +26,7 @@ hort <- aws.s3::s3read_using(FUN = read_csv,
 hort1<-hort %>%
   group_by(`Supply and use 2`) %>%
   filter(`Supply and use 2` %in% c("Production as % of total new supply for use in the UK FF", "Production as % of total new supply for use in the UK FV")) %>%
-  mutate(`Supply and use 2`=case_when(`Supply and use 2`=="Production as % of total new supply for use in the UK FF" ~ "Fresh fruit", `Supply and use 2`=="Production as % of total new supply for use in the UK FV" ~ "Fresh vegetables"))
+  mutate(`Supply and use 2`=case_when(`Supply and use 2`=="Production as % of total new supply for use in the UK FF" ~ "Fresh fruits", `Supply and use 2`=="Production as % of total new supply for use in the UK FV" ~ "Fresh vegetables"))
   #mutate(usage=factor(`Supply and use 2`, levels=c("Fresh fruit 'production to supply' ratio", "Fresh vegetable 'production to supply' ratio")))
 
 hort1$"Supply and use 2" <- as.factor(hort1$"Supply and use 2")
