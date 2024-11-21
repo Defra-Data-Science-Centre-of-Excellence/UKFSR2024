@@ -74,7 +74,7 @@ FSR_3_1_1aplot <- ggplot(FSR_3_1_1a, aes(x=Year, y=value, colour=variable, group
   scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
   labs(x = NULL,
-       y = "Thousand tonnes") +
+       y = "Kilotonnes") +
   #scale_x_date(date_breaks = "12 months", date_labels = "%Y") +
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(plot.margin = margin(5,50,5,5,unit = "pt"))
