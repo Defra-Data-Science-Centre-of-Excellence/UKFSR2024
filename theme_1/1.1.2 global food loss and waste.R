@@ -76,8 +76,6 @@ flw_chart<-food_loss_waste_2%>%
   scale_fill_manual(values = af_colours("categorical"),n=6) +
   theme_ukfsr(base_family = "GDS Transport Website", horizontal = TRUE) +
   theme(plot.margin=unit(c(0.2,2,0.2,0.2),"cm"))+
-  annotate("text", x = 5, y = 120, label = "Note:\nregions may not include\nall countries and confidence\nin the data varies between\ncountries",size=6)+
-  guides(fill=guide_legend(nrow=3, byrow=TRUE))+ 
   labs(x = NULL,
        y = "Million tonnes")
 
