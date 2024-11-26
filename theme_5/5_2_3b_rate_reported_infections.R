@@ -41,11 +41,25 @@ t_5_2_3b_long <- setDT(t_5_2_3b_long)
 t_5_2_3b_long[,y_min := 0]
 t_5_2_3b_long[,y_max:= value*1.1, by = species]
 
+# change font of facet strip title, selective italic for species, override Transport font
+# https://gist.github.com/padpadpadpad/54ec4d6cb76fb5eced5f305d043638af
+# https://stackoverflow.com/questions/66344484/changing-the-font-of-ggplot-text
+
+t_5_2_3b_long_mut <- mutate(t_5_2_3b_long, facet_lab = case_when(species == 'Campylobacter sp.' ~ 'expression(italic("Campylobacter")~sp.)',
+                                                                 species == 'Non typhoidal Salmonella sp.' ~ 'expression(italic("Non typhoidal Salmonella")~sp.)',
+                                                                 species == 'STEC O157' ~ 'expression(italic("STEC O157"))',
+                                                                 species == 'Listeria monocytogenes' ~ 'expression(italic("Listeria monocytogenes"))'))
+
+t_5_2_3b_long_mut <- mutate(t_5_2_3b_long_mut, facet_lab = case_when(species == 'Campylobacter sp.' ~ 'italic("Campylobacter")~sp.',
+                                                                     species == 'Non typhoidal Salmonella sp.' ~ 'italic("Non typhoidal Salmonella")~sp.',
+                                                                     species == 'STEC O157' ~ 'italic("STEC O157")',
+                                                                     species == 'Listeria monocytogenes' ~ 'italic("Listeria monocytogenes")'))
+
 af_colours_1 <- c(
   "#12436D" # Dark blue
 )
 
-t_5_2_3b_long_plot <- ggplot(t_5_2_3b_long, aes(x=factor(Year), y=value, group=species)) +
+t_5_2_3b_long_plot <- ggplot(t_5_2_3b_long_mut, aes(x=factor(Year), y=value, group=species)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   geom_line(linewidth=1, colour = af_colours_1) +
   labs(x = "Year", y = str_wrap("Number of UK laboratory confirmed cases per 100,000 population", width = 40)) +
@@ -53,10 +67,11 @@ t_5_2_3b_long_plot <- ggplot(t_5_2_3b_long, aes(x=factor(Year), y=value, group=s
   theme(axis.ticks.x = element_line(color = "black")) +
   theme(axis.ticks.length = unit(0.2, "cm"))
 
-t_5_2_3b_long_plot_facet <- t_5_2_3b_long_plot + facet_wrap(~ species, ncol=2, scales = "free_y") +
+t_5_2_3b_long_plot_facet <- t_5_2_3b_long_plot + facet_wrap(~ facet_lab, labeller = label_parsed, ncol=2, scales = "free_y") +
   geom_blank(aes(y = y_min)) +
   geom_blank(aes(y = y_max)) +
-  theme(strip.background = element_blank(), strip.placement = "outside") 
+  theme(strip.background = element_blank(), strip.placement = "outside") +
+  theme(strip.text = element_text(size = 24, face = "italic", family = "Arial"))
 
 t_5_2_3b_long_plot_facet
 
