@@ -39,9 +39,9 @@ FSR_4_3_2d_plot <- ggplot(FSR_4_3_2d, aes(x = `Income Quintile`, y = Value, fill
   labs(y = "% of disposable income ",
        x = "Income quintile",
        fill = "Type") +
-  theme_ukfsr() 
+  theme_ukfsr(x_axis = FALSE) 
 
 FSR_4_3_2d_plot
 
-save_graphic(FSR_4_3_2d_plot, '4.3.2d','Percentage of disposable income') + 
+save_graphic(FSR_4_3_2d_plot, '4.3.2d','Percentage of disposable income')  
   save_csv(FSR_4_3_2d, '4.3.2d','Percentage of disposable income')
