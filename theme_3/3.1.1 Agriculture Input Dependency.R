@@ -192,7 +192,7 @@ fera_chart <- pesticides_fera |>
   scale_y_continuous(limits = c(0, 20000), labels = scales::label_number(scale = 0.001)) +
   scale_x_continuous(breaks = seq(2010, 2022, by = 2)) +
   scale_fill_manual(values = af_colours(n = 6)) +
-  labs(x = NULL, y = "metric kilotons (kT)") +
+  labs(x = NULL, y = "metric kilotonnes (kT)") +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)
 
 save_graphic(fera_chart, "3.1.1d", "pesticides fera final")
