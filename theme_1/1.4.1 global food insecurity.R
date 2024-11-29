@@ -46,7 +46,7 @@ grfc2024_chart<-grfc2024_out%>%
   theme_ukfsr()+
   scale_fill_manual(values = af_colours("categorical",n=3),labels=c("Rest of population\nin GRFC countries","1+2 No/Minimal+Stressed","3+ Crisis")) +
   #scale_color_manual(values = c("white","black"))+ 
-  scale_x_continuous(breaks=seq(2016,2023,1))+
+  scale_x_continuous(breaks=seq(2016,2024,1))+
   scale_y_continuous(limits=c(0,2000), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   labs(x = NULL,
