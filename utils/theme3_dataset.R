@@ -1,83 +1,3 @@
-# Download and zip up all files from a theme -----------------------------------
-# Please be CAREFUL with this as there is nothing by way of error checking. 
-export_objects <- function(theme, filetype, output_folder = "~/ukfsr/") {
-  
-  extract_files <- function(bucket_file, filename, destination) {
-    purrr::map2(bucket_file, filename, \(bucket_file, filename) {
-      aws.s3::save_object(object = bucket_file, 
-                          bucket = ukfsr::s3_bucket(), 
-                          file = paste0(destination,filename), 
-                          headers = list("x-amz-acl" = "bucket-owner-full-control"))
-    }
-    )
-  }
-  
-  wd <- getwd()
-  folderend <- ifelse(filetype == "csv", "output/csv", "output/graphics")
-  theme = as.character(theme)
-  
-  objs <- ukfsr::bucket_manifest(file_ext = filetype) |> 
-    dplyr::filter(stringr::str_starts(folder, paste0("theme_", theme, "/t", theme)) & stringr::str_ends(folder, folderend))
-  
-  files <- objs$path
-  names <- objs$file
-  
-  outputdir <- paste0(output_folder, "t", theme, "/", filetype, "/")
-  zipfile <- paste0(output_folder, "t", theme, "/t", theme, "_", filetype, ".zip")
-  
-  extract_files(files, names, outputdir)
-  setwd(outputdir)
-  zip(zipfile = zipfile, files = list.files(outputdir))
-  
-  setwd(wd)
-}
-
-
-
-
-# Some example code to bulk download a set of files from the bucket
-
-# collect FSI graphics ---------------------------------------------------------
-svgs <- ukfsr::bucket_manifest(file_ext = "svg")
-pngs <- ukfsr::bucket_manifest(file_ext = "png")
-
-charts <- dplyr::bind_rows(svgs, pngs) |> 
-  dplyr::filter(stringr::str_starts(folder, "theme_fsi"))
-
-x <- charts$path
-y <- charts$file
-
-purrr::map2(x, y, \(x, y) {
-  aws.s3::save_object(object = x, 
-                      bucket = ukfsr::s3_bucket(), 
-                      file = paste0("~/fsi/",y), 
-                      headers = list("x-amz-acl" = "bucket-owner-full-control"))
-}
-)
-
-
-zip(zipfile = "~/fsi.zip", files = list.files("~/fsi/", full.names = TRUE))
-
-# test code to make an ODS file -----------------------------------------------
-library(ukfsr)
-library(readODS)
-library(readr)
-
-csvs <- bucket_manifest(file_ext = "csv") |> 
-  dplyr::filter(stringr::str_starts(folder, "theme_3") & stringr::str_ends(folder, "output/csv"))
-
-path <- csvs$path
-title <- csvs$title
-
-data <- purrr::map(path, \(path) {
-  x <- aws.s3::s3read_using(FUN = read_csv,
-                            bucket = ukfsr::s3_bucket(),
-                            object = path)
-  write_ods(x, path = "~/work/test.ods", sheet = title, append = TRUE)
-}
-)
-
-# Experimenting with 'rapid.spreadsheets' and xlsx ----------------------------- 
 library(rapid.spreadsheets)
 library(openxlsx)
 library(ukfsr)
@@ -116,8 +36,8 @@ create_cover_sheet(wb, text_df = as_tibble(cover), ,tab_name = "Cover_Sheet",sub
 csvs <- bucket_manifest(file_ext = "csv") |> 
   dplyr::filter(stringr::str_starts(folder, "theme_3") & stringr::str_ends(folder, "output/csv")) |> 
   #mutate(sheet_name = str_replace_all(paste0(indicator_id,"_", str_sub(title, 1, 19)), " ", "_"))
-mutate(sheet_name = indicator_id) #|>
-  #mutate(title = toupper(title)	)
+  mutate(sheet_name = indicator_id) #|>
+#mutate(title = toupper(title)	)
 
 path <- csvs$path
 title <- csvs$title
@@ -212,8 +132,6 @@ format_borders(
 
 
 
-#saveWorkbook(wb, 
-             #here("datasets","fsr_theme3.xlsx"),
-             #overwrite = TRUE)
-
-#put onto separate scripts
+saveWorkbook(wb, 
+             here("datasets","fsr_theme3.xlsx"),
+             overwrite = TRUE)
