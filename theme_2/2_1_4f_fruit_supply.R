@@ -15,7 +15,7 @@ source(here::here("utils", "load-font.R"))
 
 fruit_supply <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
-                                         object = "theme_2/input_data/t2_1_4/2_1_4g_fruit_supply.csv")
+                                         object = "theme_2/input_data/t2_1_4/2_1_4f_fruit_supply.csv")
 
 #load data
 #fruit_supply <- read_csv("2_1_4_fruit_supply.csv")
@@ -52,8 +52,9 @@ fruit_supply_chart <- fruit_supply1 |>
   
   fruit_supply_chart
 
-save_graphic(fruit_supply_chart, "2.1.4g", "fruit supply")
-save_csv(fruit_supply1, "2.1.4g", "fruit supply")
+#new file saves  
+save_graphic(fruit_supply_chart, "2.1.4f", "fruit supply")
+save_csv(fruit_supply1, "2.1.4f", "fruit supply")
 
   #save graphic
 #ggsave(filename = "2_1_4g_fruit_supply.svg",
