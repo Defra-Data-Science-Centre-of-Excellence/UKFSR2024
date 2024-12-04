@@ -34,13 +34,13 @@ library(janitor)
 
 FSR_4_1_1 <- aws.s3::s3read_using(FUN = readr::read_csv,
                                    bucket = "s3-ranch-054",
-                                   object = "theme_4/input_data/4_1_4a_ household_food_security_status_FYE_2023 .csv")
+                                   object = "theme_4/input_data/4_1_4a_ household_food_security_status_FYE_2023.csv")
 
 
 
 FSR_4_1_1 <- FSR_4_1_1 %>%
   #gather(variable,value, `High`,`Marginal`,`Low`,`Very low`)
-  gather(variable,value, `Very low`,`Low`,`Marginal`,`High`)
+  gather(variable,value, `Very low`,`Low`,`Marginal`,`High`) 
 
 
 check_sum<-FSR_4_1_1 %>% 
@@ -55,13 +55,17 @@ FSR_4_1_1$variable <- as.character(FSR_4_1_1$variable)
 # Then turn it back into a factor with the levels in the correct order
 FSR_4_1_1$variable <- factor(FSR_4_1_1$variable, levels=unique(FSR_4_1_1$variable))
 
+FSR_4_1_1 <- FSR_4_1_1 %>% dplyr::rename("percentage" = `value`)
+
+
 # Reverse the selected color in the graph
 reversed_palette <- rev(af_colours()[1:length(unique(FSR_4_1_1$variable))])
 
 
 source(here::here("utils", "load-font.R"))
 
-FSR_4_1_1_plot <- ggplot(FSR_4_1_1, aes(x = Year, y = value, fill = variable, label = round(value,0))) +
+
+FSR_4_1_1_plot <- ggplot(FSR_4_1_1, aes(x = Year, y = percentage, fill = variable, label = round(percentage,0))) +
   geom_bar(stat = "identity", width = 0.5) +
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
@@ -162,10 +166,11 @@ FSR_4_1_1b$variable <- factor(FSR_4_1_1b$variable, levels=unique(FSR_4_1_1b$vari
 # Reverse the selected color in the graph
 reversed_palette <- rev(af_colours()[1:length(unique(FSR_4_1_1b$variable))])
 
+FSR_4_1_1b <- FSR_4_1_1b %>% dplyr::rename("percentage" = `value`)
 
 source(here::here("utils", "load-font.R"))
 
-FSR_4_1_1b_plot <- ggplot(FSR_4_1_1b, aes(x = Disability, y = value, fill = variable, label = round(value,0))) +
+FSR_4_1_1b_plot <- ggplot(FSR_4_1_1b, aes(x = Disability, y = percentage, fill = variable, label = round(percentage,0))) +
   geom_bar(stat = "identity", width = 0.5) +
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
@@ -217,13 +222,13 @@ FSR_4_1_1c$variable <- factor(FSR_4_1_1c$variable, levels=unique(FSR_4_1_1c$vari
 # Reverse the selected color in the graph
 reversed_palette <- rev(af_colours()[1:length(unique(FSR_4_1_1c$variable))])
 
-
+FSR_4_1_1c <- FSR_4_1_1c %>% dplyr::rename("percentage" = `value`)
 
 
 
 source(here::here("utils", "load-font.R"))
 
-FSR_4_1_1c_plot <- ggplot(FSR_4_1_1c, aes(x = Age, y = value, fill = variable, label = round(value,0))) +
+FSR_4_1_1c_plot <- ggplot(FSR_4_1_1c, aes(x = Age, y = percentage, fill = variable, label = round(percentage,0))) +
   geom_bar(stat = "identity", width = 0.5) +
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
@@ -275,10 +280,11 @@ FSR_4_1_1d$variable <- factor(FSR_4_1_1d$variable, levels=unique(FSR_4_1_1d$vari
 # Reverse the selected color in the graph
 reversed_palette <- rev(af_colours()[1:length(unique(FSR_4_1_1d$variable))])
 
+FSR_4_1_1d <- FSR_4_1_1d %>% dplyr::rename("percentage" = `value`)
 
 source(here::here("utils", "load-font.R"))
 
-FSR_4_1_1d_plot <- ggplot(FSR_4_1_1d, aes(x = `Ethnic group`, y = value, fill = variable, label = round(value,0))) +
+FSR_4_1_1d_plot <- ggplot(FSR_4_1_1d, aes(x = `Ethnic group`, y = percentage, fill = variable, label = round(percentage,0))) +
   geom_bar(stat = "identity", width = 0.5) +
   geom_text(position = position_stack(vjust = 0.5), 
             colour= "white",
