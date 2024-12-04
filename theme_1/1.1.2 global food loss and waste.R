@@ -71,6 +71,7 @@ flw_chart<-food_loss_waste_2%>%
             inherit.aes = TRUE)+
   theme_ukfsr()+
   scale_y_continuous(limits = c(0,150)) +
+  guides(fill=guide_legend(nrow=3, byrow=TRUE)) +
   coord_flip()+
   #scale_color_manual(values = af_colours("duo")) +
   scale_fill_manual(values = af_colours("categorical"),n=6) +
