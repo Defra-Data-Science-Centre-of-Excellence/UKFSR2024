@@ -14,7 +14,8 @@ wb <- openxlsx::createWorkbook()
 cover <- c("UK Food Security Report 2024",
            "Theme 3",
            "Description",
-           "This dataset contains the underlying data for the indicators in Theme 3",
+           "This dataset contains the underlying data for the indicators in Theme 3:",
+           "[Theme 3: Food Supply Chain Resilience]",
            "Last update",
            "11 December 2024",
            "Next update",
@@ -23,12 +24,15 @@ cover <- c("UK Food Security Report 2024",
            "foodsecurityreport@defra.gov.uk",
            "Shorthand",
            "[x] indicates values that are missing due to the information not being applicable or the data being unavailable",
+           "Glossary",
+           "There are separate tables to explain all key definitions and acronyms used in the report:",
+           "[Glossary and Acronyms]",
            "Source",
            "Department for Environment, Food and Rural Affairs",
            "Copyright",
            "© Crown copyright 2024")
 
-create_cover_sheet(wb, text_df = as_tibble(cover), ,tab_name = "Cover_Sheet",subheadings = c(2,3,5,7,9,11,13,15))
+create_cover_sheet(wb, text_df = as_tibble(cover), ,tab_name = "Cover_Sheet",subheadings = c(2,3,6,8,10,12,14,17,19))
 
 
 # appending row number because I was getting duplicate sheet names - may not be
@@ -73,7 +77,7 @@ create_contents_notes(wb, contents,column_width = c(20, 60)) # set column width 
 # create notes data frame - needs updating wit new notes
 notes_df <- data.frame(
   "Note number" = c("Note 1", "Note 2", "Note 3"),
-  "Note text" = c("Figures that are Tables in the report provide a full view of the data used and so do not have an accompanying datasheet.",
+  "Note text" = c("Figures that are Tables in the report provide a full view of the data used and do not have an accompanying datasheet.",
                   "Instances where charts do not have disclosed datasheets due to the terms agreed on datasharing.",
                   "Some datasheets provide data for multiple Figures on the UKFSR")
 ) %>%   
