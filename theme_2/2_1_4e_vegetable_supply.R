@@ -40,15 +40,16 @@ names(af_categorical_colours)=levels(vegetable_supply2$Supply)
   #produce chart
 vegetable_supply_chart <- vegetable_supply2 |> 
   ggplot() +
-  geom_line(aes(x = year, y = percentage, group = Supply, colour = Supply), lwd = 1) +
+  geom_line(aes(x = year, y = percentage/100, group = Supply, colour = Supply), lwd = 1) +
   #scale_y_continuous(limits = c(0,110)) +
-  scale_y_continuous(breaks = seq(0, 100, 10),limits = c(0, 100)) +
+  #scale_y_continuous(breaks = seq(0, 100, 10),limits = c(0, 100)) +
+  scale_y_continuous(limits = c(0,1), labels = scales::percent) +
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 3)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   theme(plot.margin = margin(5,50,5,5,unit = "pt")) +
   labs(x = NULL,
-       y = "Percentage")
+       y = NULL)
   
   vegetable_supply_chart
 
