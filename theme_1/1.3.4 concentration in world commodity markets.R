@@ -17,7 +17,7 @@ source(here("utils", "load-font.R"))
 # HHI export concentration -----------------------------------------------------
 export_shares <- aws.s3::s3read_using(FUN = read_csv,
                                         bucket = ukfsr::s3_bucket(),
-                                        object = "theme_1/input_data/t1_3_4/export_shares.csv")%>%
+                                        object = "theme_1/input_data/t1_3_4/hi141120241526.csv")%>%
   pivot_longer(cols=4:23,names_to="years",values_to = "value")%>%
   mutate(Commodity=if_else(Commodity=="Corn","Maize",Commodity))
   
@@ -61,30 +61,6 @@ export_shares_global<-export_shares_global%>%
 save_graphic(herfindhal_indices_chart, "1.3.4a", "hhi export concentration")
 save_csv(export_shares_global, "1.3.4a", "hhi export concentration")
 
-
-# Daily chokepoint transit trade volume-----------------------------------------
-
-daily_chokepoint_transit_calls_and_trade_volume_estimates <- aws.s3::s3read_using(FUN = read_csv,
-                                      bucket = ukfsr::s3_bucket(),
-                                      object = "theme_1/input_data/t1_3_4/7day_moving_average_chokepoints.csv")%>%
-  pivot_longer(2:4,names_to = "chokepoint",values_to="value")%>%
-  mutate(date=as.Date(`Row Labels`))%>%
-  filter(date>as.Date("2022-12-31"))%>%
-  select(-`Row Labels`)
-
-daily_chokepoint_transit_calls_and_trade_volume_estimates_chart<-ggplot()+
-  geom_line(data=daily_chokepoint_transit_calls_and_trade_volume_estimates,aes(x=date,y=value/1E6,group=chokepoint,color=chokepoint))+
-  geom_vline(data=daily_chokepoint_transit_calls_and_trade_volume_estimates,aes(xintercept = as.Date("2023-11-01")),linetype="dashed")+
-  geom_text(aes(x=as.Date("2023-08-01"),y=3,label="dashed line\nindicates start of houthi attacks"),size=6)+
-  scale_y_continuous(limits = c(0,10),breaks=seq(0,9,1), expand = expansion(mult = c(0, 0.05))) +
-  scale_x_date(date_labels = "%b %y",breaks = date_breaks("3 months"))+
-  scale_colour_manual(values = af_colours("categorical",n=4)) +
-  theme_ukfsr(base_family = "GDS Transport Website") +
-  labs(x = NULL,
-       y = "Million tonnes") 
-
-save_graphic(daily_chokepoint_transit_calls_and_trade_volume_estimates_chart, "1.3.4c", "daily chokepoint transit trade volume")
-save_csv(daily_chokepoint_transit_calls_and_trade_volume_estimates, "1.3.4c", "daily chokepoint transit trade volume")
 
 
 

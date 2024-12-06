@@ -10,7 +10,7 @@ library(afcolours)
 library(here)
 library(readxl)
 
-source(here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 
 # Fertiliser concentration -----------------------------------------------------
@@ -65,10 +65,15 @@ total_production<-fertiliser_production%>%
   mutate(item=str_replace(item,"\\(total\\)",""))%>%
   filter(area=="World")
 
+# feeding expressions to get subscripts
+# https://www.fionamseaton.com/tutorial/r-club/plotmath/
 total_production_chart<-ggplot()+
   geom_line(data=total_production,aes(x = year, y = value/1E6, colour = item)) +
   scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.05))) +
-  scale_colour_manual(values = af_colours("categorical",n=6)) +
+  # scale_colour_manual(values = af_colours("categorical",n=6)) +
+  scale_colour_manual(values = af_colours(n = 3), labels = c(expression("Nitrogen N"),
+                                                             expression("Phosphate P"[2]*"O"[5]),
+                                                             expression("Potash K"[2]*"O"))) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   # guides(color=guide_legend(nrow=3, byrow=TRUE))+ 
   labs(x = NULL,
@@ -93,7 +98,7 @@ fertilizers_price_index <- aws.s3::s3read_using(FUN = read_excel,
 
 fertilizers_price_index_chart<-ggplot()+
   geom_line(data=fertilizers_price_index,aes(x = date, y = fertilizers_price_index), colour = af_colours()[1]) +
-  scale_y_continuous(limits = c(0,NA), expand = expansion(mult = c(0, 0.05))) +
+  scale_y_continuous(limits = c(0,400), expand = expansion(mult = c(0, 0.05))) +
   scale_colour_manual(values = af_colours()[1]) +
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,

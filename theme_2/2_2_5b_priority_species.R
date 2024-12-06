@@ -42,7 +42,7 @@ priority_species_chart <- priority_species |>
   ggplot() +
   geom_line(data=`priority_species_index`, aes(x = Year, y = value, colour = option), lwd = 1) +
   geom_ribbon(data=`priority_species_ci`, aes(x = Year, ymin = `lower_ci`, ymax = `upper_ci`, fill = option),alpha=0.2) +
-  scale_y_continuous(breaks = seq(0, 100, 10),limits = c(0, 100)) +
+  scale_y_continuous(breaks = seq(0, 100, 10),limits = c(0, 100), expand = expansion(mult = c(0, 0.05))) +
   scale_colour_manual(values = af_colours("duo")) +
   scale_fill_manual(values = af_colours("duo")) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +

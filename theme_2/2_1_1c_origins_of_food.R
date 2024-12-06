@@ -11,7 +11,7 @@ library(janitor)
 
 setwd("~/UKFSR/theme 2/files")
 
-#source(here::here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 source("load-font.R")
 
@@ -41,10 +41,11 @@ names(af_categorical_colours)=levels(oof1$Type)
 oof_chart <- oof1 |> 
   ggplot() +
   geom_line(aes(x = year, y = perc/100, group = Type, colour = Type), lwd = 1) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) +
+  scale_y_continuous(limits = c(0,1), labels = scales::percent, expand = expansion(mult = c(0, 0.05))) +
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 6)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
+  theme(plot.margin = margin(10,20,10,10,unit = "pt")) +
   labs(x = NULL,
        y = NULL)
   

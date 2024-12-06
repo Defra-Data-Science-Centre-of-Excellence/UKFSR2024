@@ -9,7 +9,7 @@ library(here)
 library(data.table)
 library(janitor)
 
-#source(here::here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 setwd("~/UKFSR/theme 2/files")
 
@@ -49,7 +49,7 @@ soya_bean_import_chart <- SBI2 |>
   ggplot() +
   geom_line(aes(x = year, y = `thousand tonnes`, group = `Soya Bean imports, thousand tonnes`, colour = `Soya Bean imports, thousand tonnes`), lwd = 1) +
   #scale_y_continuous(limits = c(0,1000)) +
-  scale_y_continuous(breaks = seq(0, 1000, 100),limits = c(0, 1000)) +
+  scale_y_continuous(breaks = seq(0, 1000, 100),limits = c(0, 1000), expand = expansion(mult = c(0, 0.05))) +
   #scale_y_continuous(labels = scales::label_number(scale = 0.001)) +
   scale_x_continuous(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 2)) +

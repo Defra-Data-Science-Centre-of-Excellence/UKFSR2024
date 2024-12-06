@@ -52,7 +52,7 @@ productivity_chart <- TFP1 |>
   ggplot() +
   geom_line(aes(x = year, y = index, group = Type, colour = Type), lwd = 1) +
   #scale_y_continuous(limits = c(0,100)) +
-  scale_y_continuous(breaks = seq(0, 175, 25),limits = c(0, 175)) +
+  scale_y_continuous(breaks = seq(0, 175, 25),limits = c(0, 175), expand = expansion(mult = c(0, 0.05))) +
   scale_x_discrete(breaks = c(1973, 1983, 1993, 2003, 2013, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 3)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +

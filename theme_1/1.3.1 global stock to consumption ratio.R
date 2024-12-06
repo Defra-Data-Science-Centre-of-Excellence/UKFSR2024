@@ -17,7 +17,7 @@ source(here("utils", "load-font.R"))
 
 stocks_to_consumption <- aws.s3::s3read_using(FUN = read_csv,
                                          bucket = ukfsr::s3_bucket(),
-                                         object = "theme_1/input_data/t1_3_1/stocks_to_consumption.csv")%>%
+                                         object = "theme_1/input_data/t1_3_1/stock_to_consumption_ratio141124_1105.csv")%>%
   pivot_longer(cols = 4:24,names_to="year",values_to = "value")
 
 

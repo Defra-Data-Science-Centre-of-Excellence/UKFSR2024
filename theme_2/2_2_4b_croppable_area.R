@@ -55,8 +55,8 @@ croppable_area_chart <- croppable_area2 |>
   ggplot() +
   geom_line(aes(x = year, y = m.hectares, group = `Land use`, colour = `Land use`), lwd = 1) +
   #scale_y_continuous(limits = c(0,600)) +
-  scale_y_continuous(breaks = seq(0, 11000, 1000),limits = c(0, 11000)) +
-  scale_y_continuous(labels = scales::label_number(scale = 0.001)) +
+  scale_y_continuous(breaks = seq(0, 11000, 1000),limits = c(0, 11000),labels = scales::label_number(scale = 0.001), expand = expansion(mult = c(0, 0.05))) +
+  # scale_y_continuous() +
   scale_x_continuous(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 6)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +

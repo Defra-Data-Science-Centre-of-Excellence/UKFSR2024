@@ -71,7 +71,7 @@ septoria_tritici_chart <-septoria_tritici |>
   guides(color=guide_legend(nrow=6,byrow=TRUE))+
   scale_x_continuous(breaks=seq(2003,2023,2),labels = seq(2003,2023,2))+
   scale_linetype_manual(values=c("solid","solid","solid","dotted","dotted","dotted"))+
-  scale_y_continuous(labels = scales::percent)+
+  scale_y_continuous(labels = scales::percent, expand = expansion(mult = c(0, 0.05)), limits = c(0,1))+
   theme_ukfsr(base_family = "GDS Transport Website") +
   labs(x = NULL,
        y = "")

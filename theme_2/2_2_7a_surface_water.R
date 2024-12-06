@@ -53,10 +53,11 @@ names(af_categorical_colours)=levels(surface_water1$Quality)
   #filter(year>"2013") |>
 
 surface_water_chart <-
-ggplot(surface_water1, aes(fill = Quality, x = year, y = percentage)) +
-  geom_col(ggplot2::aes(fill = Quality, x = year, y = percentage)) +
+  ggplot(surface_water1, aes(fill = Quality, x = year, y = percentage/100)) +
+  geom_col(ggplot2::aes(fill = Quality, x = year, y = percentage/100)) +
+  scale_y_continuous(limits = c(0,1.1), breaks = c(0, 0.25, 0.5, 0.75, 1), labels = scales::percent, expand = expansion(mult = c(0, 0.05))) +
   scale_x_continuous(breaks = c(2010, 2013, 2016, 2019)) +
-  labs(x = NULL, y = "Percentage", title = NULL) +
+  labs(x = NULL, y = NULL, title = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   scale_fill_manual(values = af_colours("categorical", n = 5))
   #ggplot2::coord_flip()
