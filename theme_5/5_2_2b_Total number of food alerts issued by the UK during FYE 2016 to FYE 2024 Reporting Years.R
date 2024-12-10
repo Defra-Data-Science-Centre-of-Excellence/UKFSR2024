@@ -49,12 +49,12 @@ names(af_categorical_colours)=levels(t5_2_2b_long$Alert)
   theme(legend.position = "bottom", legend.title = element_blank()) +
   theme(legend.text = element_text(face = "italic")) +
   theme(axis.title.x = element_blank()) +
-  geom_text(aes(label=Value), position=position_dodge(width=0.9), fontface = "bold", size=8, vjust = -0.8) +
+    geom_text(aes(label=Value), position=position_dodge(width=0.9), size=8, vjust = -0.8) +
   coord_cartesian(clip = "off")
   
 t5_2_2b_plot
 
-save_graphic(t5_2_2b_plot, "5.2.2d", "total number of food alerts issued by the UK during FYE 2016 to FYE 2024 reporting years")
+save_graphic(t5_2_2b_plot, "5.2.2b", "total number of food alerts issued by the UK during FYE 2016 to FYE 2024 reporting years")
 
-save_csv(t5_2_2b, "5.2.2d", "total number of food alerts issued by the UK during FYE 2016 to FYE 2024 reporting years")
+save_csv(t5_2_2b, "5.2.2b", "total number of food alerts issued by the UK during FYE 2016 to FYE 2024 reporting years")
 
