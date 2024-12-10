@@ -12,9 +12,10 @@ library(here)
 source(here("utils", "load-font.R"))
 
 # People facing high insecurity GRFC countries----------------------------------
-grfc2024 <- aws.s3::s3read_using(FUN = read_csv,
+grfc2024 <- aws.s3::s3read_using(FUN = read_excel,
                                   bucket = ukfsr::s3_bucket(),
-                                  object = "theme_1/input_data/t1_4_1/GRFC2024_Master.csv")
+                                  object = "theme_1/input_data/t1_4_1/grfc_database_2016-2024-myu.xlsx",
+                                  sheet = "GFRC MYU 2024_Master")
 
 grfc2024_in2 <- aws.s3::s3read_using(FUN = read_csv,
                                      bucket = ukfsr::s3_bucket(),
@@ -45,8 +46,8 @@ grfc2024_chart<-grfc2024_out%>%
   theme_ukfsr()+
   scale_fill_manual(values = af_colours("categorical",n=3),labels=c("Rest of population\nin GRFC countries","1+2 No/Minimal+Stressed","3+ Crisis")) +
   #scale_color_manual(values = c("white","black"))+ 
-  scale_x_continuous(breaks=seq(2016,2023,1))+
-  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
+  scale_x_continuous(breaks=seq(2016,2024,1))+
+  scale_y_continuous(limits=c(0,2000), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   labs(x = NULL,
        y = "Million people")
@@ -98,7 +99,7 @@ number_of_moderately_or_severely_food_insecure_people_world<-number_of_moderatel
 number_of_moderately_or_severely_food_insecure_people_world_chart<-number_of_moderately_or_severely_food_insecure_people_world%>%
   ggplot()+
   geom_col(aes(x=year,y=value),fill=af_colours("duo")[1])+
-  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
+  scale_y_continuous(limits=c(0,2500), expand = expansion(mult = c(0, 0.05)))+
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE) +
   #scale_x_continuous(breaks=seq(2016,2023,1))+
   labs(x = NULL,
@@ -137,7 +138,7 @@ coahd_chart<-coahd%>%
   scale_fill_manual(values = c("#A285D1","#28A197","#801650","#F46A25","#3D3D3D","#12436D")) +
   scale_shape_manual(values = c(NA,NA,NA,NA,NA,24)) +
   guides(color=guide_legend(nrow=3, byrow=TRUE))+
-  scale_y_continuous(labels = scales::percent)+
+  scale_y_continuous(limits = c(0,0.8), labels = scales::percent)+
   labs(x = NULL,
        y = "")
 
@@ -325,7 +326,7 @@ number_of_undernourised_chart<-ggplot()+
   geom_col(data=number_of_undernourised,aes(x=`Year Code`,y=Value,group=Area,fill=Area))+
   scale_fill_manual(values = af_colours("duo")) +
   scale_color_manual(values = af_colours("duo")[2]) +
-  scale_y_continuous(limits=c(0,NA), expand = expansion(mult = c(0, 0.05)))+
+  scale_y_continuous(limits=c(0,1000), breaks = seq(0,1000, 200), expand = expansion(mult = c(0, 0.05)))+
   #scale_x_continuous(breaks=seq(2016,2023,1))+
   labs(x = NULL,
        y = "Million people") +

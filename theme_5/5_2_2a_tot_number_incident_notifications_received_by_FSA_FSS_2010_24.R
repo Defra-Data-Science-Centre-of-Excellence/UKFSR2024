@@ -16,20 +16,20 @@ t5_2_2a <- aws.s3::s3read_using(FUN = read_csv,
                                 col_types = colspec)
 
 t5_2_2a_long <- t5_2_2a %>%
-  gather(variable,value,`Total incidents received by FSA (inclusive of FSS from 2015 onwards)`,`Total incidents received by FSS`,`Total Incidents received by FSA & FSS (FSS new data reporting format)`) 
+  gather(variable,value,`Total incidents received by FSA`,`Total incidents received by FSS`) 
 
-af_categorical_colours <- afcolours::af_colours("categorical", n = 3)
+
+# af_categorical_colours <- afcolours::af_colours("categorical", n = 3)
+af_categorical_colours <- afcolours::af_colours("duo")
 names(af_categorical_colours)=levels(t5_2_2a_long$Response)
 
 # https://kohske.wordpress.com/2010/12/25/various-position-adjustments-of-legend-in-ggplot2/
 t5_2_2a_plot <- ggplot(t5_2_2a_long, aes(x=factor(Year), y=value, fill=variable)) +
   geom_bar(stat="identity", position=position_dodge()) +
-  geom_text(data = subset(t5_2_2a_long, variable == "Total incidents received by FSA (inclusive of FSS from 2015 onwards)"), 
-            aes(label=value ,vjust = -0.2, hjust = 0.9), size=7) +
+  geom_text(data = subset(t5_2_2a_long, variable == "Total incidents received by FSA"), 
+            aes(label=value ,vjust = -0.2, hjust = 1.1), size=7) +
   geom_text(data = subset(t5_2_2a_long, variable == "Total incidents received by FSS"), 
-            aes(label=value, vjust = -0.2, hjust = -0.1), size=7) +
-  geom_text(data = subset(t5_2_2a_long, variable == "Total Incidents received by FSA & FSS (FSS new data reporting format)"), 
-            aes(label=value, vjust = -0.2, hjust = 0.5), size=7) +
+            aes(label=value, vjust = -0.2, hjust = -0.4), size=7) +
   guides(fill = guide_legend(byrow = TRUE)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   scale_fill_manual(values = af_categorical_colours) +

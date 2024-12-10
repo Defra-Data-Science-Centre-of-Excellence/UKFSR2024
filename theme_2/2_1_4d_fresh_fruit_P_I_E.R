@@ -10,7 +10,7 @@ library(data.table)
 library(janitor)
 library(stringr)
 
-#source(here::here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 #setwd("~/UKFSR/theme 2/files")
 
@@ -54,7 +54,7 @@ fruit_chart_prod <- fruit2 |>
   ggplot() +
   geom_line(aes(x = year, y = `m.tonnes`, group = `Supply and use 2`, colour = `Supply and use 2`), lwd = 1) +
   #scale_y_continuous(limits = c(0,4000)) +
-  scale_y_continuous(breaks = seq(0, 4, 0.5),limits = c(0, 4)) +
+  scale_y_continuous(breaks = seq(0, 4, 0.5),limits = c(0, 4), expand = expansion(mult = c(0, 0.05))) +
   scale_x_discrete(breaks = c(2003, 2008, 2013, 2018, 2023)) +
   scale_colour_manual(values = af_colours("categorical", n = 3)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +

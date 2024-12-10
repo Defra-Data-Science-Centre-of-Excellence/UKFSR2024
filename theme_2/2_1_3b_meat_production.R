@@ -9,7 +9,7 @@ library(here)
 library(data.table)
 library(janitor)
 
-#source(here::here("utils", "load-font.R"))
+source(here::here("utils", "load-font.R"))
 
 #setwd("~/UKFSR/theme 2/files")
 
@@ -53,6 +53,7 @@ meat_chart_prod <-
   ggplot(meatprod2, aes(group = Population, x = year, y = `m. tonnes`)) +
   geom_line(ggplot2::aes(group = Population, colour = Population, x = year, y = `m. tonnes`), lwd = 1) +
   scale_x_continuous(breaks = c(2003, 2008, 2013, 2018, 2023)) +
+  scale_y_continuous(limits = c(0,2), expand = expansion(mult = c(0, 0.05))) +
   labs(x = NULL, y = "Million tonnes", title = NULL) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +
   scale_colour_manual(values = af_colours("categorical", n = 4))

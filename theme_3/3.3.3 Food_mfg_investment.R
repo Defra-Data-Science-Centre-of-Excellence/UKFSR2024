@@ -31,7 +31,7 @@ chart <- mfg_investment |>
   ggplot() +
   geom_line(aes(x = date, y = value), 
             colour = af_colours(type = "categorical", n = 1)) +
-  scale_y_continuous(limits = c(0, NA), labels = scales::label_comma(), expand = expansion(mult = c(0,0.05))) +
+  scale_y_continuous(limits = c(0, 1400),breaks = seq(0, 1400, 200), labels = scales::label_comma(), expand = expansion(mult = c(0,0.05))) +
   labs(x = NULL,
        y = "£m") +
   theme_ukfsr(base_family = "GDS Transport Website")

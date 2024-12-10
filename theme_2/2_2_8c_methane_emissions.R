@@ -43,7 +43,7 @@ methane_chart <- methane2 |>
   ggplot() +
   geom_line(aes(x = year, y = `million tonnes carbon dioxide equivalent`, group = Emissions, colour = Emissions), lwd = 1) +
   #scale_y_continuous(limits = c(0,110)) +
-  scale_y_continuous(breaks = seq(0, 90, 10),limits = c(0, 90)) +
+  scale_y_continuous(breaks = seq(0, 90, 10),limits = c(0, 90), expand = expansion(mult = c(0, 0.05))) +
   scale_x_discrete(breaks = c(2002, 2007, 2012, 2017, 2022)) +
   scale_colour_manual(values = af_colours("categorical", n = 2)) +
   theme_ukfsr(base_family = "GDS Transport Website", base_size = 14) +

@@ -74,7 +74,7 @@ FSR_3_1_1aplot <- ggplot(FSR_3_1_1a, aes(x=Year, y=value, colour=variable, group
   scale_colour_manual(values = af_colours("categorical")) + 
   guides(fill = guide_legend(byrow = TRUE)) +
   labs(x = NULL,
-       y = "Thousand tonnes") +
+       y = "Kilotonnes") +
   #scale_x_date(date_breaks = "12 months", date_labels = "%Y") +
   theme_ukfsr(base_family = "GDS Transport Website") +
   theme(plot.margin = margin(5,50,5,5,unit = "pt"))
@@ -189,10 +189,10 @@ fera_chart <- pesticides_fera |>
   filter(name != "Total") |> 
   ggplot() +
   geom_col(aes(x = year, y = value, fill = name)) +
-  scale_y_continuous(labels = scales::label_number(scale = 0.001)) +
+  scale_y_continuous(limits = c(0, 20000), labels = scales::label_number(scale = 0.001)) +
   scale_x_continuous(breaks = seq(2010, 2022, by = 2)) +
   scale_fill_manual(values = af_colours(n = 6)) +
-  labs(x = NULL, y = "metric kilotons (kT)") +
+  labs(x = NULL, y = "metric kilotonnes (kT)") +
   theme_ukfsr(base_family = "GDS Transport Website", x_axis = FALSE)
 
 save_graphic(fera_chart, "3.1.1d", "pesticides fera final")
@@ -207,7 +207,10 @@ feed <- aws.s3::s3read_using(FUN = readr::read_csv,
 feed_chart <- ggplot(feed) +
   geom_line(aes(x = year, y = value, colour = Type)) +
   scale_colour_manual(values = af_colours(type = "categorical", n = 4)) +
-  scale_y_continuous(labels = scales::label_comma(scale = 0.001), limits = c(0,NA), expand = expansion(mult = c(0, 0.05))) +
+  scale_y_continuous(labels = scales::label_comma(scale = 0.001),
+                     limits = c(0,15000), 
+                     breaks = seq(0, 15000, 5000),
+                     expand = expansion(mult = c(0, 0.05))) +
   labs(x = NULL, y = "million tonnes") +
   guides(colour = guide_legend(nrow = 2)) + 
   theme_ukfsr(base_family = "GDS Transport Website")

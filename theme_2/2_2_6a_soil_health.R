@@ -55,7 +55,7 @@ nutrient_balance_chart <- nutrient_balance1 |>
   ggplot() +
   geom_line(aes(x = year, y = kg_per_ha, group = `soil_nutrient_balance_kg_per_ha`, colour = `soil_nutrient_balance_kg_per_ha`), lwd = 1) +
   #scale_y_continuous(limits = c(0,600)) +
-  scale_y_continuous(breaks = seq(0, 100, 10),limits = c(0, 100)) +
+  scale_y_continuous(breaks = seq(0, 100, 10),limits = c(0, 100), expand = expansion(mult = c(0, 0.05))) +
   #scale_y_continuous(labels = scales::label_number(scale = 0.001)) +
   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020, 2022)) +
   scale_colour_manual(values = af_colours("categorical", n = 2)) +
